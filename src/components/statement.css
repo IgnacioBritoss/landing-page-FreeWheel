@@ -1,0 +1,38 @@
+/* ============================================================================
+   statement.css — La frase que se ilumina
+   ========================================================================== */
+
+.statement {
+  padding-block: clamp(90px, 14vw, 200px);
+  border-top: 1px solid var(--line);
+}
+
+.statement__text {
+  font-size: clamp(1.5rem, 3.6vw, 2.9rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.32;
+  max-width: 26ch;
+}
+
+.statement__word {
+  /* La cuenta está explicada arriba, en el componente. En resumen: la palabra
+     se enciende cuando el frente de avance del scroll la pasa. */
+  opacity: clamp(0.16, calc((var(--progress, 0) * var(--count) - var(--w)) * 1.5), 1);
+  /* La transición cubre el caso del salto brusco (por ejemplo, al usar la
+     rueda muy rápido o al llegar con un enlace directo). */
+  transition: opacity 0.18s linear;
+}
+
+/* La palabra clave de la frase queda en azul. Es el único azul de esta
+   sección, así que se lleva toda la atención cuando le toca encenderse. */
+.statement__word.is-key {
+  color: var(--blue);
+}
+
+/* Quien pidió menos movimiento lee la frase entera, en negro, de una vez. */
+@media (prefers-reduced-motion: reduce) {
+  .statement__word {
+    opacity: 1;
+  }
+}

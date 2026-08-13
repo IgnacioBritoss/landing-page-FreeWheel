@@ -1,0 +1,169 @@
+/* ============================================================================
+   trust.css — Verificación y rangos
+   ========================================================================== */
+
+.trust {
+  border-top: 1px solid var(--line);
+}
+
+.trust__head {
+  max-width: 640px;
+  margin-bottom: clamp(46px, 6vw, 74px);
+}
+
+.trust__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* La línea vertical entre las dos mitades, en vez de dos recuadros. Es el
+   mismo recurso de toda la página: separar con una línea, no con una caja. */
+.kyc,
+.tiers {
+  padding-top: 34px;
+  padding-bottom: 8px;
+}
+
+.kyc {
+  padding-right: clamp(24px, 4vw, 56px);
+  border-right: 1px solid var(--line);
+}
+
+.tiers {
+  padding-left: clamp(24px, 4vw, 56px);
+}
+
+.trust__sub {
+  font-size: var(--t-h3);
+  font-weight: 650;
+  letter-spacing: -0.022em;
+}
+
+.trust__sub-note {
+  font-size: var(--t-sm);
+  color: var(--text-3);
+  margin-top: 5px;
+  margin-bottom: 28px;
+}
+
+.trust__sub-note em {
+  font-style: normal;
+  font-weight: 650;
+  color: var(--text);
+}
+
+/* ── Los pasos de la verificación ────────────────────────────────────── */
+.kyc__steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.kyc__steps li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.kyc__n {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue);
+}
+
+.kyc__steps strong {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 650;
+  margin-bottom: 3px;
+}
+
+.kyc__steps span {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.kyc__foot {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: var(--t-xs);
+  color: var(--text-3);
+  line-height: 1.65;
+}
+
+/* ── Rangos ──────────────────────────────────────────────────────────── */
+.tiers__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 20px;
+}
+
+.tier {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  color: var(--text-3);
+  transition: color 0.25s ease;
+}
+
+/* El escudo hereda el color del <li>, así que basta con cambiarlo acá para que
+   el dibujo y el texto viajen juntos. */
+.tier:hover {
+  color: var(--blue);
+}
+
+.tier__shield {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.tier strong {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.tier span {
+  display: block;
+  font-size: var(--t-xs);
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .trust__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Con una sola columna la línea tiene que separar arriba y abajo, no a los
+     costados. */
+  .kyc {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 34px;
+  }
+
+  .tiers {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 440px) {
+  .tiers__list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

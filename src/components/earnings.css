@@ -1,0 +1,269 @@
+/* ============================================================================
+   earnings.css — Calculadora de ganancias
+   ========================================================================== */
+
+.earnings {
+  border-top: 1px solid var(--line);
+}
+
+.earnings__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 5vw, 70px);
+  align-items: start;
+}
+
+/* ── Los tres puntos de la izquierda ─────────────────────────────────── */
+.earnings__points {
+  margin-top: 38px;
+  border-top: 1px solid var(--line);
+}
+
+.earnings__points > div {
+  padding-block: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.earnings__points dt {
+  font-size: var(--t-sm);
+  font-weight: 650;
+  margin-bottom: 3px;
+}
+
+.earnings__points dd {
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* ── La calculadora ──────────────────────────────────────────────────── */
+.calc {
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  padding: 28px 26px;
+}
+
+.calc__head {
+  margin-bottom: 28px;
+}
+
+.calc__head h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.calc__head p {
+  font-size: var(--t-sm);
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+.calc__field {
+  border: none;
+  margin-bottom: 26px;
+}
+
+.calc__label {
+  display: block;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.calc__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calc__days {
+  font-size: var(--t-body);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Categorías ──────────────────────────────────────────────────────── */
+/* Cuatro celdas separadas por líneas de 1px. El truco de la grilla con gap de
+   1px sobre fondo gris: los "bordes" son el fondo que se ve entre las celdas,
+   así nunca quedan dobles donde dos celdas se tocan. */
+.calc__cats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.calc__cat {
+  background: var(--paper);
+  padding: 13px 14px;
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.calc__cat:hover {
+  background: var(--paper-2);
+}
+
+.calc__cat.is-active {
+  background: var(--text);
+  color: var(--paper);
+}
+
+.calc__cat strong {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 650;
+}
+
+.calc__cat small {
+  font-size: 11px;
+  color: var(--text-4);
+}
+
+.calc__cat.is-active small {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── El control deslizante ───────────────────────────────────────────────
+   Un <input type="range"> se dibuja con el estilo del sistema operativo. Se le
+   saca la apariencia nativa y se redibuja a mano, en las DOS sintaxis que
+   existen (WebKit/Blink y Firefox). No se pueden agrupar en la misma regla: si
+   un navegador no entiende uno de los selectores de la lista, descarta la
+   regla entera. */
+.calc__range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  margin-top: 16px;
+  background: linear-gradient(
+    90deg,
+    var(--blue) var(--fill),
+    var(--line-2) var(--fill)
+  );
+  cursor: pointer;
+  outline: none;
+}
+
+/* Pulgar — WebKit / Blink (Chrome, Edge, Safari) */
+.calc__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--blue);
+  cursor: grab;
+}
+
+.calc__range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+
+/* Pulgar — Firefox */
+.calc__range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blue);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--blue);
+  cursor: grab;
+}
+
+.calc__scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 10.5px;
+  color: var(--text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── El resultado ────────────────────────────────────────────────────── */
+.calc__result {
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.calc__result-label {
+  display: block;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.calc__amount {
+  font-size: clamp(2rem, 4.6vw, 2.9rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.12;
+  margin-top: 8px;
+  /* Dígitos de ancho fijo: sin esto el número tiembla mientras se desliza. */
+  font-variant-numeric: tabular-nums;
+}
+
+.calc__rows {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.calc__rows > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 9px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--t-xs);
+  color: var(--text-3);
+}
+
+.calc__rows strong {
+  font-weight: 650;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.calc__cta {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.calc__note {
+  font-size: 11px;
+  color: var(--text-4);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .earnings__inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .calc {
+    padding: 22px 18px;
+  }
+
+  .calc__cats {
+    grid-template-columns: 1fr;
+  }
+}

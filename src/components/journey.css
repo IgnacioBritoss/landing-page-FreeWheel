@@ -1,0 +1,249 @@
+/* ============================================================================
+   journey.css — La sección fija de los cuatro pasos
+   ========================================================================== */
+
+/* La sección mide cuatro pantallas: ese es el recorrido de scroll durante el
+   cual el contenido de adentro se queda quieto. Una pantalla por paso. */
+.journey {
+  position: relative;
+  height: 400vh;
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+}
+
+/* Lo que se queda pegado. `top: 0` y alto de una pantalla: mientras el padre
+   recorre sus cuatro pantallas, esto no se mueve. */
+.journey__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.journey__inner {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(36px, 6vw, 90px);
+  align-items: start;
+  padding-block: 40px;
+}
+
+.journey__head {
+  grid-column: 1 / -1;
+  margin-bottom: 8px;
+}
+
+.journey__title {
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.12;
+}
+
+/* ── La columna de los cuatro números ────────────────────────────────── */
+.journey__rail {
+  position: relative;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 3.4vh, 34px);
+  padding-left: 30px;
+}
+
+/* La línea vertical de fondo. */
+.journey__track {
+  position: absolute;
+  left: 5px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: var(--line-2);
+}
+
+/* La parte llena, que crece con el avance del scroll. */
+.journey__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--blue);
+  transform: scaleY(var(--progress, 0));
+  transform-origin: top;
+}
+
+.journey__tick {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 10px;
+  align-items: baseline;
+}
+
+/* El punto sobre la línea. */
+.journey__dot {
+  position: absolute;
+  left: -30px;
+  top: 7px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--paper-2);
+  border: 1px solid var(--line-2);
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease),
+    transform 0.4s var(--ease);
+}
+
+.journey__tick.is-done .journey__dot {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.journey__tick.is-active .journey__dot {
+  background: var(--blue);
+  border-color: var(--blue);
+  transform: scale(1.35);
+}
+
+.journey__tick-n {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-4);
+  transition: color 0.35s ease;
+}
+
+.journey__tick-label {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--text-4);
+  transition: color 0.35s ease;
+}
+
+.journey__tick.is-active .journey__tick-n,
+.journey__tick.is-active .journey__tick-label {
+  color: var(--text);
+}
+
+.journey__tick.is-done .journey__tick-label,
+.journey__tick.is-done .journey__tick-n {
+  color: var(--text-3);
+}
+
+/* ── Los paneles ─────────────────────────────────────────────────────── */
+/* En escritorio se ve solo el activo. Los otros no ocupan lugar (display:none)
+   para que el alto del bloque no dependa del paso más largo. */
+.journey__panel {
+  display: none;
+  border-left: 1px solid var(--line-2);
+  padding-left: clamp(24px, 3.6vw, 46px);
+}
+
+.journey__panel.is-active {
+  display: block;
+  /* Entra desde la derecha. La animación se reinicia sola en cada cambio de
+     paso: un elemento que pasa de display:none a visible vuelve a correr sus
+     animaciones. */
+  animation: journey-in 0.55s var(--ease) both;
+}
+
+@keyframes journey-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.journey__panel-n {
+  display: block;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--blue);
+  margin-bottom: 16px;
+}
+
+.journey__panel-title {
+  font-size: clamp(1.25rem, 2.4vw, 1.9rem);
+  margin-bottom: 14px;
+}
+
+.journey__panel-text {
+  font-size: var(--t-body);
+  color: var(--text-2);
+  line-height: 1.68;
+  max-width: 46ch;
+}
+
+.journey__panel-aside {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: var(--t-sm);
+  color: var(--text-3);
+  max-width: 46ch;
+}
+
+/* ── La barra de avance de abajo ─────────────────────────────────────── */
+.journey__bar {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--line);
+}
+
+.journey__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left;
+}
+
+/* ============================================================================
+   Pantallas chicas
+   ----------------------------------------------------------------------------
+   En un celular hay dos problemas con una sección pegada: el alto útil es
+   poco (y el navegador esconde y muestra su barra al scrollear, cambiando el
+   alto en el medio), y el gesto de scroll es más impreciso. Una sección que
+   se traba cuatro pantallas se siente rota.
+
+   Por eso acá se apaga el pegado: la sección vuelve a ser una lista común de
+   cuatro pasos, uno abajo del otro. La información es la misma; lo que cambia
+   es la forma de recorrerla.
+   ========================================================================== */
+@media (max-width: 880px) {
+  .journey {
+    height: auto;
+    padding-block: var(--section-y);
+  }
+
+  .journey__sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .journey__inner {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  /* La columna de números y la barra de avance solo tienen sentido mientras
+     la sección está pegada. Acá no lo está, así que sobran. */
+  .journey__rail,
+  .journey__bar {
+    display: none;
+  }
+
+  /* Los cuatro pasos, uno abajo del otro. */
+  .journey__panels {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+  }
+
+  .journey__panel,
+  .journey__panel.is-active {
+    display: block;
+    animation: none; /* no hay paso "activo": están todos a la vista */
+  }
+}

@@ -1,0 +1,131 @@
+/* ============================================================================
+   close.css — El bloque oscuro del cierre
+   ========================================================================== */
+
+.close {
+  background: var(--ink);
+  color: var(--text-on-ink);
+}
+
+/* Dentro de este bloque el logo va en blanco. Como el símbolo usa
+   currentColor, alcanza con cambiar el color del contenedor. */
+.close .logo,
+.close .logo__text {
+  color: var(--text-on-ink);
+}
+
+/* ── La llamada a la acción ──────────────────────────────────────────── */
+.close__cta {
+  padding-block: clamp(90px, 13vw, 180px);
+}
+
+.close__title {
+  font-size: clamp(2rem, 5.6vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: -0.042em;
+  line-height: 1.03;
+}
+
+.close__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 42px;
+}
+
+.close__note {
+  margin-top: 26px;
+  font-size: var(--t-sm);
+  color: var(--text-on-ink-2);
+  max-width: 44ch;
+  line-height: 1.65;
+}
+
+/* ── El pie ──────────────────────────────────────────────────────────── */
+.close__footer {
+  border-top: 1px solid var(--line-on-ink);
+  padding-top: 56px;
+  padding-bottom: 30px;
+}
+
+.close__top {
+  display: grid;
+  grid-template-columns: 1.1fr 2fr;
+  gap: clamp(32px, 5vw, 64px);
+  padding-bottom: 46px;
+}
+
+.close__brand p {
+  font-size: var(--t-sm);
+  color: var(--text-on-ink-2);
+  margin-top: 16px;
+  max-width: 30ch;
+  line-height: 1.6;
+}
+
+.close__cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.close__cols h3 {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-on-ink-2);
+  margin-bottom: 16px;
+}
+
+.close__cols ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.close__cols a {
+  font-size: var(--t-sm);
+  color: var(--text-on-ink-2);
+  transition: color 0.2s ease;
+}
+
+.close__cols a:hover {
+  color: var(--text-on-ink);
+}
+
+.close__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-on-ink);
+  font-size: var(--t-xs);
+  color: var(--text-on-ink-2);
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .close__top {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .close__cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 20px;
+  }
+
+  .close__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .close__actions .btn {
+    flex-grow: 1;
+  }
+}

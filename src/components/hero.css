@@ -1,0 +1,207 @@
+/* ============================================================================
+   hero.css — La portada
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  min-height: 100svh; /* svh = alto real del visor en el celular */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 150px;
+  /* El auto se dibuja abajo y ocupa alto real: este espacio es exactamente el
+     lugar que necesita. Si es menor, el trazo cruza por encima del párrafo y
+     el texto se vuelve ilegible.
+     La cuenta: el SVG mide 900px de ancho como máximo y su viewBox es 720×260,
+     así que su alto es 900 × 260/720 ≈ 325px. Los 380px dejan aire arriba. */
+  padding-bottom: clamp(200px, 30vw, 380px);
+  overflow: hidden;
+}
+
+/* ── El texto ────────────────────────────────────────────────────────── */
+.hero__kicker {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 30px;
+
+  opacity: 0;
+  animation: pop-in 0.8s var(--ease) 0.1s forwards;
+}
+
+.hero__title {
+  font-size: var(--t-display);
+  font-weight: 700;
+  /* El interletrado negativo es lo que hace que un titular grande se lea
+     "diseñado" en vez de simplemente agrandado. */
+  letter-spacing: -0.045em;
+  line-height: 0.97;
+  max-width: 16ch;
+}
+
+/* El titular arranca visible: en la portada no hay que esperar al scroll.
+   La clase la pone el propio CSS agregando .is-visible al contenedor. */
+.hero .curtain > span {
+  transform: translateY(106%);
+  animation: curtain-up 1.15s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 110ms + 120ms);
+}
+
+@keyframes curtain-up {
+  to { transform: translateY(0); }
+}
+
+/* La fila de abajo: el párrafo a la izquierda, los botones a la derecha,
+   separados por una línea de 1px que cruza todo el ancho. */
+.hero__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 44px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+
+  opacity: 0;
+  animation: pop-in 0.9s var(--ease) 0.55s forwards;
+}
+
+.hero__lead {
+  font-size: var(--t-lead);
+  color: var(--text-2);
+  max-width: 46ch;
+  line-height: 1.66;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   El auto que se dibuja
+   ========================================================================== */
+
+.hero__car {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  /* Detrás del texto por si en una pantalla baja llegaran a tocarse. */
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__car svg {
+  width: min(900px, 88vw);
+  margin-inline: auto;
+  /* El auto se apoya sobre la línea del piso. */
+  margin-bottom: -2px;
+}
+
+/* El recorrido completo, apenas insinuado: sin esto el trazo azul parece
+   aparecer de la nada y no se entiende hacia dónde va. */
+.hero__car-ghost {
+  stroke: var(--line);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* El trazo que se dibuja.
+   dasharray 1 = un guion que cubre el trazado entero (por pathLength="1").
+   dashoffset va de 1 (nada visible) a 0 (todo visible), y el avance lo pone
+   el hook en la variable --progress del <section>.
+   El 1.15 estira un poco el efecto: el auto termina de dibujarse antes de que
+   la portada salga del todo de pantalla, que es cuando se lo puede ver
+   entero. El min() lo frena en 1 para que no se pase de largo. */
+.hero__car-line {
+  stroke: var(--blue);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - min(var(--progress, 0) * 1.15, 1));
+}
+
+/* La línea del piso, que crece desde el centro hacia los costados. */
+.hero__ground {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  transform: scaleX(calc(0.2 + min(var(--progress, 0) * 1.15, 1) * 0.8));
+  transform-origin: center;
+}
+
+/* ── El indicador de scroll ──────────────────────────────────────────── */
+.hero__scroll {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 34px;
+  font-size: var(--t-xs);
+  color: var(--text-4);
+  transition: color 0.25s ease;
+
+  opacity: 0;
+  animation: pop-in 0.9s var(--ease) 0.75s forwards;
+}
+
+.hero__scroll:hover {
+  color: var(--text-2);
+}
+
+.hero__mouse {
+  width: 21px;
+  height: 33px;
+  border: 1px solid currentColor;
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.hero__wheel {
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: wheel 2s var(--ease) infinite;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero {
+    padding-top: 120px;
+    padding-bottom: 200px;
+  }
+
+  .hero__foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn {
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    padding-bottom: 160px;
+  }
+
+  .hero__title {
+    max-width: none;
+  }
+
+  /* En el celular el gesto de scrollear ya es evidente y el cartel roba
+     lugar al auto. */
+  .hero__scroll {
+    display: none;
+  }
+}
