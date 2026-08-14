@@ -16,6 +16,14 @@
 //  ─────────────────────────────────────────────────────────────────────────
 // ============================================================================
 
+/**
+ * La aplicación en funcionamiento. Todos los enlaces que sacan de la landing
+ * apuntan acá: no hay botones de "iniciar sesión" ni de "registrarse"
+ * repetidos por la página, porque esas pantallas ya existen del otro lado y
+ * duplicarlas acá solo agrega botones que no hacen nada.
+ */
+export const APP_URL = "https://freewheel-5a.vercel.app/";
+
 /** Links del menú. El href apunta al id de cada <section>. */
 export const NAV_LINKS = [
   { href: "#recorrido", label: "Cómo funciona" },
@@ -31,8 +39,6 @@ export const HERO = {
   titleLines: ["El auto que necesitás", "está a tres cuadras"],
   lead:
     "Freewheel conecta a quien tiene un auto parado con quien lo necesita. Identidad verificada, disponibilidad real y entrega registrada de las dos partes.",
-  ctaPrimary: "Buscar un auto",
-  ctaSecondary: "Publicar el mío",
   scrollHint: "Seguí bajando",
 };
 
@@ -204,6 +210,31 @@ export const SCREENS = [
   { key: "detalle", label: "Ficha del auto", title: "Toyota Corolla 2021" },
   { key: "reserva", label: "Reserva", title: "Elegí las fechas" },
   { key: "qr", label: "Entrega", title: "Retiro del vehículo" },
+];
+
+/**
+ * Los autos que se ven sobre el mapa. `x` e `y` son porcentajes dentro del
+ * recuadro del mapa, no coordenadas reales: el mapa de la landing es un dibujo,
+ * el de la aplicación usa Leaflet con OpenStreetMap.
+ */
+export const MAP_CARS = [
+  { id: 1, x: 26, y: 34, name: "Toyota Corolla", price: "$8.500", zone: "Palermo" },
+  { id: 2, x: 58, y: 26, name: "VW T-Cross", price: "$12.000", zone: "Belgrano" },
+  { id: 3, x: 44, y: 62, name: "Fiat Cronos", price: "$7.200", zone: "Caballito" },
+  { id: 4, x: 74, y: 58, name: "Peugeot 208", price: "$6.800", zone: "Almagro" },
+  { id: 5, x: 16, y: 68, name: "Renault Duster", price: "$11.000", zone: "Flores" },
+];
+
+/**
+ * La conversación de ejemplo del chat. `side` es quién habla: "them" es el
+ * dueño del auto, "me" quien alquila. `kind` cambia cómo se dibuja el mensaje.
+ */
+export const CHAT = [
+  { side: "them", kind: "text", body: "Hola, sí, está disponible esos días.", time: "10:02" },
+  { side: "me", kind: "text", body: "Genial. ¿Dónde lo retiro?", time: "10:03" },
+  { side: "them", kind: "voice", seconds: 8, transcript: "En Godoy Cruz y Santa Fe, a una cuadra del subte. Te espero a las diez.", time: "10:05" },
+  { side: "them", kind: "image", caption: "Estado actual del auto", time: "10:06" },
+  { side: "me", kind: "text", body: "Perfecto, nos vemos ahí.", time: "10:07" },
 ];
 
 /** Los cinco idiomas traducidos de punta a punta. */

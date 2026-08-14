@@ -28,7 +28,7 @@ export default function AppPreview() {
       <div className="wrap">
         <header className="preview__head">
           <span className="label" data-reveal="up">
-            <span className="label__n">05</span>
+            <span className="label__n">06</span>
             La aplicación
             <span className="label__rule" />
           </span>

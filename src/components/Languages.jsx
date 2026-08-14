@@ -22,7 +22,7 @@ export default function Languages() {
       <div className="wrap langs__inner">
         <div className="langs__copy">
           <span className="label" data-reveal="up">
-            <span className="label__n">07</span>
+            <span className="label__n">08</span>
             Idiomas
             <span className="label__rule" />
           </span>

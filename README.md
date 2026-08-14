@@ -26,36 +26,53 @@ Eso no es capricho: son ~230 KB de JavaScript en total (70 KB comprimidos), la
 página no hace ni un pedido de red a terceros, y cada efecto se puede explicar
 línea por línea.
 
-## Las dos animaciones principales
+## Las animaciones principales
 
-Las dos van **atadas al scroll**: no se disparan y terminan, avanzan y
-retroceden con la rueda del mouse.
-
-**1. El auto que se dibuja** (`components/Hero.jsx`)
-Un perfil de auto de un solo trazo continuo que se va dibujando mientras se
-baja por la portada. Usa `pathLength="1"` para normalizar el largo del trazado
-y `stroke-dashoffset` para correr el guion. Si se sube, se desdibuja.
+**1. El auto que llega manejando** (`components/Hero.jsx`)
+Al cargar la página, el auto entra desde afuera de la pantalla por la
+izquierda, se pasa de largo y vuelve **marcha atrás** para estacionar, como
+cuando uno se pasa de la cochera. Está en el `@keyframes park` de `hero.css`.
+Lo que hace que la maniobra se lea como un auto y no como un deslizamiento son
+las curvas: el tramo de entrada desacelera fuerte, el de marcha atrás es más
+lento.
 
 **2. La sección que se queda fija** (`components/Journey.jsx`)
 Mide cuatro pantallas de alto, pero lo de adentro está pegado
 (`position: sticky`): mientras se scrollea, el bloque no se mueve y van
 cambiando los cuatro pasos. Para seguir bajando hay que pasar por los cuatro.
 
-Hay una tercera, más chica: la frase que se ilumina palabra por palabra
-(`components/Statement.jsx`).
+**3. La frase que se ilumina palabra por palabra** (`components/Statement.jsx`)
+No se puede leer de un vistazo: hay que bajar para terminarla.
 
-El motor de las tres es `hooks/useScrollProgress.js`, que escribe el avance
-(un número de 0 a 1) en una **variable CSS** en vez de guardarlo en el estado
-de React. Por eso la página no se re-renderiza mientras se scrollea. Está
-explicado en detalle en los comentarios de ese archivo.
+Las dos últimas van **atadas al scroll**: no se disparan y terminan, avanzan y
+retroceden con la rueda del mouse. El motor es `hooks/useScrollProgress.js`,
+que escribe el avance (un número de 0 a 1) en una **variable CSS** en vez de
+guardarlo en el estado de React. Por eso la página no se re-renderiza mientras
+se scrollea. Está explicado en detalle en los comentarios de ese archivo.
+
+Además, `components/Showcase.jsx` tiene tres piezas de la aplicación
+redibujadas: el **escaneo del DNI** (con la línea que recorre el documento y
+los cuatro controles que hace el modelo), el **mapa con los autos disponibles**
+(pines y zonas aproximadas, con los mismos colores y medidas que usa Leaflet en
+la app) y el **chat** (con la nota de voz transcripta). Las tres arrancan
+recién cuando entran en pantalla.
 
 ## Cómo personalizarla
 
-### Los textos
+### Los textos y el enlace a la aplicación
 
 Están **todos** en `src/data/content.js`, ninguno dentro de un componente.
 Para cambiar un título, agregar una pregunta al FAQ o sumar una función a la
 lista de la plataforma, se edita ese archivo y listo. No hace falta tocar JSX.
+
+La dirección de la aplicación en funcionamiento es la constante `APP_URL`, al
+principio de ese mismo archivo. Es el **único** enlace que saca de la landing y
+aparece dos veces: en la barra de arriba y en el cierre.
+
+No hay botones de "iniciar sesión", "registrarse", "buscar un auto" ni
+"publicar mi auto" repartidos por la página. Los había, y todos apuntaban a
+otra sección de esta misma página: prometían una pantalla y entregaban un
+scroll. Un botón que no hace lo que dice es peor que no tenerlo.
 
 ### Los colores
 
@@ -97,12 +114,13 @@ src/
     useScrollProgress.js     motor de las animaciones atadas al scroll
   components/
     Nav.jsx                  barra de arriba y menú de celular
-    Hero.jsx                 portada + el auto que se dibuja
+    Hero.jsx                 portada + el auto que llega y estaciona
     Statement.jsx            la frase que se ilumina
     Journey.jsx              los cuatro pasos, sección fija
     Platform.jsx             las ocho capacidades del producto
     AiShowcase.jsx           los cuatro usos de IA, con demo
     Trust.jsx                verificación de identidad y rangos
+    Showcase.jsx             escaneo del DNI, mapa y chat
     AppPreview.jsx           la app dentro de un teléfono
     Earnings.jsx             calculadora de ganancias
     Languages.jsx            los cinco idiomas

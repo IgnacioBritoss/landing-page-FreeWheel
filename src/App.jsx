@@ -39,6 +39,7 @@ import Journey from "./components/Journey";
 import Platform from "./components/Platform";
 import AiShowcase from "./components/AiShowcase";
 import Trust from "./components/Trust";
+import Showcase from "./components/Showcase";
 import AppPreview from "./components/AppPreview";
 import Earnings from "./components/Earnings";
 import Languages from "./components/Languages";
@@ -61,6 +62,7 @@ export default function App() {
         <Platform />
         <AiShowcase />
         <Trust />
+        <Showcase />
         <AppPreview />
         <Earnings />
         <Languages />

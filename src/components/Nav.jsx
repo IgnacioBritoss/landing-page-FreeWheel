@@ -16,9 +16,9 @@
 // ============================================================================
 import { useState, useEffect } from "react";
 import { useScroll } from "../hooks/useScroll";
-import { NAV_LINKS } from "../data/content";
+import { NAV_LINKS, APP_URL } from "../data/content";
 import Logo from "./ui/Logo";
-import { Arrow } from "./Hero";
+import { Arrow, ExternalArrow } from "./Hero";
 import "./nav.css";
 
 export default function Nav() {
@@ -59,11 +59,18 @@ export default function Nav() {
           </nav>
 
           <div className="nav__actions">
-            <a href="#cierre" className="nav__login">
-              Iniciar sesión
-            </a>
-            <a href="#cierre" className="btn btn--solid nav__cta">
-              Crear cuenta
+            {/* El único enlace que saca de la landing, y lleva a la aplicación
+                de verdad. Antes acá había un "Iniciar sesión" y un "Crear
+                cuenta" que apuntaban a otra sección de esta misma página: dos
+                botones que prometían una pantalla y entregaban un scroll. */}
+            <a
+              href={APP_URL}
+              className="btn btn--solid nav__cta"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Abrir Freewheel
+              <ExternalArrow />
             </a>
 
             <button
@@ -107,11 +114,15 @@ export default function Nav() {
         </nav>
 
         <div className="sheet__foot" style={{ "--i": NAV_LINKS.length }}>
-          <a href="#cierre" className="btn btn--line" onClick={() => setOpen(false)}>
-            Iniciar sesión
-          </a>
-          <a href="#cierre" className="btn btn--solid" onClick={() => setOpen(false)}>
-            Crear cuenta
+          <a
+            href={APP_URL}
+            className="btn btn--solid"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+          >
+            Abrir Freewheel
+            <ExternalArrow />
           </a>
         </div>
       </div>

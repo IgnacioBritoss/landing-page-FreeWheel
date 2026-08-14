@@ -72,18 +72,13 @@ export default function Hero() {
           ))}
         </h1>
 
+        {/* Sin botones. Antes había un "Buscar un auto" y un "Publicar el mío"
+            que no llevaban a ninguna parte: eran anclas a otra sección de esta
+            misma página. Un botón que no hace lo que dice es peor que no
+            tenerlo. Lo único que saca de acá es el enlace a la aplicación de
+            verdad, y está una sola vez, en la barra de arriba y en el cierre. */}
         <div className="hero__foot">
           <p className="hero__lead">{HERO.lead}</p>
-
-          <div className="hero__actions">
-            <a href="#duenos" className="btn btn--blue">
-              {HERO.ctaPrimary}
-              <Arrow />
-            </a>
-            <a href="#duenos" className="btn btn--line">
-              {HERO.ctaSecondary}
-            </a>
-          </div>
         </div>
 
         {/* El aviso de que hay más abajo. Va DENTRO del flujo y no pegado al
@@ -98,23 +93,50 @@ export default function Hero() {
       </div>
 
       {/* ── El auto ─────────────────────────────────────────────────────
+          LLEGA MANEJANDO. Entra desde la izquierda, pasa de largo el lugar y
+          vuelve marcha atrás para estacionar, como cuando uno se pasa de la
+          cochera. Toda la maniobra está en el @keyframes `park` de hero.css.
+
           aria-hidden porque es decorativo: no aporta información que no esté
           escrita en el titular, y describírselo a un lector de pantalla sería
           ruido. */}
       <div className="hero__car">
-        <svg viewBox="0 0 720 260" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
-          {/* Dos trazados encima del otro:
-              · el "fantasma", muy tenue, que muestra el recorrido completo para
-                que se entienda que el dibujo va a alguna parte;
-              · el trazo azul, que es el que se dibuja con el scroll. */}
-          <path className="hero__car-ghost" d={CAR_PATH} pathLength="1" />
-          <path className="hero__car-line" d={CAR_PATH} pathLength="1" />
-        </svg>
+        <div className="hero__car-move">
+          <svg viewBox="0 0 720 260" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
+            <path className="hero__car-line" d={CAR_PATH} pathLength="1" />
+          </svg>
+        </div>
 
-        {/* La línea del piso, que también crece con el scroll. */}
+        {/* La línea del piso: es la calle sobre la que llega. Se extiende con
+            el scroll, así que el bloque sigue teniendo algo atado al scroll
+            después de que el auto terminó de estacionar. */}
         <span className="hero__ground" />
       </div>
     </section>
+  );
+}
+
+/**
+ * La flecha diagonal de los enlaces que salen del sitio. Es la convención de
+ * toda la web: una flecha hacia afuera avisa que el clic abre otra pestaña,
+ * antes de hacer clic. Si el enlace abre una pestaña nueva sin avisar, la
+ * persona pierde el botón "atrás" y no entiende qué pasó.
+ */
+export function ExternalArrow({ size = 15 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M8 16 16 8M9 8h7v7" />
+    </svg>
   );
 }
 

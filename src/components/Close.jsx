@@ -14,9 +14,9 @@
 //  solo bloque visual: separarlos obligaría a repetir el fondo, el borde y las
 //  reglas de color invertido en dos archivos.
 // ============================================================================
-import { FOOTER } from "../data/content";
+import { FOOTER, APP_URL } from "../data/content";
 import Logo from "./ui/Logo";
-import { Arrow } from "./Hero";
+import { ExternalArrow } from "./Hero";
 import "./close.css";
 
 export default function Close() {
@@ -36,18 +36,20 @@ export default function Close() {
         </h2>
 
         <div className="close__actions" data-reveal="up" style={{ "--i": 2 }}>
-          <a href="#top" className="btn btn--paper">
-            Crear mi cuenta
-            <Arrow />
-          </a>
-          <a href="#duenos" className="btn btn--line-ink">
-            Publicar mi auto
+          <a
+            href={APP_URL}
+            className="btn btn--paper"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir Freewheel
+            <ExternalArrow />
           </a>
         </div>
 
         <p className="close__note" data-reveal="up" style={{ "--i": 3 }}>
-          El registro es gratis y no pide tarjeta. La verificación de identidad
-          se hace una sola vez.
+          La aplicación está funcionando. El registro es gratis, no pide tarjeta
+          y la verificación de identidad se hace una sola vez.
         </p>
       </div>
 

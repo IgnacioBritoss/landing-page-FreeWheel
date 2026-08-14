@@ -25,7 +25,7 @@ export default function Faq() {
       <div className="wrap faq__inner">
         <header className="faq__head">
           <span className="label" data-reveal="up">
-            <span className="label__n">08</span>
+            <span className="label__n">09</span>
             Preguntas
             <span className="label__rule" />
           </span>

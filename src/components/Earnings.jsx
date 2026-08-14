@@ -17,7 +17,6 @@
 // ============================================================================
 import { useState, useEffect, useRef, useMemo } from "react";
 import { CALC } from "../data/content";
-import { Arrow } from "./Hero";
 import "./earnings.css";
 
 // Se crea UNA vez fuera del componente: construir un Intl.NumberFormat es caro
@@ -48,7 +47,7 @@ export default function Earnings() {
         {/* ── Izquierda ──────────────────────────────────────────────── */}
         <div>
           <span className="label" data-reveal="up">
-            <span className="label__n">06</span>
+            <span className="label__n">07</span>
             Para dueños
             <span className="label__rule" />
           </span>
@@ -152,11 +151,10 @@ export default function Earnings() {
               </div>
             </div>
 
-            <a href="#cierre" className="btn btn--blue calc__cta">
-              Publicar mi auto
-              <Arrow />
-            </a>
-
+            {/* Acá había un botón "Publicar mi auto" que solo bajaba hasta el
+                cierre de esta misma página. La nota alcanza: la acción real
+                está en la aplicación, y el enlace a la aplicación ya está
+                arriba y abajo. */}
             <p className="calc__note">
               Estimación orientativa. El precio final lo ponés vos al publicar.
             </p>
