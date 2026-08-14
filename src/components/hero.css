@@ -1,0 +1,244 @@
+/* ============================================================================
+   hero.css — La portada
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  min-height: 100svh; /* svh = alto real del visor en el celular */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 110px;
+  /* El auto se dibuja abajo y ocupa alto real: este espacio es exactamente el
+     lugar que necesita. Si es menor, el trazo cruza por encima del párrafo y
+     el texto se vuelve ilegible.
+     La cuenta: el SVG mide 780px de ancho como máximo y su viewBox es 720×260,
+     así que su alto es 780 × 260/720 ≈ 282px. Los 320px dejan aire arriba.
+
+     Y el total del bloque tiene que entrar en una pantalla de 900px de alto:
+     si el auto queda abajo del pliegue, la maniobra de estacionamiento ocurre
+     donde nadie la ve, que es lo mismo que no tenerla. */
+  padding-bottom: clamp(170px, 25vw, 320px);
+  overflow: hidden;
+}
+
+/* ── El texto ────────────────────────────────────────────────────────── */
+.hero__kicker {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 30px;
+
+  opacity: 0;
+  animation: pop-in 0.8s var(--ease) 0.1s forwards;
+}
+
+.hero__title {
+  font-size: var(--t-display);
+  font-weight: 700;
+  /* El interletrado negativo es lo que hace que un titular grande se lea
+     "diseñado" en vez de simplemente agrandado. */
+  letter-spacing: -0.045em;
+  line-height: 0.97;
+  /* 22ch y no 16: con 16 la primera línea se partía en "El auto que /
+     necesitás" y el titular ocupaba tres renglones en vez de dos. Esos cien
+     píxeles de más empujaban al auto abajo del pliegue. */
+  max-width: 22ch;
+}
+
+/* El titular arranca visible: en la portada no hay que esperar al scroll.
+   La clase la pone el propio CSS agregando .is-visible al contenedor. */
+.hero .curtain > span {
+  transform: translateY(106%);
+  animation: curtain-up 1.15s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 110ms + 120ms);
+}
+
+@keyframes curtain-up {
+  to { transform: translateY(0); }
+}
+
+/* La fila de abajo: el párrafo a la izquierda, los botones a la derecha,
+   separados por una línea de 1px que cruza todo el ancho. */
+.hero__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 44px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+
+  opacity: 0;
+  animation: pop-in 0.9s var(--ease) 0.55s forwards;
+}
+
+.hero__lead {
+  font-size: var(--t-lead);
+  color: var(--text-2);
+  max-width: 46ch;
+  line-height: 1.66;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   El auto que se dibuja
+   ========================================================================== */
+
+.hero__car {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  /* Detrás del texto por si en una pantalla baja llegaran a tocarse. */
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── La maniobra de estacionamiento ──────────────────────────────────────
+   El auto entra desde afuera de la pantalla por la izquierda, se pasa de
+   largo y vuelve marcha atrás hasta quedar centrado.
+
+   Los tres tramos del @keyframes:
+     0%   → fuera de pantalla a la izquierda;
+     58%  → llegó y se pasó un 7% del lugar (viene rápido y frena);
+     100% → retrocede ese 7% y queda estacionado.
+
+   Las curvas de cada tramo importan más que las posiciones: el primero usa
+   una curva que desacelera fuerte (llega y frena), el segundo una suave y
+   lenta (la marcha atrás siempre es más despacio que la entrada). Con una
+   sola curva pareja para todo, el movimiento se lee como un deslizamiento y
+   no como un auto maniobrando.
+
+   El `both` deja el auto en el estado final cuando la animación termina, y el
+   retardo de 0.3s le da tiempo al titular a aparecer primero. */
+.hero__car-move {
+  animation: park 2.9s both 0.3s;
+}
+
+@keyframes park {
+  0% {
+    transform: translateX(-125%);
+    animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1);
+  }
+  58% {
+    transform: translateX(7%);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.hero__car svg {
+  width: min(780px, 86vw);
+  margin-inline: auto;
+  /* El auto se apoya sobre la línea del piso. */
+  margin-bottom: -2px;
+}
+
+.hero__car-line {
+  stroke: var(--blue);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* La calle sobre la que llega. Crece desde el centro hacia los costados con el
+   scroll: es lo único de la portada que sigue atado al scroll una vez que el
+   auto terminó de estacionar. */
+.hero__ground {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  transform: scaleX(calc(0.35 + min(var(--progress, 0) * 2, 1) * 0.65));
+  transform-origin: center;
+}
+
+/* Quien pidió menos movimiento no ve la maniobra: el auto ya está estacionado.
+   La regla global de animations.css acorta la duración, pero eso dejaría al
+   auto clavado en el primer fotograma (fuera de pantalla), así que acá hay
+   que anular la animación entera. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__car-move {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* ── El indicador de scroll ──────────────────────────────────────────── */
+.hero__scroll {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 34px;
+  font-size: var(--t-xs);
+  color: var(--text-4);
+  transition: color 0.25s ease;
+
+  opacity: 0;
+  animation: pop-in 0.9s var(--ease) 0.75s forwards;
+}
+
+.hero__scroll:hover {
+  color: var(--text-2);
+}
+
+.hero__mouse {
+  width: 21px;
+  height: 33px;
+  border: 1px solid currentColor;
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.hero__wheel {
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: wheel 2s var(--ease) infinite;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero {
+    padding-top: 120px;
+    padding-bottom: 200px;
+  }
+
+  .hero__foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__actions .btn {
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    padding-bottom: 160px;
+  }
+
+  .hero__title {
+    max-width: none;
+  }
+
+  /* En el celular el gesto de scrollear ya es evidente y el cartel roba
+     lugar al auto. */
+  .hero__scroll {
+    display: none;
+  }
+}

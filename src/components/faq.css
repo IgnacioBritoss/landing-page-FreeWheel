@@ -1,0 +1,157 @@
+/* ============================================================================
+   faq.css — Acordeón de preguntas
+   ========================================================================== */
+
+.faq {
+  border-top: 1px solid var(--line);
+}
+
+.faq__inner {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(32px, 5vw, 70px);
+  align-items: start;
+}
+
+.faq__head {
+  /* Se queda fija mientras se recorren las preguntas: el título acompaña la
+     lectura en vez de irse arriba y dejar la columna huérfana. */
+  position: sticky;
+  top: 120px;
+}
+
+.faq__list {
+  list-style: none;
+  border-top: 1px solid var(--line-2);
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--line-2);
+}
+
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 22px 2px;
+  text-align: left;
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-2);
+  transition: color 0.2s ease;
+}
+
+.faq__q:hover,
+.faq__item.is-open .faq__q {
+  color: var(--text);
+}
+
+/* El signo: dos rayas que forman una cruz, y al abrir se convierte en un menos
+   (la vertical rota 90° y desaparece detrás de la horizontal). Es más sobrio
+   que una flecha y no necesita ningún ícono importado. */
+.faq__sign {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.faq__sign::before,
+.faq__sign::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+  transition: transform 0.4s var(--ease), opacity 0.3s ease;
+}
+
+/* La horizontal */
+.faq__sign::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  margin-top: -0.75px;
+}
+
+/* La vertical, que se rota hasta desaparecer */
+.faq__sign::after {
+  left: 50%;
+  top: 0;
+  width: 1.5px;
+  height: 100%;
+  margin-left: -0.75px;
+}
+
+.faq__item.is-open .faq__sign::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+
+.faq__item.is-open .faq__sign {
+  color: var(--blue);
+}
+
+/* ── El panel que se expande ─────────────────────────────────────────────
+   `height: auto` no se puede animar: el navegador no sabe a qué número tiene
+   que llegar. La solución es una grilla que va de 0fr a 1fr, que SÍ se puede
+   interpolar. Es CSS puro, se adapta solo a cualquier contenido y no hace
+   falta medir nada con JavaScript. */
+.faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.42s var(--ease);
+}
+
+.faq__item.is-open .faq__panel {
+  grid-template-rows: 1fr;
+}
+
+/* El hijo necesita min-height: 0 y overflow: hidden, si no la grilla no lo
+   puede achicar por debajo de su alto natural y el truco no funciona. */
+.faq__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.faq__panel-inner p {
+  padding: 0 40px 24px 2px;
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  line-height: 1.72;
+  max-width: 62ch;
+  /* El texto entra un poco más tarde que la caja: así no se lo ve apretujarse
+     mientras el panel todavía se está abriendo. */
+  opacity: 0;
+  transition: opacity 0.3s ease 0.12s;
+}
+
+.faq__item.is-open .faq__panel-inner p {
+  opacity: 1;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .faq__inner {
+    grid-template-columns: 1fr;
+  }
+
+  /* Con una sola columna, "pegajoso" no sirve: el título taparía las
+     preguntas. */
+  .faq__head {
+    position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .faq__q {
+    padding: 18px 2px;
+    font-size: var(--t-sm);
+  }
+
+  .faq__panel-inner p {
+    padding-right: 20px;
+  }
+}

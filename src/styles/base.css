@@ -1,0 +1,312 @@
+/* ============================================================================
+   base.css — Reset y elementos comunes
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* La barra de navegación es fija: sin esto, un enlace a una sección la
+     dejaría escondida abajo del menú. */
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--paper);
+  color: var(--text);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Nada puede empujar la página a lo ancho. Va en <body> y no en <html>: en
+     <html> rompe el scroll con la rueda del mouse en Windows/Chrome cuando el
+     usuario tiene zoom del sistema activado (mismo criterio que la app). */
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Las palabras largas (un mail, un modelo de auto larguísimo) no pueden romper
+   la caja. `break-word` y no `anywhere`: `anywhere` también achica el ancho
+   mínimo que el navegador le reconoce al texto y parte palabras que sí
+   entraban. */
+h1, h2, h3, h4, p, li, a, strong {
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+}
+
+/* Se saca el contorno solo cuando el foco vino del mouse; para el teclado
+   JAMÁS: quien navega con Tab necesita ver dónde está parado. */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ============================================================================
+   Layout
+   ========================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding-inline: var(--page-pad);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+/* El gris cálido de la app, para dar ritmo sin cambiar de mundo. */
+.section--tint {
+  background: var(--paper-2);
+}
+
+/* La línea de 1px arriba de una sección. Es el separador de toda la página:
+   no hay ni una sombra ni un recuadro haciendo ese trabajo. */
+.section--ruled {
+  border-top: 1px solid var(--line);
+}
+
+/* ============================================================================
+   El encabezado de sección
+   ----------------------------------------------------------------------------
+   En vez de la etiquetita redondeada con el puntito de color, cada sección
+   se numera como un capítulo: "01 — Cómo funciona", en versalitas chicas y
+   con una línea encima. Es lo que hace que la página se lea como un
+   documento y no como un catálogo de tarjetas.
+   ========================================================================== */
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 26px;
+}
+
+.label__n {
+  font-variant-numeric: tabular-nums;
+  color: var(--blue);
+}
+
+/* La línea que se estira hacia la derecha después del texto de la etiqueta.
+   Se anima con scaleX cuando la sección aparece. */
+.label__rule {
+  flex-grow: 1;
+  height: 1px;
+  background: var(--line);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s var(--ease) 0.15s;
+}
+
+.is-visible .label__rule,
+.label.is-visible .label__rule {
+  transform: scaleX(1);
+}
+
+.section-title {
+  font-size: var(--t-h2);
+  max-width: 20ch;
+}
+
+.section-lead {
+  font-size: var(--t-lead);
+  color: var(--text-2);
+  max-width: 56ch;
+  margin-top: 20px;
+  line-height: 1.68;
+}
+
+/* El azul se usa para destacar UNA idea dentro de un título. Sin degradado:
+   color plano, que es lo que se lee bien y no se rompe al imprimir. */
+.accent {
+  color: var(--blue);
+}
+
+/* ============================================================================
+   Botones
+   ----------------------------------------------------------------------------
+   Dos, nada más: el sólido y el de línea. Sin degradados y sin resplandores.
+   El radio es chico (6px), el mismo de los campos de la app.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s var(--ease);
+  /* Medida mínima para el dedo: la que recomiendan Apple y Google. */
+  min-height: 46px;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--solid {
+  background: var(--text);
+  color: var(--paper);
+}
+
+.btn--solid:hover {
+  background: #000;
+}
+
+.btn--blue {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn--blue:hover {
+  background: var(--blue-dark);
+}
+
+.btn--line {
+  border: 1px solid var(--line-2);
+  color: var(--text);
+}
+
+.btn--line:hover {
+  border-color: var(--text);
+}
+
+/* Sobre el bloque oscuro los papeles se invierten: el sólido es blanco. */
+.btn--paper {
+  background: var(--paper);
+  color: var(--text);
+}
+
+.btn--paper:hover {
+  background: #e9ebef;
+}
+
+.btn--line-ink {
+  border: 1px solid var(--line-on-ink);
+  color: var(--text-on-ink);
+}
+
+.btn--line-ink:hover {
+  border-color: var(--text-on-ink);
+}
+
+/* La flechita del botón se corre al pasar el mouse. */
+.btn svg {
+  transition: transform 0.3s var(--ease);
+}
+
+.btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* ============================================================================
+   Piezas sueltas
+   ========================================================================== */
+
+/* Un enlace de texto con la línea abajo que se dibuja de izquierda a derecha. */
+.link {
+  position: relative;
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}
+
+/* El número grande de un ítem enumerado (01, 02...). Tipografía tabular para
+   que todos midan exactamente lo mismo y las columnas queden alineadas. */
+.num {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--text-4);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Celular ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* En iOS, un campo con letra menor a 16px hace que el navegador haga zoom
+     solo al tocarlo y la página queda corrida. Con 16px no pasa. */
+  input, textarea, select {
+    font-size: 16px;
+  }
+}

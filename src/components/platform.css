@@ -1,0 +1,98 @@
+/* ============================================================================
+   platform.css — La lista de capacidades
+   ========================================================================== */
+
+.platform {
+  border-top: 1px solid var(--line);
+}
+
+.platform__head {
+  max-width: 640px;
+  margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+.platform__list {
+  list-style: none;
+}
+
+/* Cada fila: el número, el título y el texto en tres columnas. En un índice,
+   que los tres empiecen siempre en la misma vertical es lo que hace que se lea
+   rápido. */
+.platform__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(180px, 1fr) 1.5fr;
+  gap: 12px 26px;
+  align-items: baseline;
+  padding-block: 26px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.3s ease;
+}
+
+.platform__row:first-child {
+  border-top: 1px solid var(--line);
+}
+
+/* Al pasar el mouse, la fila se aclara apenas y el número se pone azul. No se
+   mueve nada: en una lista larga, filas que se desplazan al pasar por encima
+   marean. */
+.platform__row:hover {
+  background: var(--paper-2);
+}
+
+.platform__n {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--text-4);
+  transition: color 0.25s ease;
+}
+
+.platform__row:hover .platform__n {
+  color: var(--blue);
+}
+
+.platform__title {
+  font-size: var(--t-h3);
+  font-weight: 650;
+  letter-spacing: -0.022em;
+}
+
+.platform__text {
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  line-height: 1.68;
+  max-width: 56ch;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 820px) {
+  /* El texto pasa abajo del título, alineado con él (la primera columna sigue
+     siendo la del número, para que el índice no se desarme). */
+  .platform__row {
+    grid-template-columns: 40px 1fr;
+    gap: 8px 16px;
+  }
+
+  .platform__text {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .platform__row {
+    padding-block: 22px;
+  }
+
+  /* Sin sangría en el celular: 40px de ancho para el número son un 10% de la
+     pantalla, y el texto queda en una columna demasiado angosta. */
+  .platform__row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .platform__text {
+    grid-column: 1;
+  }
+}

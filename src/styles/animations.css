@@ -1,0 +1,160 @@
+/* ============================================================================
+   animations.css — El movimiento de la página
+   ----------------------------------------------------------------------------
+   Sin librerías: ni GSAP ni Framer Motion. Hay TRES mecanismos, y con esos
+   tres está hecho todo el movimiento.
+
+   1) APARICIÓN AL ENTRAR EN PANTALLA — [data-reveal]
+      El elemento arranca invisible y corrido. Un IntersectionObserver
+      (hooks/useReveal.js) le agrega .is-visible cuando entra, y la transición
+      la hace el CSS. El retardo en cascada sale de una variable --i que el
+      JSX declara inline, así diez elementos aparecen uno detrás del otro sin
+      escribir diez reglas.
+
+   2) LIGADO AL SCROLL — variables CSS
+      Las dos piezas grandes (el auto que se dibuja y la sección fija de los
+      pasos) no se disparan: AVANZAN con el scroll. El hook useScrollProgress
+      escribe un número de 0 a 1 en una variable CSS y el CSS la usa. Nada de
+      esto pasa por el estado de React, así que la página no se re-renderiza
+      mientras se scrollea.
+
+   3) BUCLES — @keyframes
+      Muy pocos y muy sobrios, abajo de todo.
+
+   REGLA DE RENDIMIENTO: solo se animan `transform` y `opacity` (y
+   `stroke-dashoffset`, que tampoco recalcula el layout). Son las propiedades
+   que el navegador puede mover en la placa de video sin rehacer el cálculo de
+   la página en cada cuadro.
+   ========================================================================== */
+
+/* ============================================================================
+   1) Aparición al entrar en pantalla
+   ========================================================================== */
+
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.85s var(--ease),
+    transform 0.85s var(--ease);
+  transition-delay: calc(var(--i, 0) * 85ms);
+  will-change: transform, opacity;
+}
+
+/* El desplazamiento es corto —18px, no 60— a propósito. Un movimiento chico se
+   lee como algo asentándose; uno grande, como una diapositiva entrando. */
+[data-reveal="up"]    { transform: translateY(18px); }
+[data-reveal="left"]  { transform: translateX(-22px); }
+[data-reveal="right"] { transform: translateX(22px); }
+
+/* El estado final es el mismo para todas las variantes, por eso una sola
+   regla las apaga a todas. */
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Cortina: el texto sube desde detrás de una línea ─────────────────────
+   El contenedor recorta y el hijo sube desde abajo. Es el recurso de los
+   títulos de película, y sigue siendo la forma más elegante de presentar un
+   titular. */
+.curtain {
+  display: block;
+  overflow: hidden;
+  /* padding + margen negativo: sin esto, el recorte se come las colas de las
+     letras (la "g", la "y") y el título aparece mutilado. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.curtain > span {
+  display: block;
+  transform: translateY(106%);
+  transition: transform 1.05s var(--ease);
+  transition-delay: calc(var(--i, 0) * 105ms);
+}
+
+.is-visible .curtain > span,
+.curtain.is-visible > span {
+  transform: translateY(0);
+}
+
+/* ── Línea que se dibuja ───────────────────────────────────────────────── */
+.rule-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s var(--ease);
+}
+
+.rule-draw.is-visible {
+  transform: scaleX(1);
+}
+
+/* ============================================================================
+   3) Bucles
+   ========================================================================== */
+
+/* El cursor que titila al final de un texto. */
+@keyframes caret {
+  0%, 45%  { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100%     { opacity: 1; }
+}
+
+/* Los tres puntitos de "está escribiendo". */
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+  30%           { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Aparición corta de un elemento que se agrega a una lista. */
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* La cinta que se desplaza sin cortes. El contenido está duplicado en el JSX
+   y se mueve exactamente la mitad: al terminar, el segundo juego está donde
+   estaba el primero y el salto es invisible. */
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* La rueda del indicador de scroll del hero. */
+@keyframes wheel {
+  0%   { transform: translateY(0); opacity: 0; }
+  25%  { opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+/* ============================================================================
+   Accesibilidad: quien pidió menos movimiento, recibe menos movimiento
+   ----------------------------------------------------------------------------
+   `prefers-reduced-motion` es una preferencia real del sistema operativo. La
+   activa gente con vértigo, migraña o trastornos vestibulares: para ellos una
+   página que se mueve mucho no es "linda", es mareo.
+
+   No se apaga todo a cero (eso deja elementos invisibles para siempre). Se
+   dejan tiempos mínimos y se anulan los desplazamientos: el contenido aparece
+   igual, pero no viaja por la pantalla.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .curtain > span,
+  .rule-draw {
+    transform: none;
+  }
+}

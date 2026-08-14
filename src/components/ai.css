@@ -1,0 +1,215 @@
+/* ============================================================================
+   ai.css — Sección de inteligencia artificial
+   ========================================================================== */
+
+.ai {
+  border-top: 1px solid var(--line);
+}
+
+.ai__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 76px);
+  align-items: start;
+}
+
+/* ── Izquierda ───────────────────────────────────────────────────────── */
+.ai__tabs {
+  list-style: none;
+  margin-top: 36px;
+  border-top: 1px solid var(--line-2);
+}
+
+.ai__tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 4px;
+  border-bottom: 1px solid var(--line-2);
+  text-align: left;
+  color: var(--text-3);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+.ai__tab:hover {
+  color: var(--text);
+}
+
+.ai__tab.is-active {
+  color: var(--text);
+  font-weight: 650;
+}
+
+.ai__tab-n {
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-4);
+  transition: color 0.25s ease;
+}
+
+.ai__tab.is-active .ai__tab-n {
+  color: var(--blue);
+}
+
+/* La barrita de avance de la pestaña activa. Dura lo mismo que la demo
+   completa (5 renglones × 420ms + 2200ms de pausa ≈ 4.3s). */
+.ai__tab-bar {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--blue);
+  transform-origin: left;
+  animation: ai-bar 4.3s linear forwards;
+}
+
+@keyframes ai-bar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.ai__note {
+  margin-top: 26px;
+  font-size: var(--t-xs);
+  color: var(--text-3);
+  line-height: 1.65;
+  max-width: 46ch;
+}
+
+.ai__note code {
+  font-family: var(--font-mono);
+  font-size: 0.94em;
+  background: var(--paper-3);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── La consola ──────────────────────────────────────────────────────── */
+.ai__console {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.ai__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ai__bar-title {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--text-3);
+}
+
+.ai__bar-state {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.ai__screen {
+  padding: 22px 20px 26px;
+  /* Alto mínimo fijo: sin esto, la caja crece y se achica en cada renglón que
+     aparece y en cada cambio de pestaña, y la página entera da saltos. */
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ai__who {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 9px;
+}
+
+.ai__prompt {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  padding: 11px 14px;
+  background: var(--paper-2);
+  border-radius: var(--r-sm);
+}
+
+.ai__out {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai__out li {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  padding: 9px 0 9px 16px;
+  border-bottom: 1px solid var(--line);
+  /* La barrita de color a la izquierda reemplaza al tilde: dice lo mismo
+     (aprobado / rechazado) sin llenar la pantalla de íconos. */
+  border-left: 2px solid var(--ok);
+  /* Cada renglón entra al montarse. Como React los agrega de a uno, el efecto
+     es el de un texto que se escribe. */
+  animation: pop-in 0.35s var(--ease) both;
+}
+
+.ai__out li.is-bad {
+  border-left-color: var(--alert);
+  color: var(--alert);
+}
+
+.ai__typing {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  border-left-color: transparent !important;
+  border-bottom: none !important;
+}
+
+.ai__typing i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-4);
+  animation: typing-dot 1.3s var(--ease) infinite;
+}
+
+.ai__typing i:nth-child(2) { animation-delay: 0.18s; }
+.ai__typing i:nth-child(3) { animation-delay: 0.36s; }
+
+.ai__explain {
+  margin-top: 16px;
+  font-size: var(--t-xs);
+  color: var(--text-3);
+  line-height: 1.65;
+  animation: pop-in 0.45s var(--ease) both;
+}
+
+/* ── Pantallas chicas ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .ai__inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .ai__out li,
+  .ai__prompt {
+    font-size: 12.5px;
+  }
+}

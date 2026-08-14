@@ -1,0 +1,59 @@
+/* ============================================================================
+   statement.css — La frase que se ilumina
+   ========================================================================== */
+
+.statement {
+  padding-block: clamp(90px, 14vw, 200px);
+  border-top: 1px solid var(--line);
+}
+
+.statement__text {
+  font-size: clamp(1.5rem, 3.6vw, 2.9rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.32;
+  max-width: 26ch;
+}
+
+/* ── El frente de avance ──────────────────────────────────────────────────
+   Cuántas palabras están encendidas en este momento.
+
+   EL AJUSTE QUE IMPORTA: el avance crudo del scroll llega a 1 recién cuando la
+   sección terminó de SALIR por arriba de la pantalla. Si las palabras se
+   repartieran sobre ese recorrido completo, la última se encendería cuando la
+   frase ya no se ve, y nunca se la llegaría a leer entera. Que es exactamente
+   lo que pasaba.
+
+   Por eso el avance se comprime: se multiplica por 2.1 y se le resta un
+   arranque de 0.22. Resultado, la frase queda completa alrededor del 58% del
+   recorrido, que es cuando está bien centrada en la pantalla. Después
+   simplemente se queda encendida mientras termina de pasar.
+
+   El -0.22 evita que las primeras palabras ya estén encendidas antes de que la
+   frase entre: sin él, arrancaría a mitad de camino. */
+.statement__text {
+  --reach: calc((var(--progress, 0) * 2.1 - 0.22) * var(--count));
+}
+
+.statement__word {
+  /* La palabra se enciende cuando el frente de avance la pasa. El × 1.4 hace
+     que la transición de una a la otra se solape un poco: sin eso se encienden
+     de a una y se ve entrecortado. */
+  opacity: clamp(0.16, calc((var(--reach) - var(--w)) * 1.4), 1);
+  /* La transición cubre los saltos bruscos: la rueda muy rápido, o llegar a
+     media página con un enlace directo. */
+  transition: opacity 0.18s linear;
+}
+
+/* La palabra clave de la frase queda en azul. Es el único azul de esta
+   sección, así que se lleva toda la atención cuando le toca encenderse. */
+.statement__word.is-key {
+  color: var(--blue);
+}
+
+/* Quien pidió menos movimiento lee la frase entera, en negro, de una vez. */
+@media (prefers-reduced-motion: reduce) {
+  .statement__word {
+    opacity: 1;
+  }
+}

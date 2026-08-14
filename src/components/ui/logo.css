@@ -1,0 +1,22 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.logo__mark {
+  flex-shrink: 0;
+  /* Un empujón mínimo hacia abajo: el símbolo tiene las ruedas colgando por
+     debajo de su masa principal, así que alineado al centro exacto se ve
+     "flotando" al lado del texto. */
+  transform: translateY(1px);
+}
+
+.logo__text {
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  /* Sin esto, en un ancho apretado la palabra se parte en "Freewhee / l". */
+  white-space: nowrap;
+}
