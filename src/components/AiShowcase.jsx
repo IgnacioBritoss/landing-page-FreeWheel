@@ -100,11 +100,6 @@ export default function AiShowcase() {
             ))}
           </ul>
 
-          <p className="ai__note" data-reveal="up" style={{ "--i": 4 }}>
-            La clave del modelo vive en el servidor, nunca en el navegador. Todo
-            lo que empieza con <code>VITE_</code> queda escrito dentro del
-            JavaScript que descarga cualquier visitante.
-          </p>
         </div>
 
         {/* ── Derecha: la consola ───────────────────────────────────── */}

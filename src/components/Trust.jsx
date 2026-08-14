@@ -75,7 +75,7 @@ export default function Trust() {
             <ul className="tiers__list">
               {TIERS.map((tier) => (
                 <li className="tier" key={tier.key}>
-                  <TierShield tier={tier.key} bars={tier.bars} size={28} />
+                  <TierShield tier={tier.key} size={28} />
                   <div>
                     <strong>{tier.name}</strong>
                     <span>{tier.req}</span>

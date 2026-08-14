@@ -29,15 +29,17 @@
    frase ya no se ve, y nunca se la llegaría a leer entera. Que es exactamente
    lo que pasaba.
 
-   Por eso el avance se comprime: se multiplica por 2.1 y se le resta un
-   arranque de 0.22. Resultado, la frase queda completa alrededor del 58% del
-   recorrido, que es cuando está bien centrada en la pantalla. Después
-   simplemente se queda encendida mientras termina de pasar.
+   Por eso el avance se comprime: se multiplica por 3 y se le resta un arranque
+   de 0.25. Con "cover", el avance vale exactamente 0.5 cuando el bloque está
+   centrado en la pantalla, así que con estos números la frase termina de
+   encenderse bastante ANTES de llegar al centro —alrededor del 42% del
+   recorrido— y se la puede leer entera y quieta. Con el 2.1 anterior todavía
+   quedaba un tercio en gris a esa altura.
 
    El -0.22 evita que las primeras palabras ya estén encendidas antes de que la
    frase entre: sin él, arrancaría a mitad de camino. */
 .statement__text {
-  --reach: calc((var(--progress, 0) * 2.1 - 0.22) * var(--count));
+  --reach: calc((var(--progress, 0) * 3 - 0.25) * var(--count));
 }
 
 .statement__word {

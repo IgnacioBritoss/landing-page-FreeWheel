@@ -307,26 +307,9 @@
   transform: translate(-50%, -50%);
 }
 
-/* La zona aproximada, con el mismo azul y el mismo relleno que la app. */
-.map__zone {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 78px;
-  height: 78px;
-  margin: -39px 0 0 -39px;
-  border-radius: 50%;
-  border: 1.5px solid var(--blue);
-  background: rgba(191, 219, 254, 0.45);
-  opacity: 0.55;
-  transition: opacity 0.3s ease, transform 0.4s var(--ease);
-  pointer-events: none;
-}
-
-.map__pin.is-open .map__zone {
-  opacity: 1;
-  transform: scale(1.1);
-}
+/* El círculo celeste de "zona aproximada" se sacó: con cinco pines juntos, los
+   círculos se pisaban entre sí y tapaban las calles y los nombres de los
+   barrios. Queda solo el punto, que es lo que se lee. */
 
 /* El punto: 14px, azul, borde blanco. Igual que el divIcon de la aplicación. */
 .map__dot {
@@ -744,23 +727,30 @@
   height: 17px;
 }
 
+/* Ahora es un <input> de verdad, no un texto. Hereda el mismo aspecto. */
 .chat__input {
   flex-grow: 1;
+  min-width: 0;
+  outline: none;
   padding: 9px 15px;
   border-radius: var(--r-pill, 999px);
   border: 1px solid var(--line);
   background: var(--paper-2);
   font-size: var(--t-sm);
+  color: var(--text);
+}
+
+.chat__input::placeholder {
   color: var(--text-4);
-  /* Si el texto no entra, se corta con puntos suspensivos en vez de empujar
-     los botones fuera de la caja. */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.chat__input:focus {
+  border-color: var(--blue);
 }
 
 .chat__send {
   display: grid;
+  transition: opacity 0.2s ease, background 0.2s ease;
   place-items: center;
   width: 34px;
   height: 34px;
@@ -768,6 +758,11 @@
   background: var(--blue);
   color: #fff;
   flex-shrink: 0;
+}
+
+.chat__send:disabled {
+  background: var(--line-2);
+  cursor: not-allowed;
 }
 
 .chat__send svg {

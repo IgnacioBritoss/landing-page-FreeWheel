@@ -111,8 +111,13 @@
 
    Los tres tramos del @keyframes:
      0%   → fuera de pantalla a la izquierda;
-     55%  → llegó y se pasó un 8% del lugar (viene rápido y frena);
-     100% → retrocede ese 8% y queda estacionado.
+     55%  → llegó y se pasó 8% para el lado de la trompa (viene y frena);
+     100% → RETROCEDE ese 8% y queda estacionado.
+
+   Este auto mira a la izquierda, así que ir hacia la izquierda es marcha
+   adelante y volver hacia la derecha es marcha atrás. Por eso el tramo final
+   va hacia la derecha, y es ahí donde se encienden las luces de atrás y sale
+   el humo por el escape.
 
    Las curvas de cada tramo importan más que las posiciones: el primero
    desacelera fuerte (llega y frena), el segundo es lento y parejo (la marcha
@@ -132,7 +137,9 @@
     animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1);
   }
   55% {
-    transform: translateX(8%);
+    /* Se pasa de largo hacia la IZQUIERDA (marcha adelante, porque mira para
+       ese lado) y después vuelve hacia la derecha en marcha atrás. */
+    transform: translateX(-8%);
     animation-timing-function: cubic-bezier(0.5, 0, 0.35, 1);
   }
   100% {
@@ -226,11 +233,12 @@
 .hero__smoke circle:nth-child(2) { animation-delay: 2.35s; }
 .hero__smoke circle:nth-child(3) { animation-delay: 2.8s; }
 
-/* La bocanada crece, se va hacia atrás y arriba, y se disipa. */
+/* La bocanada crece, se aleja del caño hacia la derecha y arriba, y se
+   disipa. */
 @keyframes puff {
   0%   { opacity: 0;    transform: translate(0, 0) scale(0.3); }
   18%  { opacity: 0.34; }
-  100% { opacity: 0;    transform: translate(-52px, -30px) scale(1.5); }
+  100% { opacity: 0;    transform: translate(52px, -30px) scale(1.5); }
 }
 
 /* La calle sobre la que llega. Crece desde el centro hacia los costados con el

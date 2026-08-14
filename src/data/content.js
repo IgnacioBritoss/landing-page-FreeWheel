@@ -197,10 +197,10 @@ export const TIERS = [
 export const CALC = {
   fee: 0.12,
   categories: [
-    { id: "chico", label: "Chico", example: "Fiat 500, Up!", pricePerDay: 6000 },
-    { id: "sedan", label: "Sedán", example: "Corolla, Cronos", pricePerDay: 8500 },
-    { id: "suv", label: "SUV", example: "T-Cross, Duster", pricePerDay: 12000 },
-    { id: "premium", label: "Premium", example: "BMW, Audi", pricePerDay: 20000 },
+    { id: "hatchback", label: "Hatchback", example: "Volkswagen Polo, Peugeot 208", pricePerDay: 6500 },
+    { id: "sedan", label: "Sedán", example: "Toyota Corolla, Fiat Cronos", pricePerDay: 8500 },
+    { id: "suv", label: "SUV", example: "Volkswagen T-Cross, Renault Duster", pricePerDay: 12000 },
+    { id: "premium", label: "Premium", example: "BMW Serie 3, Audi A4", pricePerDay: 20000 },
   ],
 };
 
@@ -376,10 +376,33 @@ export const FAQS = [
 /** Pie de página. */
 export const FOOTER = {
   tagline: "Alquiler de autos entre particulares. Hecho en Argentina.",
+  /* Cada enlace lleva a una sección REAL de esta página. Antes todos
+     apuntaban al tope: tres columnas de enlaces que hacían todos lo mismo, que
+     es no hacer nada. */
   columns: [
-    { title: "Producto", links: ["Buscar autos", "Publicar un auto", "Cómo funciona", "La app"] },
-    { title: "Confianza", links: ["Verificación de identidad", "Reseñas y rangos", "Reportes", "Términos"] },
-    { title: "Proyecto", links: ["Sobre Freewheel", "Contacto", "Documentación"] },
+    {
+      title: "Cómo funciona",
+      links: [
+        { label: "El recorrido completo", href: "#recorrido" },
+        { label: "La plataforma", href: "#plataforma" },
+        { label: "La aplicación por dentro", href: "#app" },
+      ],
+    },
+    {
+      title: "Confianza",
+      links: [
+        { label: "Verificación de identidad", href: "#confianza" },
+        { label: "Reseñas y rangos", href: "#confianza" },
+        { label: "Preguntas frecuentes", href: "#preguntas" },
+      ],
+    },
+    {
+      title: "Para dueños",
+      links: [
+        { label: "Cuánto podés ganar", href: "#duenos" },
+        { label: "Cómo se publica", href: "#recorrido" },
+        { label: "Idiomas disponibles", href: "#idiomas" },
+      ],
+    },
   ],
-  legal: "Proyecto académico. Los pagos son simulados y no se cobra dinero real.",
 };

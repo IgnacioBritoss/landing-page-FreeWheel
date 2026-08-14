@@ -18,7 +18,7 @@ export default function Languages() {
   const current = LANGUAGES.find((l) => l.code === active);
 
   return (
-    <section className="section section--tint langs">
+    <section className="section section--tint langs" id="idiomas">
       <div className="wrap langs__inner">
         <div className="langs__copy">
           <span className="label" data-reveal="up">
@@ -28,12 +28,13 @@ export default function Languages() {
           </span>
 
           <h2 className="langs__title" data-reveal="up" style={{ "--i": 1 }}>
-            Traducida entera, no solo el menú
+            Un turista puede alquilar un auto acá
           </h2>
           <p className="langs__text" data-reveal="up" style={{ "--i": 2 }}>
-            Cada pantalla, cada aviso y cada mensaje de error. Si una traducción
-            queda incompleta, se muestra el texto en castellano en vez de dejar
-            la clave cruda a la vista.
+            La aplicación está traducida entera a cinco idiomas: cada pantalla,
+            cada aviso y cada mensaje de error. Alguien que llega de afuera se
+            verifica, reserva y coordina la entrega sin tener que entender una
+            palabra de castellano.
           </p>
 
           <ul className="langs__list" role="tablist" aria-label="Idiomas" data-reveal="up" style={{ "--i": 3 }}>

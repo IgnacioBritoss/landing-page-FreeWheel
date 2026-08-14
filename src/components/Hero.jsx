@@ -108,12 +108,13 @@ export default function Hero() {
       <div className="hero__car">
         <div className="hero__car-move">
           <svg viewBox="0 0 720 260" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
-            {/* El humo del escape. Sale por atrás justo mientras el auto está
-                haciendo la marcha atrás, y se disipa solo. */}
+            {/* El humo, saliendo del caño de escape. Va en el extremo DERECHO
+                (x≈700), que es la cola de este auto: la trompa es la izquierda,
+                donde el capó sube lento y largo hasta el parabrisas. */}
             <g className="hero__smoke">
-              <circle cx="14" cy="206" r="9" />
-              <circle cx="14" cy="206" r="7" />
-              <circle cx="14" cy="206" r="11" />
+              <circle cx="706" cy="208" r="9" />
+              <circle cx="706" cy="208" r="7" />
+              <circle cx="706" cy="208" r="11" />
             </g>
 
             {/* El contorno gris: el auto que llega. */}
@@ -123,16 +124,15 @@ export default function Hero() {
                 contorno. Es el auto "llenándose". */}
             <path className="hero__car-line" d={CAR_PATH} pathLength="1" />
 
-            {/* Las luces de atrás. Van sobre el PORTÓN TRASERO, que en este
-                dibujo es el lado izquierdo: el auto mira a la derecha (la
-                trompa larga y baja está en x≈704, el techo y la luneta a la
-                izquierda). El faro sigue la inclinación del panel trasero,
-                pegado al contorno y no flotando al lado.
+            {/* Las luces traseras, sobre la cola: extremo DERECHO del dibujo.
+                El auto mira a la IZQUIERDA —el capó largo y bajo que sube hasta
+                el parabrisas está de ese lado, y la caída corta y empinada de
+                la luneta está acá—. Antes estaban en la trompa.
                 Se encienden cuando pone la marcha atrás. */}
             <g className="hero__lamps">
-              <rect className="hero__lamp-glow" x="16" y="140" width="52" height="46" rx="22" />
-              <rect className="hero__lamp" x="24" y="150" width="34" height="17" rx="8" />
-              <rect className="hero__lamp hero__lamp--low" x="28" y="174" width="24" height="9" rx="4.5" />
+              <rect className="hero__lamp-glow" x="654" y="132" width="56" height="48" rx="24" />
+              <rect className="hero__lamp" x="664" y="142" width="34" height="16" rx="8" />
+              <rect className="hero__lamp hero__lamp--low" x="670" y="165" width="24" height="9" rx="4.5" />
             </g>
 
           </svg>

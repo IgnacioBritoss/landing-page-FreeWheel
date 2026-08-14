@@ -18,18 +18,24 @@
 //  anaranjado, la plata a gris frío, el oro a amarillo cálido y el platino a un
 //  gris con azul, que es lo que lo diferencia de la plata.
 //
-//  EL RANGO SE SIGUE LEYENDO POR CANTIDAD DE BARRAS, no solo por color: una a
-//  cuatro, recortadas en blanco sobre el metal. Es el mismo criterio de la
-//  aplicación, y es lo que hace que se distinga un bronce de un platino con
-//  daltonismo o impreso en blanco y negro.
+//  SIN BARRAS. Antes el rango se contaba con una a cuatro rayitas blancas
+//  adentro del escudo; ensuciaban la pieza y la hacían ver como un ícono de
+//  interfaz en vez de una insignia. El nombre del rango va escrito al lado de
+//  cada escudo, así que la información no se pierde ni depende del color.
+//
+//  EL PLATINO lleva además un destello: una franja clara y angosta cruzando la
+//  cara, como el reflejo sobre una superficie pulida. Es lo único que lo
+//  separa de la plata a primera vista, porque los dos son grises; el platino
+//  es el más frío, el más claro y el único que brilla.
 // ============================================================================
 import "./tier-shield.css";
 
 const METAL = {
   bronze: { light: "#c98a52", dark: "#a05f2b", rim: "#7d4a20" },
-  silver: { light: "#bcc7d2", dark: "#8b97a5", rim: "#6d7986" },
+  silver: { light: "#b4bfcb", dark: "#8b97a5", rim: "#6d7986" },
   gold: { light: "#e8bd48", dark: "#c1901a", rim: "#9a7210" },
-  platinum: { light: "#a8bad6", dark: "#7188ad", rim: "#566b8e" },
+  // Más claro y más frío que la plata, para que no se confundan.
+  platinum: { light: "#dce7f5", dark: "#9db4d2", rim: "#7d95b6", shine: true },
 };
 
 // El contorno del escudo: hombros rectos, laterales que se cierran y base en
@@ -40,7 +46,7 @@ const SHIELD = "M10 1.2 18.4 3.5V11.5C18.4 16.5 15 20.5 10 22.8 5 20.5 1.6 16.5 
 // solo del lado izquierdo y cierra por el eje central.
 const FACET = "M10 1.2 1.6 3.5V11.5C1.6 16.5 5 20.5 10 22.8Z";
 
-export default function TierShield({ tier = "bronze", bars = 1, size = 26, className = "" }) {
+export default function TierShield({ tier = "bronze", size = 26, className = "" }) {
   const metal = METAL[tier] ?? METAL.bronze;
 
   return (
@@ -59,19 +65,23 @@ export default function TierShield({ tier = "bronze", bars = 1, size = 26, class
       {/* El borde, un tono más profundo que las dos caras. */}
       <path d={SHIELD} stroke={metal.rim} strokeWidth="1" strokeLinejoin="round" />
 
-      {/* Las barras del rango, recortadas en blanco de abajo hacia arriba. */}
-      {Array.from({ length: bars }).map((_, i) => (
-        <rect
-          key={i}
-          x="6.2"
-          y={14.4 - i * 2.9}
-          width="7.6"
-          height="1.7"
-          rx="0.85"
-          fill="#fff"
-          opacity="0.92"
-        />
-      ))}
+      {/* El destello del platino: una franja clara en diagonal, como el
+          reflejo sobre metal pulido. Va recortada con la forma del escudo para
+          que no se salga por los bordes. */}
+      {metal.shine && (
+        <>
+          <defs>
+            <clipPath id={`shine-${tier}`}>
+              <path d={SHIELD} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#shine-${tier})`}>
+            <path d="M13.5 -2 20 4 8 24 1.5 18Z" fill="#ffffff" opacity="0.5" />
+            <path d="M18.5 1 21 3.4 10.5 24 8 21.6Z" fill="#ffffff" opacity="0.35" />
+          </g>
+        </>
+      )}
+
     </svg>
   );
 }

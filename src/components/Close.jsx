@@ -67,12 +67,12 @@ export default function Close() {
                 <div key={col.title}>
                   <h3>{col.title}</h3>
                   <ul>
+                    {/* Cada enlace baja a una sección real de esta página.
+                        Antes los nueve apuntaban al tope: nueve enlaces que
+                        hacían exactamente lo mismo, que es nada. */}
                     {col.links.map((link) => (
-                      <li key={link}>
-                        {/* Son enlaces de muestra: la landing todavía no tiene
-                            esas páginas. Apuntan al inicio y no a "#" a secas,
-                            que en algunos navegadores salta de golpe. */}
-                        <a href="#top">{link}</a>
+                      <li key={link.label}>
+                        <a href={link.href}>{link.label}</a>
                       </li>
                     ))}
                   </ul>
@@ -83,7 +83,7 @@ export default function Close() {
 
           <div className="close__bottom">
             <span>© {year} Freewheel</span>
-            <span>{FOOTER.legal}</span>
+            <span>Alquiler de autos entre particulares · Argentina</span>
           </div>
         </div>
       </footer>

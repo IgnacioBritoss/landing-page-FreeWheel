@@ -53,7 +53,7 @@ export default function Showcase() {
           <Block
             n="02"
             title="Los autos, sobre el mapa"
-            text="Cada punto es un auto publicado en la Ciudad. El círculo alrededor es la zona aproximada, no la puerta: la dirección exacta aparece recién cuando la reserva está confirmada."
+            text="Cada punto es un auto publicado en la Ciudad, ubicado sobre su barrio y no sobre su puerta: la dirección exacta aparece recién cuando la reserva está confirmada."
             reverse
           >
             <MapCars />
@@ -248,7 +248,6 @@ function MapCars() {
           onMouseEnter={() => setOpen(car.id)}
           onFocus={() => setOpen(car.id)}
         >
-          <span className="map__zone" aria-hidden="true" />
           <button className="map__dot" aria-label={`${car.name} en ${car.zone}`} />
 
           <div className="map__card">
@@ -278,7 +277,12 @@ function MapCars() {
 function ChatDemo() {
   const [shown, setShown] = useState(0);
   const [profileOpen, setProfileOpen] = useState(false);
+  // Lo que la persona escribe y manda de verdad. Se guarda aparte de la
+  // conversación de ejemplo para no tocar los datos de content.js.
+  const [draft, setDraft] = useState("");
+  const [sent, setSent] = useState([]);
   const ref = useRef(null);
+  const endRef = useRef(null);
 
   const begin = useCallback(() => {
     let count = 0;
@@ -291,6 +295,21 @@ function ChatDemo() {
   }, []);
 
   useInView(ref, begin, { threshold: 0.35 });
+
+  // Al mandar, el mensaje se agrega al final y la conversación baja sola hasta
+  // él: si el chat quedara arriba, parecería que no pasó nada.
+  const send = (e) => {
+    e.preventDefault();
+    const text = draft.trim();
+    if (!text) return;
+    const time = new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+    setSent((list) => [...list, { body: text, time }]);
+    setDraft("");
+  };
+
+  useEffect(() => {
+    if (sent.length) endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [sent.length]);
 
   return (
     <div className="chat" ref={ref}>
@@ -327,18 +346,40 @@ function ChatDemo() {
             </div>
           </div>
         )}
+
+        {/* Los que escribe la persona que está mirando la página. Llevan los
+            mismos tildes que los demás: enviado, entregado y leído. */}
+        {sent.map((m, i) => (
+          <div key={`sent-${i}`} className="msg msg--me">
+            <p className="msg__text">{m.body}</p>
+            <span className="msg__meta">
+              {m.time}
+              <Ticks />
+            </span>
+          </div>
+        ))}
+
+        <div ref={endRef} />
       </div>
 
       {/* La barra de abajo, con los mismos controles que la aplicación:
-          adjuntar, escribir, grabar y enviar. */}
-      <div className="chat__bar">
+          adjuntar, escribir, grabar y enviar. El campo funciona: lo que se
+          escribe y se manda aparece en la conversación. */}
+      <form className="chat__bar" onSubmit={send}>
         <span className="chat__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.4 11.5 12 19.9a5.5 5.5 0 0 1-7.8-7.8l8.5-8.4a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.9-7.8" />
           </svg>
         </span>
 
-        <span className="chat__input">Escribí un mensaje...</span>
+        <input
+          className="chat__input"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Escribí un mensaje..."
+          aria-label="Escribí un mensaje"
+          maxLength={140}
+        />
 
         <span className="chat__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -347,12 +388,14 @@ function ChatDemo() {
           </svg>
         </span>
 
-        <span className="chat__send" aria-hidden="true">
+        {/* Deshabilitado mientras no haya nada escrito: un botón de enviar que
+            no envía nada es un botón que miente. */}
+        <button className="chat__send" type="submit" disabled={!draft.trim()} aria-label="Enviar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4.5 12 20 4.5 15.5 20l-4-6.5-7-1.5Z" />
           </svg>
-        </span>
-      </div>
+        </button>
+      </form>
 
       {profileOpen && <ProfileModal onClose={() => setProfileOpen(false)} />}
     </div>
@@ -546,7 +589,7 @@ function ProfileModal({ onClose }) {
             <div className="profile__chips">
               <span className="chip chip--ok">Identidad verificada</span>
               <span className="chip chip--tier">
-                <TierShield tier="platinum" bars={CHAT_PEER.tierBars} size={15} />
+                <TierShield tier="platinum" size={15} />
                 {CHAT_PEER.tier}
               </span>
             </div>
