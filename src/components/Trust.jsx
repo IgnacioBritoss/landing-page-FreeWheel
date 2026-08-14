@@ -12,6 +12,7 @@
 //     negro. Ese detalle está en la app y se respeta acá.
 // ============================================================================
 import { TIERS } from "../data/content";
+import TierShield from "./ui/TierShield";
 import "./trust.css";
 
 const KYC = [
@@ -74,7 +75,7 @@ export default function Trust() {
             <ul className="tiers__list">
               {TIERS.map((tier) => (
                 <li className="tier" key={tier.key}>
-                  <Shield bars={tier.bars} />
+                  <TierShield tier={tier.key} bars={tier.bars} size={28} />
                   <div>
                     <strong>{tier.name}</strong>
                     <span>{tier.req}</span>
@@ -91,34 +92,5 @@ export default function Trust() {
         </div>
       </div>
     </section>
-  );
-}
-
-/**
- * El escudo del rango: hombros rectos, laterales que se cierran y base en
- * punta. Las barras se apilan de abajo hacia arriba, una por nivel. Es el
- * mismo dibujo que components/RankBadge.jsx de la aplicación.
- */
-function Shield({ bars, size = 26 }) {
-  return (
-    <svg
-      className="tier__shield"
-      width={size}
-      height={Math.round(size * 1.2)}
-      viewBox="0 0 20 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M10 1.4 18.2 3.6V11.4C18.2 16.3 14.9 20.2 10 22.4 5.1 20.2 1.8 16.3 1.8 11.4V3.6L10 1.4Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      {Array.from({ length: bars }).map((_, i) => (
-        // Cada barra 3 unidades más arriba que la anterior.
-        <rect key={i} x="6" y={14.6 - i * 3} width="8" height="1.9" rx="0.4" fill="currentColor" />
-      ))}
-    </svg>
   );
 }

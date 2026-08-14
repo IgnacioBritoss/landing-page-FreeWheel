@@ -74,7 +74,18 @@ export function useScrollProgress({ steps = 0, onStep, mode = "cover" } = {}) {
       const vh = window.innerHeight;
 
       let progress;
-      if (mode === "fill") {
+      if (mode === "out") {
+        // Cuánto del elemento ya salió por arriba, medido contra su propio
+        // alto: 0 cuando su borde superior toca el tope de la pantalla, 1
+        // cuando terminó de salir. Es el modo que corresponde para algo que
+        // tiene que arrancar EN CERO con la página recién cargada.
+        //
+        // Con "cover" eso no pasa: ahí un elemento que ocupa la primera
+        // pantalla ya arranca por la mitad del recorrido, porque el cálculo
+        // cuenta desde que asoma por abajo. El auto de la portada aparecía
+        // dibujado en un 80% antes de tocar la rueda del mouse.
+        progress = rect.height > 0 ? -rect.top / rect.height : 0;
+      } else if (mode === "fill") {
         // Cuánto del elemento ya pasó por el borde de arriba de la pantalla.
         // El recorrido útil es su alto menos una pantalla: ese es el tramo en
         // el que el contenido pegado queda quieto.

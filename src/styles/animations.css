@@ -127,34 +127,93 @@
 }
 
 /* ============================================================================
-   Accesibilidad: quien pidió menos movimiento, recibe menos movimiento
+   Accesibilidad: menos movimiento, no CERO movimiento
    ----------------------------------------------------------------------------
    `prefers-reduced-motion` es una preferencia real del sistema operativo. La
-   activa gente con vértigo, migraña o trastornos vestibulares: para ellos una
-   página que se mueve mucho no es "linda", es mareo.
+   activa gente con vértigo, migraña o trastornos vestibulares —y también queda
+   activada sin querer, porque en Windows se apaga junto con los "efectos de
+   animación" de todo el escritorio—.
 
-   No se apaga todo a cero (eso deja elementos invisibles para siempre). Se
-   dejan tiempos mínimos y se anulan los desplazamientos: el contenido aparece
-   igual, pero no viaja por la pantalla.
+   LA VERSIÓN ANTERIOR DE ESTE BLOQUE ESTABA MAL. Apagaba absolutamente todo
+   con !important, y el resultado era una página completamente inmóvil: ni el
+   auto llegaba, ni el texto aparecía, ni se movía un solo elemento. La
+   preferencia se llama REDUCE, no "remove": pide bajar el movimiento, no
+   eliminarlo.
+
+   El criterio correcto, que es el que se aplica acá:
+
+     · Lo que SE MANTIENE — las apariciones por opacidad. Un elemento que se
+       funde de transparente a opaco no dispara vértigo: no hay desplazamiento
+       que el ojo tenga que seguir. Es lo que permite que la página se sienta
+       viva y que se entienda que las cosas van apareciendo.
+
+     · Lo que SE SACA — todo lo que se DESPLAZA por la pantalla: el auto que
+       entra manejando, los textos que suben desde abajo, el humo, las barras
+       del audio que laten, los puntitos que rebotan. Ese es el movimiento que
+       molesta de verdad.
+
+   Las animaciones ligadas al scroll (el auto llenándose, la frase que se
+   ilumina, la sección fija) se mantienen: no se mueven solas, avanzan
+   únicamente cuando la persona scrollea, y por lo tanto nunca la sorprenden.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0ms !important;
-    scroll-behavior: auto !important;
-  }
-
+  /* Las apariciones dejan de moverse pero siguen fundiendo. */
   [data-reveal] {
-    opacity: 1;
-    transform: none;
+    transform: none !important;
+    transition: opacity 0.5s ease !important;
+    transition-delay: calc(var(--i, 0) * 60ms) !important;
   }
 
-  .curtain > span,
-  .rule-draw {
-    transform: none;
+  [data-reveal].is-visible {
+    opacity: 1;
   }
+
+  /* La cortina del titular ya no sube: aparece. */
+  .curtain {
+    overflow: visible;
+  }
+
+  /* El !important acá NO es pereza, es necesario: hero.css declara la
+     animación del titular de la portada con la misma especificidad que este
+     bloque (0,2,1), y como se carga DESPUÉS en el paquete final, ganaba él. El
+     titular se quedaba en opacidad 0 y la portada aparecía sin título.
+     Una media query no suma especificidad, así que la única forma de que una
+     regla de accesibilidad le gane siempre a la regla decorativa es esta.
+     El atajo `animation` pisa también el retardo que declara hero.css. */
+  .curtain > span {
+    transform: none !important;
+    opacity: 0;
+    animation: fade-in 0.7s ease calc(var(--i, 0) * 90ms) forwards !important;
+  }
+
+  /* Las líneas que se dibujaban de izquierda a derecha aparecen enteras. */
+  .rule-draw,
+  .label__rule {
+    transform: none !important;
+    transition: opacity 0.4s ease !important;
+  }
+
+  /* Los bucles que se mueven sin que nadie los pida: fuera. */
+  .msg__typing i,
+  .ai__typing i,
+  .voice__wave span,
+  .hero__wheel,
+  .langs__caret,
+  .hero__smoke,
+  .hero__lamps {
+    animation: none !important;
+  }
+
+  /* El cursor que titila se deja fijo en vez de parpadeando. */
+  .langs__caret {
+    opacity: 1;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes fade-in {
+  to { opacity: 1; }
 }

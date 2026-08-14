@@ -16,7 +16,7 @@
 //  contenedor.
 // ============================================================================
 import { useState } from "react";
-import { SCREENS } from "../data/content";
+import { SCREENS, QR_MATRIX, APP_URL } from "../data/content";
 import "./preview.css";
 
 export default function AppPreview() {
@@ -190,17 +190,29 @@ function ScreenBooking() {
 function ScreenQr() {
   return (
     <>
+      {/* ES UN CÓDIGO QR DE VERDAD: escaneándolo con la cámara del teléfono
+          se abre la aplicación. La matriz está calculada de antemano y
+          guardada en content.js, porque el contenido nunca cambia: generarla
+          en el navegador costaría una librería entera para llegar siempre al
+          mismo dibujo. */}
       <div className="ph-code">
-        <div className="ph-code__grid">
-          {Array.from({ length: 49 }).map((_, i) => (
-            <span
-              key={i}
-              // Un patrón fijo, no aleatorio: con Math.random() el dibujo
-              // cambiaría en cada render y el código parpadearía.
-              className={(i * 7 + (i % 5) + Math.floor(i / 7)) % 3 === 0 ? "on" : ""}
-              style={{ "--i": i % 12 }}
-            />
-          ))}
+        <div
+          className="ph-code__grid"
+          style={{ "--n": QR_MATRIX.length }}
+          role="img"
+          aria-label={`Código QR que abre ${APP_URL}`}
+        >
+          {QR_MATRIX.map((row, y) =>
+            row.split("").map((cell, x) => (
+              <span
+                key={`${y}-${x}`}
+                className={cell === "1" ? "on" : ""}
+                // Los módulos se encienden en diagonal, como si el código se
+                // fuera armando. El retardo sale de la suma de fila y columna.
+                style={{ "--i": (x + y) % 14 }}
+              />
+            )),
+          )}
         </div>
       </div>
 

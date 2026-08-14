@@ -121,11 +121,6 @@
   color: var(--blue);
 }
 
-.tier__shield {
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
 .tier strong {
   display: block;
   font-size: var(--t-sm);

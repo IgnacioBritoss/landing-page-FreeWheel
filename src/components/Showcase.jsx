@@ -4,22 +4,22 @@
 //  Acá no se explica nada con palabras: se muestra la pantalla. Son tres piezas
 //  reales de Freewheel, redibujadas con divs y SVG.
 //
-//   1. LA VERIFICACIÓN DEL DNI. El documento se escanea y una línea recorre la
-//      foto mientras el modelo lo revisa. Después aparecen los cuatro controles
-//      que hace de verdad: tipo de documento, nombre, número y vigencia.
-//   2. EL MAPA CON LOS AUTOS DISPONIBLES. Los pines son los mismos que dibuja
-//      la aplicación: un punto azul de 14px con borde blanco, y un círculo
-//      alrededor que marca la ZONA APROXIMADA, no la dirección exacta.
-//   3. EL CHAT ENTRE LAS DOS PERSONAS. Con texto, una nota de voz transcripta y
-//      una foto del estado del auto.
+//   1. LA VERIFICACIÓN DEL DNI. Una línea recorre el documento mientras el
+//      modelo lo revisa, y después aparecen los cuatro controles que hace.
+//   2. EL MAPA DE LA CIUDAD DE BUENOS AIRES, con los autos publicados. Los
+//      pines son los mismos que dibuja la aplicación: un punto azul de 14px con
+//      borde blanco, y un círculo que marca la ZONA APROXIMADA, no la
+//      dirección exacta.
+//   3. EL CHAT. Con el audio que se reproduce, los tildes de entregado y
+//      leído, y el perfil de la otra persona, que se abre al tocar el nombre.
 //
-//  Las tres se animan cuando entran en pantalla, no antes: si arrancaran al
+//  Las tres arrancan cuando entran en pantalla, no antes: si empezaran al
 //  cargar la página, para cuando alguien baje hasta acá ya habrían terminado.
-//  Eso lo resuelve useInView, que avisa la primera vez que el bloque se ve.
 // ============================================================================
-import { useState, useRef, useCallback } from "react";
-import { MAP_CARS, CHAT } from "../data/content";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { MAP_CARS, CHAT, CHAT_PEER, CHAT_PHOTO } from "../data/content";
 import { useInView } from "../hooks/useReveal";
+import TierShield from "./ui/TierShield";
 import "./showcase.css";
 
 export default function Showcase() {
@@ -53,7 +53,7 @@ export default function Showcase() {
           <Block
             n="02"
             title="Los autos, sobre el mapa"
-            text="Cada punto es un auto publicado. El círculo alrededor es la zona aproximada, no la puerta: la dirección exacta aparece recién cuando la reserva está confirmada."
+            text="Cada punto es un auto publicado en la Ciudad. El círculo alrededor es la zona aproximada, no la puerta: la dirección exacta aparece recién cuando la reserva está confirmada."
             reverse
           >
             <MapCars />
@@ -62,7 +62,7 @@ export default function Showcase() {
           <Block
             n="03"
             title="Se coordina por chat"
-            text="Texto, fotos, archivos y notas de voz. Los audios se transcriben solos, para poder leerlos cuando no se puede escuchar."
+            text="Texto, fotos, archivos y notas de voz. Los audios se transcriben solos para poder leerlos cuando no se puede escuchar, y tocando el nombre se abre el perfil de la otra persona con sus reseñas."
           >
             <ChatDemo />
           </Block>
@@ -90,21 +90,13 @@ function Block({ n, title, text, children, reverse = false }) {
 
 /* ============================================================================
    1) El escaneo del DNI
-   ----------------------------------------------------------------------------
-   El documento está dibujado (no es la foto de un DNI real, obviamente). Una
-   línea azul lo recorre de arriba a abajo mientras "se revisa", y después
-   aparecen los cuatro controles de a uno.
-
-   La línea de escaneo es un degradado angosto que se mueve con transform: no
-   cambia de posición con `top`, que obligaría a recalcular el layout en cada
-   cuadro.
    ========================================================================== */
 function ScanDni() {
   const [started, setStarted] = useState(false);
   const ref = useRef(null);
 
   const begin = useCallback(() => setStarted(true), []);
-  useInView(ref, begin, { threshold: 0.45 });
+  useInView(ref, begin, { threshold: 0.35 });
 
   const checks = [
     "Tipo de documento correcto",
@@ -115,7 +107,6 @@ function ScanDni() {
 
   return (
     <div className={`scan ${started ? "is-on" : ""}`} ref={ref}>
-      {/* ── El documento ─────────────────────────────────────────── */}
       <div className="scan__doc">
         <div className="scan__doc-top">
           <span className="scan__doc-country">REPÚBLICA ARGENTINA</span>
@@ -123,7 +114,6 @@ function ScanDni() {
         </div>
 
         <div className="scan__doc-body">
-          {/* El retrato: una silueta genérica, no una persona. */}
           <div className="scan__photo" aria-hidden="true">
             <svg viewBox="0 0 40 48" fill="none">
               <circle cx="20" cy="16" r="9" fill="currentColor" />
@@ -132,9 +122,8 @@ function ScanDni() {
           </div>
 
           <div className="scan__fields">
-            {/* Los renglones del documento son barras, no texto inventado: no
-                hace falta poner un nombre y un número falsos para que se
-                entienda que ahí va el nombre y el número. */}
+            {/* Los renglones del documento son barras, no texto: no hace falta
+                inventar un nombre y un número para que se entienda qué va ahí. */}
             <span className="scan__label">Apellido y nombre</span>
             <span className="scan__bar" style={{ "--w": "78%" }} />
             <span className="scan__label">Documento</span>
@@ -144,7 +133,6 @@ function ScanDni() {
           </div>
         </div>
 
-        {/* Las esquinas del encuadre y la línea que recorre. */}
         <span className="scan__corner scan__corner--tl" />
         <span className="scan__corner scan__corner--tr" />
         <span className="scan__corner scan__corner--bl" />
@@ -152,7 +140,6 @@ function ScanDni() {
         <span className="scan__beam" aria-hidden="true" />
       </div>
 
-      {/* ── Los controles ────────────────────────────────────────── */}
       <ul className="scan__checks">
         {checks.map((label, i) => (
           <li key={label} style={{ "--i": i }}>
@@ -166,36 +153,91 @@ function ScanDni() {
 }
 
 /* ============================================================================
-   2) El mapa con los autos disponibles
+   2) El mapa de la Ciudad de Buenos Aires
    ----------------------------------------------------------------------------
-   El mapa de la aplicación es Leaflet sobre OpenStreetMap. Acá está dibujado:
-   una trama de calles en SVG, y encima los pines con los mismos colores y
-   medidas que usa la app (punto azul de 14px con borde blanco de 2px, y un
-   círculo de zona en #2563eb sobre relleno #bfdbfe al 18%).
+   El contorno es el de CABA: el Río de la Plata al noreste, la Avenida General
+   Paz cerrando por el oeste y el Riachuelo por el sur. Adentro van la trama de
+   calles y las avenidas principales.
 
-   Al pasar el mouse por un punto se abre la tarjeta del auto, igual que el
-   popup del mapa real.
+   Está dibujado y no es un mapa de imágenes por una razón práctica: un mapa de
+   verdad son decenas de pedidos a un servidor de mosaicos, que tardan, a veces
+   fallan y dejan el recuadro gris. Acá el plano ya está en la página. El mapa
+   de VERDAD, con Leaflet y OpenStreetMap, está en la aplicación.
    ========================================================================== */
 function MapCars() {
-  // Cuál está abierto. Arranca en el primero para que se entienda de entrada
-  // que los puntos se pueden tocar.
-  const [open, setOpen] = useState(MAP_CARS[0].id);
+  const [open, setOpen] = useState(MAP_CARS[1].id);
 
   return (
     <div className="map">
-      {/* La trama de calles. Son líneas rectas cruzadas, no un mapa real: lo
-          que tiene que quedar claro es que es un plano, no la geografía. */}
-      <svg className="map__grid" viewBox="0 0 400 300" aria-hidden="true">
-        {[40, 92, 150, 208, 262].map((y) => (
-          <line key={`h${y}`} x1="0" y1={y} x2="400" y2={y} />
-        ))}
-        {[54, 118, 186, 250, 320].map((x) => (
-          <line key={`v${x}`} x1={x} y1="0" x2={x} y2="300" />
-        ))}
-        {/* Dos avenidas más gruesas, para que la trama no sea perfectamente
-            uniforme y se lea como una ciudad. */}
-        <line className="map__ave" x1="0" y1="150" x2="400" y2="150" />
-        <line className="map__ave" x1="186" y1="0" x2="186" y2="300" />
+      <svg className="map__plane" viewBox="0 0 400 300" aria-hidden="true">
+        <defs>
+          {/* Todo lo que se dibuje adentro de este recorte queda dentro de los
+              límites de la Ciudad: así las calles no se salen al río. */}
+          <clipPath id="caba">
+            <path d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
+                     L232 252 L168 258 L118 250 L86 214 L64 168 L62 120 L86 74
+                     L128 40 L182 18 Z" />
+          </clipPath>
+        </defs>
+
+        {/* El río, detrás de todo */}
+        <path
+          className="map__river"
+          d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
+             L400 300 L400 0 Z"
+        />
+
+        <g clipPath="url(#caba)">
+          {/* La superficie de la ciudad */}
+          <rect x="0" y="0" width="400" height="300" className="map__land" />
+
+          {/* La trama de calles, en diagonal: el damero de Buenos Aires está
+              girado respecto del norte, y esa inclinación es justamente lo que
+              lo hace reconocible. */}
+          <g className="map__streets" transform="rotate(-33 200 150)">
+            {Array.from({ length: 26 }).map((_, i) => (
+              <line key={`a${i}`} x1="-140" y1={-40 + i * 18} x2="540" y2={-40 + i * 18} />
+            ))}
+            {Array.from({ length: 34 }).map((_, i) => (
+              <line key={`b${i}`} x1={-140 + i * 22} y1="-140" x2={-140 + i * 22} y2="440" />
+            ))}
+          </g>
+
+          {/* Las avenidas. Van sin rotar porque cada una tiene su traza. */}
+          <g className="map__aves">
+            {/* Rivadavia, que parte la ciudad al medio de este a oeste */}
+            <path d="M330 150 L64 160" />
+            {/* 9 de Julio */}
+            <path d="M296 96 L318 230" />
+            {/* Del Libertador, siguiendo la costa */}
+            <path d="M232 22 L286 92 L318 168" />
+            {/* Corrientes */}
+            <path d="M308 122 L96 96" />
+            {/* Juan B. Justo */}
+            <path d="M290 66 L92 148" />
+          </g>
+
+          {/* Los parques: Bosques de Palermo y Parque Centenario */}
+          <g className="map__parks">
+            <ellipse cx="268" cy="66" rx="30" ry="20" />
+            <circle cx="176" cy="150" r="9" />
+          </g>
+        </g>
+
+        {/* El borde de la Ciudad, encima de todo */}
+        <path
+          className="map__edge"
+          d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
+             L232 252 L168 258 L118 250 L86 214 L64 168 L62 120 L86 74
+             L128 40 L182 18 Z"
+        />
+
+        <text className="map__hood" x="252" y="46">BELGRANO</text>
+        <text className="map__hood" x="278" y="128">PALERMO</text>
+        <text className="map__hood" x="196" y="176">ALMAGRO</text>
+        <text className="map__hood" x="132" y="196">CABALLITO</text>
+        <text className="map__hood" x="92" y="228">FLORES</text>
+        <text className="map__water" x="352" y="96">RÍO DE LA PLATA</text>
       </svg>
 
       {MAP_CARS.map((car) => (
@@ -206,12 +248,9 @@ function MapCars() {
           onMouseEnter={() => setOpen(car.id)}
           onFocus={() => setOpen(car.id)}
         >
-          {/* La zona aproximada. */}
           <span className="map__zone" aria-hidden="true" />
-
           <button className="map__dot" aria-label={`${car.name} en ${car.zone}`} />
 
-          {/* La tarjeta, igual que el popup del mapa de la app. */}
           <div className="map__card">
             <strong>{car.name}</strong>
             <span className="map__card-zone">
@@ -225,7 +264,7 @@ function MapCars() {
         </div>
       ))}
 
-      <span className="map__credit">Sobre OpenStreetMap en la aplicación</span>
+      <span className="map__credit">Ciudad de Buenos Aires</span>
     </div>
   );
 }
@@ -233,83 +272,54 @@ function MapCars() {
 /* ============================================================================
    3) El chat
    ----------------------------------------------------------------------------
-   Los mensajes aparecen de a uno cuando el bloque entra en pantalla, con el
-   indicador de "escribiendo" entre uno y otro. Es lo que hace que se lea como
-   una conversación pasando y no como una captura de pantalla.
+   Los mensajes aparecen de a uno con el indicador de "escribiendo" en el medio,
+   así se lee como una conversación pasando y no como una captura.
    ========================================================================== */
 function ChatDemo() {
   const [shown, setShown] = useState(0);
+  const [profileOpen, setProfileOpen] = useState(false);
   const ref = useRef(null);
 
-  // Al entrar en pantalla, se van sumando mensajes de a uno. El temporizador
-  // se vuelve a agendar solo mientras falten: no hace falta un setInterval que
-  // después haya que cancelar.
   const begin = useCallback(() => {
     let count = 0;
     const next = () => {
       count += 1;
       setShown(count);
-      if (count < CHAT.length) setTimeout(next, 950);
+      if (count < CHAT.length) setTimeout(next, 880);
     };
-    setTimeout(next, 350);
+    setTimeout(next, 300);
   }, []);
 
-  useInView(ref, begin, { threshold: 0.4 });
+  useInView(ref, begin, { threshold: 0.35 });
 
   return (
     <div className="chat" ref={ref}>
       <header className="chat__head">
-        <span className="chat__avatar">R</span>
-        <div>
-          <strong>Roberto O.</strong>
-          <span>Toyota Corolla 2021</span>
-        </div>
+        {/* El nombre es un botón: abre el perfil, igual que en la aplicación. */}
+        <button className="chat__peer" onClick={() => setProfileOpen(true)}>
+          <span className="chat__avatar">{CHAT_PEER.initials}</span>
+          <span className="chat__peer-text">
+            <strong>{CHAT_PEER.name}</strong>
+            <span>{CHAT_PEER.car}</span>
+          </span>
+        </button>
       </header>
 
       <div className="chat__body">
         {CHAT.slice(0, shown).map((msg, i) => (
           <div key={i} className={`msg msg--${msg.side}`}>
             {msg.kind === "text" && <p className="msg__text">{msg.body}</p>}
+            {msg.kind === "voice" && <VoiceNote msg={msg} />}
+            {msg.kind === "image" && <PhotoMessage caption={msg.caption} />}
 
-            {msg.kind === "voice" && (
-              <div className="msg__voice">
-                <div className="msg__wave" aria-hidden="true">
-                  {/* Las barras del audio. Las alturas son fijas y no
-                      aleatorias: con Math.random() el dibujo cambiaría en cada
-                      render y la onda temblaría. */}
-                  {[8, 14, 20, 11, 17, 23, 13, 9, 16, 21, 12, 7, 15, 19, 10].map((h, j) => (
-                    <span key={j} style={{ height: `${h}px`, "--j": j }} />
-                  ))}
-                </div>
-                <span className="msg__secs">0:0{msg.seconds}</span>
-                <p className="msg__transcript">
-                  <span>Transcripción</span>
-                  {msg.transcript}
-                </p>
-              </div>
-            )}
-
-            {msg.kind === "image" && (
-              <div className="msg__image">
-                <div className="msg__thumb" aria-hidden="true">
-                  <svg viewBox="0 0 48 22" fill="none">
-                    <path
-                      d="M1 12.4C1 11.2 1.8 10.2 3 9.9L13.2 7.6L18.6 3.2C19.4 2.6 20.3 2.3 21.3 2.3H29.5C30.8 2.3 32 2.8 32.9 3.7L38.4 9.2L45 10.6C46.2 10.9 47 11.9 47 13.1V15.3C47 16 46.4 16.5 45.7 16.5H40.5A4.3 4.3 0 0 0 31.9 16.5H16.1A4.3 4.3 0 0 0 6.5 16.5H2.3C1.6 16.5 1 16 1 15.3V12.4Z"
-                      fill="currentColor"
-                    />
-                    <circle cx="11.8" cy="16.5" r="3" fill="currentColor" />
-                    <circle cx="36.2" cy="16.5" r="3" fill="currentColor" />
-                  </svg>
-                </div>
-                <span className="msg__caption">{msg.caption}</span>
-              </div>
-            )}
-
-            <span className="msg__time">{msg.time}</span>
+            <span className="msg__meta">
+              {msg.time}
+              {/* Los tildes solo van en los mensajes propios. */}
+              {msg.side === "me" && <Ticks />}
+            </span>
           </div>
         ))}
 
-        {/* Mientras falten mensajes, los tres puntitos. */}
         {shown > 0 && shown < CHAT.length && (
           <div className="msg msg--them">
             <div className="msg__typing" aria-label="escribiendo">
@@ -319,10 +329,269 @@ function ChatDemo() {
         )}
       </div>
 
-      <div className="chat__bar" aria-hidden="true">
-        <span>Escribí un mensaje</span>
-        <span className="chat__mic" />
+      {/* La barra de abajo, con los mismos controles que la aplicación:
+          adjuntar, escribir, grabar y enviar. */}
+      <div className="chat__bar">
+        <span className="chat__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.4 11.5 12 19.9a5.5 5.5 0 0 1-7.8-7.8l8.5-8.4a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.9-7.8" />
+          </svg>
+        </span>
+
+        <span className="chat__input">Escribí un mensaje...</span>
+
+        <span className="chat__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="9" y="2.5" width="6" height="11" rx="3" />
+            <path d="M5 11a7 7 0 0 0 14 0M12 18.5v3" />
+          </svg>
+        </span>
+
+        <span className="chat__send" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4.5 12 20 4.5 15.5 20l-4-6.5-7-1.5Z" />
+          </svg>
+        </span>
+      </div>
+
+      {profileOpen && <ProfileModal onClose={() => setProfileOpen(false)} />}
+    </div>
+  );
+}
+
+/**
+ * La nota de voz. Se reproduce de verdad —la barra avanza y el botón cambia a
+ * pausa—, solo que sin audio: es una maqueta. El botón existe porque una nota
+ * de voz sin botón de reproducir no se lee como una nota de voz.
+ */
+function VoiceNote({ msg }) {
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // El avance corre mientras está reproduciendo. Cuando llega al final se
+  // frena solo y vuelve a cero, listo para escucharlo de nuevo.
+  useEffect(() => {
+    if (!playing) return;
+    const id = setInterval(() => {
+      setProgress((p) => {
+        const next = p + 100 / (msg.seconds * 10);
+        if (next >= 100) {
+          setPlaying(false);
+          return 0;
+        }
+        return next;
+      });
+    }, 100);
+    return () => clearInterval(id);
+  }, [playing, msg.seconds]);
+
+  // El segundo en el que va, para el contador.
+  const current = Math.round((progress / 100) * msg.seconds);
+  const label = playing ? `0:0${current}` : `0:0${msg.seconds}`;
+
+  return (
+    <div className="voice">
+      <div className="voice__row">
+        <button
+          className="voice__play"
+          onClick={() => setPlaying((v) => !v)}
+          aria-label={playing ? "Pausar la nota de voz" : "Reproducir la nota de voz"}
+        >
+          {playing ? (
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="7" y="5" width="3.6" height="14" rx="1.2" />
+              <rect x="13.4" y="5" width="3.6" height="14" rx="1.2" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M8 5.6c0-.9 1-1.5 1.8-1l8 6.4c.7.5.7 1.5 0 2l-8 6.4c-.8.5-1.8-.1-1.8-1V5.6Z" />
+            </svg>
+          )}
+        </button>
+
+        {/* La onda. Las barras que ya pasaron quedan en azul, las que faltan en
+            gris: el corte lo marca la variable --played. */}
+        <div className="voice__wave" style={{ "--played": `${progress}%` }} aria-hidden="true">
+          {[9, 15, 22, 12, 18, 25, 14, 10, 17, 23, 13, 8, 16, 21, 11, 19, 24, 12, 9, 15].map(
+            (h, j) => (
+              <span key={j} style={{ height: `${h}px`, "--j": j }} data-on={playing ? "1" : "0"} />
+            ),
+          )}
+        </div>
+
+        <span className="voice__time">{label}</span>
+      </div>
+
+      <p className="voice__transcript">
+        <span>Transcripción</span>
+        {msg.transcript}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * La foto del auto. Si en content.js se cargó una foto real (CHAT_PHOTO), va
+ * esa; si no, se dibuja un auto en tres cuartos. La ilustración no depende de
+ * ningún archivo, así que nunca queda el hueco gris de una imagen que no cargó.
+ */
+function PhotoMessage({ caption }) {
+  return (
+    <div className="photo">
+      <div className="photo__frame">
+        {CHAT_PHOTO ? (
+          <img src={CHAT_PHOTO} alt={caption} loading="lazy" />
+        ) : (
+          <svg className="photo__draw" viewBox="0 0 320 200" aria-hidden="true">
+            {/* El piso y la sombra debajo del auto */}
+            <ellipse className="photo__shadow" cx="160" cy="163" rx="118" ry="12" />
+
+            {/* Carrocería, vista de tres cuartos delantera */}
+            <path
+              className="photo__body"
+              d="M42 148c-12 0-20-8-20-19v-16c0-9 6-17 15-19l38-9 30-27c7-6 16-10 25-10h68c11 0 21 5 28 13l24 27 34 9c11 3 18 12 18 23v9c0 11-8 19-19 19H42Z"
+            />
+            {/* Parabrisas y ventanillas */}
+            <path className="photo__glass" d="M115 62h55c7 0 13 3 18 8l18 21h-96l5-29Z" />
+            <path className="photo__glass" d="M104 63l-5 28-31 8 24-24c4-4 8-8 12-12Z" />
+            {/* Línea de la puerta y manija */}
+            <path className="photo__line" d="M118 91v50M170 91v50" />
+            <rect className="photo__handle" x="126" y="104" width="14" height="4" rx="2" />
+            {/* Ópticas */}
+            <rect className="photo__lamp" x="256" y="106" width="30" height="12" rx="5" />
+            <rect className="photo__lamp" x="30" y="106" width="20" height="10" rx="4" />
+            {/* Ruedas */}
+            <circle className="photo__tyre" cx="88" cy="148" r="27" />
+            <circle className="photo__rim" cx="88" cy="148" r="12" />
+            <circle className="photo__tyre" cx="234" cy="148" r="27" />
+            <circle className="photo__rim" cx="234" cy="148" r="12" />
+          </svg>
+        )}
+      </div>
+      <span className="photo__caption">{caption}</span>
+    </div>
+  );
+}
+
+/**
+ * Los tildes de estado: uno gris (enviado), dos grises (entregado) y dos
+ * celestes (leído). Avanzan solos apenas se monta el mensaje, que es lo que
+ * pasa de verdad cuando uno manda algo y del otro lado lo abren.
+ */
+function Ticks() {
+  const [state, setState] = useState("sent");
+
+  useEffect(() => {
+    const a = setTimeout(() => setState("delivered"), 700);
+    const b = setTimeout(() => setState("read"), 1800);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+    };
+  }, []);
+
+  return (
+    <span className={`ticks is-${state}`} aria-label={
+      state === "read" ? "Leído" : state === "delivered" ? "Entregado" : "Enviado"
+    }>
+      <svg viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {/* El segundo tilde aparece recién en "entregado". */}
+        <path className="ticks__b" d="M9 8.5 12.5 12 19 3" />
+        <path className="ticks__a" d="M1 8.5 4.5 12 11 3" />
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * El perfil de la otra persona, con el mismo contenido que el modal de la
+ * aplicación: verificación, rango, promedio y las reseñas recibidas.
+ *
+ * ACCESIBILIDAD: se cierra con Escape y con el botón, y el foco arranca en el
+ * botón de cerrar. Un modal del que no se puede salir con el teclado es un
+ * modal roto.
+ */
+function ProfileModal({ onClose }) {
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="profile" role="dialog" aria-modal="true" aria-label="Perfil">
+      {/* El fondo también cierra al tocarlo: es lo que la gente intenta primero. */}
+      <button className="profile__scrim" onClick={onClose} aria-label="Cerrar el perfil" />
+
+      <div className="profile__card">
+        <header className="profile__top">
+          <h4>Perfil</h4>
+          <button className="profile__close" onClick={onClose} ref={closeRef} aria-label="Cerrar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </header>
+
+        <div className="profile__id">
+          <span className="profile__avatar">{CHAT_PEER.initials}</span>
+          <div>
+            <strong>{CHAT_PEER.name}</strong>
+            <span>{CHAT_PEER.since}</span>
+            <div className="profile__chips">
+              <span className="chip chip--ok">Identidad verificada</span>
+              <span className="chip chip--tier">
+                <TierShield tier="platinum" bars={CHAT_PEER.tierBars} size={15} />
+                {CHAT_PEER.tier}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="profile__ratings">
+          <h5>Calificaciones</h5>
+          <p>
+            Como dueño: <Stars n={5} />
+            <strong>{CHAT_PEER.ratingAsOwner.toFixed(1)}</strong>
+            <em>({CHAT_PEER.reviewCount})</em>
+          </p>
+          <p className="profile__trips">{CHAT_PEER.trips} alquileres completados</p>
+        </div>
+
+        <div className="profile__reviews">
+          <h5>Reseñas recibidas ({CHAT_PEER.reviewCount})</h5>
+          {CHAT_PEER.reviews.map((r) => (
+            <article key={r.author}>
+              <div className="profile__review-top">
+                <strong>{r.author}</strong>
+                <Stars n={r.stars} />
+              </div>
+              <span className="profile__review-meta">
+                {r.role} · {r.date}
+              </span>
+              <p>{r.body}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
+  );
+}
+
+/** Las estrellas del promedio. Rellenas, que es como se leen de un vistazo. */
+function Stars({ n }) {
+  return (
+    <span className="stars" aria-label={`${n} de 5 estrellas`}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={i < n ? "" : "is-off"}>
+          <path d="m12 2.8 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.4l6.2-.9L12 2.8Z" />
+        </svg>
+      ))}
+    </span>
   );
 }

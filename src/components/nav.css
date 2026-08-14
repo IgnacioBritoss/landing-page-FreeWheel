@@ -7,14 +7,35 @@
   inset-inline: 0;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid transparent;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  /* Barra sólida DESDE EL PRINCIPIO. Antes arrancaba transparente y aparecía
+     al bajar: el tope de la página quedaba liso y la marca flotando sin
+     apoyo. */
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.3s ease;
 }
 
-/* Al bajar: fondo blanco y la línea. Sin sombra y sin desenfoque. */
-.nav--solid {
-  background: var(--paper);
-  border-bottom-color: var(--line);
+/* Al bajar, una sombra mínima separa la barra del contenido que pasa debajo.
+   Es lo único que cambia con el scroll. */
+.nav--scrolled {
+  box-shadow: 0 1px 12px rgba(17, 24, 39, 0.06);
+}
+
+/* ── La franja de la bandera ─────────────────────────────────────────────
+   Celeste, blanco y celeste, con el amarillo del sol como hilo de abajo. Va
+   arriba de todo y cruza el ancho completo.
+
+   Los cortes del degradado son duros (dos posiciones iguales seguidas): así
+   quedan franjas nítidas y no una transición de un color al otro. */
+.nav__flag {
+  display: block;
+  height: 3px;
+  background: linear-gradient(
+    to bottom,
+    #74acdf 0 33.34%,
+    #ffffff 33.34% 66.67%,
+    #74acdf 66.67% 100%
+  );
 }
 
 .nav__inner {

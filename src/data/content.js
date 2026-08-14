@@ -213,28 +213,127 @@ export const SCREENS = [
 ];
 
 /**
- * Los autos que se ven sobre el mapa. `x` e `y` son porcentajes dentro del
- * recuadro del mapa, no coordenadas reales: el mapa de la landing es un dibujo,
- * el de la aplicación usa Leaflet con OpenStreetMap.
+ * Los autos sobre el mapa de la Ciudad de Buenos Aires.
+ * `x` e `y` son porcentajes dentro del recuadro, ubicados sobre el barrio que
+ * corresponde en el dibujo. El mapa de la aplicación es Leaflet sobre
+ * OpenStreetMap con coordenadas reales; el de acá es el mismo plano dibujado.
  */
 export const MAP_CARS = [
-  { id: 1, x: 26, y: 34, name: "Toyota Corolla", price: "$8.500", zone: "Palermo" },
-  { id: 2, x: 58, y: 26, name: "VW T-Cross", price: "$12.000", zone: "Belgrano" },
-  { id: 3, x: 44, y: 62, name: "Fiat Cronos", price: "$7.200", zone: "Caballito" },
-  { id: 4, x: 74, y: 58, name: "Peugeot 208", price: "$6.800", zone: "Almagro" },
-  { id: 5, x: 16, y: 68, name: "Renault Duster", price: "$11.000", zone: "Flores" },
+  { id: 1, x: 68, y: 22, name: "Volkswagen T-Cross", price: "$12.000", zone: "Belgrano" },
+  { id: 2, x: 74, y: 42, name: "Toyota Corolla", price: "$8.500", zone: "Palermo" },
+  { id: 3, x: 52, y: 56, name: "Peugeot 208", price: "$6.800", zone: "Almagro" },
+  { id: 4, x: 38, y: 62, name: "Fiat Cronos", price: "$7.200", zone: "Caballito" },
+  { id: 5, x: 24, y: 72, name: "Renault Duster", price: "$11.000", zone: "Flores" },
 ];
 
 /**
- * La conversación de ejemplo del chat. `side` es quién habla: "them" es el
- * dueño del auto, "me" quien alquila. `kind` cambia cómo se dibuja el mensaje.
+ * ► PERSONALIZAR — LA FOTO DEL AUTO EN EL CHAT
+ * Poné un archivo (por ejemplo `auto.jpg`) dentro de la carpeta `public/` y
+ * escribí acá su ruta: "/auto.jpg". Mientras esto sea null, se dibuja una
+ * ilustración vectorial de un auto en tres cuartos, que no depende de ningún
+ * archivo y nunca deja el hueco gris de una imagen que no cargó.
+ */
+export const CHAT_PHOTO = null;
+
+/** La otra persona de la conversación. Su perfil se abre al tocar el nombre. */
+export const CHAT_PEER = {
+  name: "Ignacio Britos",
+  initials: "IB",
+  car: "Toyota Corolla 2021",
+  since: "En Freewheel desde marzo de 2026",
+  tier: "Platino",
+  tierBars: 4,
+  trips: 34,
+  ratingAsOwner: 5.0,
+  reviewCount: 32,
+  reviews: [
+    {
+      author: "Martina G.",
+      role: "Como dueña del auto",
+      date: "12 de marzo de 2026",
+      stars: 5,
+      body: "Puntual, cuidadoso y me devolvió el auto con el tanque lleno. Ojalá todos alquilaran así.",
+    },
+    {
+      author: "Lucas P.",
+      role: "Como dueño del auto",
+      date: "28 de febrero de 2026",
+      stars: 5,
+      body: "Avisó cada cosa por chat y coordinó la entrega sin una sola vuelta. Un lujo.",
+    },
+    {
+      author: "Sofía M.",
+      role: "Como dueña del auto",
+      date: "9 de febrero de 2026",
+      stars: 5,
+      body: "Segunda vez que le alquilo. Devuelve el auto impecable y siempre a horario.",
+    },
+  ],
+};
+
+/**
+ * La conversación del chat.
+ *   side  — "them" es la otra persona, "me" quien está mirando la pantalla.
+ *   kind  — cambia cómo se dibuja el mensaje (texto, audio, foto).
+ *   state — solo en los propios: "sent" un tilde, "delivered" dos tildes
+ *           grises, "read" dos tildes celestes. La animación los recorre en
+ *           ese orden, igual que cualquier mensajería.
  */
 export const CHAT = [
   { side: "them", kind: "text", body: "Hola, sí, está disponible esos días.", time: "10:02" },
   { side: "me", kind: "text", body: "Genial. ¿Dónde lo retiro?", time: "10:03" },
-  { side: "them", kind: "voice", seconds: 8, transcript: "En Godoy Cruz y Santa Fe, a una cuadra del subte. Te espero a las diez.", time: "10:05" },
+  {
+    side: "them",
+    kind: "voice",
+    seconds: 8,
+    transcript: "En Godoy Cruz y Santa Fe, a una cuadra del subte. Te espero a las diez.",
+    time: "10:05",
+  },
   { side: "them", kind: "image", caption: "Estado actual del auto", time: "10:06" },
-  { side: "me", kind: "text", body: "Perfecto, nos vemos ahí.", time: "10:07" },
+  { side: "me", kind: "text", body: "Perfecto, nos vemos ahí. Gracias!", time: "10:07" },
+];
+
+/**
+ * El código QR de la pantalla de entrega. ES UN QR DE VERDAD: escaneándolo con
+ * la cámara del teléfono se abre APP_URL.
+ *
+ * La matriz está calculada de antemano y guardada acá como texto (un "1" es un
+ * módulo negro). Se hace así, y no generándola en el navegador, porque el
+ * contenido nunca cambia: calcular siempre lo mismo en cada visita costaría una
+ * librería de varios kilobytes para llegar exactamente a esta matriz.
+ *
+ * Versión 3, corrección de errores Q (tolera hasta un 25% del código tapado).
+ */
+export const QR_MATRIX = [
+  "11111110011111001010101111111",
+  "10000010000111001001101000001",
+  "10111010110110101110101011101",
+  "10111010000101010011001011101",
+  "10111010111000100110001011101",
+  "10000010100100111101101000001",
+  "11111110101010101010101111111",
+  "00000000000011101101000000000",
+  "01001010110100011101110110100",
+  "01000000011010000010001110011",
+  "00101111001000101110110111001",
+  "01001101101110011110110000011",
+  "00010011000100100101000100001",
+  "00100101110101010000001010101",
+  "01001110110100000100001010011",
+  "11110000100001100111101101011",
+  "00001010001110010101110100011",
+  "10100101000010100000011110101",
+  "00111110000001010010100111001",
+  "00101001111010100111000011011",
+  "11111010110101010101111111000",
+  "00000000110001011011100010101",
+  "11111110011110010101101010001",
+  "10000010000011010101100011001",
+  "10111010100101000101111110010",
+  "10111010010001010100000101101",
+  "10111010001001111101110001011",
+  "10000010101101011100111100011",
+  "11111110010111000100101011010",
 ];
 
 /** Los cinco idiomas traducidos de punta a punta. */

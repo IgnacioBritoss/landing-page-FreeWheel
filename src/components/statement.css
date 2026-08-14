@@ -2,8 +2,13 @@
    statement.css — La frase que se ilumina
    ========================================================================== */
 
+/* El aire de arriba es bastante menor que el de abajo (la mitad): la frase
+   viene justo después de la portada, que ya tiene muchísimo espacio en blanco
+   debajo del auto. Con el mismo padding arriba y abajo, quedaba hundida y muy
+   lejos de lo anterior. */
 .statement {
-  padding-block: clamp(90px, 14vw, 200px);
+  padding-top: clamp(48px, 6vw, 92px);
+  padding-bottom: clamp(90px, 13vw, 190px);
   border-top: 1px solid var(--line);
 }
 

@@ -36,8 +36,39 @@
 /* Al pasar el mouse, la fila se aclara apenas y el número se pone azul. No se
    mueve nada: en una lista larga, filas que se desplazan al pasar por encima
    marean. */
-.platform__row:hover {
+/* El gris del hover ocupa TODO el ancho de la pantalla, no solo la columna
+   de contenido. Se hace con un pseudo-elemento que se estira 50vw hacia cada
+   lado desde el centro de la fila: así no importa cuánto mida el contenedor.
+
+   El `left: 50%` + `margin-left: -50vw` es lo que lo centra en la ventana; con
+   `inset-inline: -50vw` a secas quedaría corrido, porque la fila no empieza en
+   el borde de la pantalla.
+
+   Va con z-index negativo para pasar POR DETRÁS del texto. */
+.platform__row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
   background: var(--paper-2);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.platform__row:hover::before {
+  opacity: 1;
+}
+
+/* El contenido tiene que quedar por encima de la banda gris. */
+.platform__n,
+.platform__title,
+.platform__text {
+  position: relative;
 }
 
 .platform__n {

@@ -1,0 +1,11 @@
+/* El escudo se levanta un poco al pasar el mouse por su fila. La sombra es muy
+   corta y muy tenue: es una pieza chica, una sombra larga la haría flotar. */
+.tier-shield {
+  flex-shrink: 0;
+  transition: transform 0.35s var(--ease);
+  filter: drop-shadow(0 1px 1px rgba(17, 24, 39, 0.18));
+}
+
+.tier:hover .tier-shield {
+  transform: translateY(-2px) scale(1.06);
+}

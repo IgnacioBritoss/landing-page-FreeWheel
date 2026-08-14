@@ -44,7 +44,13 @@ export default function Nav() {
 
   return (
     <>
-      <header className={`nav ${scrolled ? "nav--solid" : ""}`}>
+      <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
+        {/* La franja de la bandera, arriba de todo. Es lo primero que se ve al
+            entrar y le da un borde a la página: sin ella el tope quedaba liso.
+            Tres píxeles alcanzan — con más, deja de ser un detalle y se
+            convierte en una decoración. */}
+        <span className="nav__flag" aria-hidden="true" />
+
         <div className="nav__inner wrap">
           <a href="#top" className="nav__brand" aria-label="Freewheel, ir al inicio">
             <Logo height={20} />
