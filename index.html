@@ -27,6 +27,17 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- La fuente se precarga: el navegador la empieza a bajar en paralelo con
+         el HTML, en vez de esperar a leer el CSS para descubrir que la
+         necesita. Son unos 300ms menos de texto con la tipografía equivocada. -->
+    <link
+      rel="preload"
+      href="/fonts/plus-jakarta-sans-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <!-- El volante es la marca. Se precarga acá como dato embebido para que el
          ícono de la pestaña aparezca sin un pedido extra al servidor. -->
   </head>

@@ -61,10 +61,16 @@
   --r-lg: 14px;
 
   /* ── Tipografía ───────────────────────────────────────────────────────
-     La pila del sistema, la misma que usa la app: cero pedidos de red, cero
-     salto de fuente al cargar, y se ve nativa en cada sistema operativo. */
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+     Plus Jakarta Sans, la tipografía de la marca. Es una variable font: un
+     solo archivo cubre todos los grosores de 400 a 800, así que los pesos
+     intermedios que usa la página (650, 750) salen exactos y no aproximados
+     por el navegador.
+
+     Detrás va la pila del sistema como respaldo: si la fuente no llega a
+     descargarse, la página se ve con la tipografía nativa en vez de con la
+     de Times New Roman por defecto. */
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Tamaños fluidos: crecen con el ancho de la pantalla sin una media query

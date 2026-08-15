@@ -272,13 +272,44 @@
 
 .map .leaflet-control-attribution {
   font-size: 9px;
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--paper);
+  color: var(--text-3);
+}
+
+.map .leaflet-control-attribution a {
+  color: var(--text-2);
+}
+
+/* ── El globo del auto ────────────────────────────────────────────────────
+   Leaflet le pinta un fondo BLANCO fijo, propio de su hoja de estilos. En
+   modo oscuro eso dejaba texto blanco sobre fondo blanco: el nombre del auto
+   desaparecía. Acá el fondo pasa a la variable del tema, así que en claro
+   sigue siendo blanco y en oscuro se pone oscuro, y el texto se lee en los
+   dos.
+
+   La `tip` es el triangulito que apunta al pin: si se le cambia el fondo al
+   globo y no a ella, queda una flechita blanca colgando de una caja oscura. */
+.map .leaflet-popup-content-wrapper,
+.map .leaflet-popup-tip {
+  background: var(--paper);
+  color: var(--text);
 }
 
 .map .leaflet-popup-content-wrapper {
   border-radius: var(--r-sm);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   padding: 0;
+}
+
+/* Los controles de zoom también son blancos por defecto. */
+.map .leaflet-control-zoom a {
+  background: var(--paper);
+  border-bottom-color: var(--line);
+}
+
+.map .leaflet-control-zoom a:hover {
+  background: var(--paper-2);
 }
 
 .map .leaflet-popup-content {

@@ -1,4 +1,60 @@
 /* ============================================================================
+   LA TIPOGRAFÍA DE LA MARCA
+   ----------------------------------------------------------------------------
+   Plus Jakarta Sans. Es geométrica como el logo —el auto está hecho de curvas
+   parejas y formas cerradas— pero con detalles que la sacan de lo genérico: la
+   "a" de un solo piso, la "g" con la cola abierta, la "y" en diagonal. Se
+   reconoce sin ser rara, que es lo que necesita una página que quiere verse
+   seria.
+
+   VIENE DENTRO DEL PROYECTO, NO DE GOOGLE FONTS. Dos motivos:
+     · velocidad — pedirla a Google dispara una cadena: primero el CSS a
+       fonts.googleapis.com, que recién ahí revela la URL del archivo en
+       fonts.gstatic.com. Son tres viajes de red antes de ver una letra con la
+       tipografía correcta. Acá el archivo sale del mismo servidor que la
+       página;
+     · privacidad — pedirle la fuente a Google le entrega a Google la IP de
+       cada visitante.
+
+   Son 49 KB entre los dos archivos, menos que una foto chica.
+
+   ES UNA VARIABLE FONT: un solo archivo cubre TODOS los grosores de 400 a 800,
+   por eso dice `font-weight: 400 800` en vez de haber un archivo por peso. Los
+   pesos intermedios que usa la página (650, 750) salen exactos, no
+   aproximados por el navegador engordando el trazo.
+
+   `font-display: swap` es la parte importante: mientras la fuente se descarga,
+   el texto se muestra con la del sistema y después cambia. Sin eso el
+   navegador esconde el texto hasta tenerla, y la página arranca en blanco.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+  /* El navegador descarga este archivo solo si la página usa alguno de estos
+     caracteres. El latino básico alcanza para todo el castellano. */
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* El subconjunto extendido cubre los caracteres del portugués, el italiano y
+   el resto de Europa que aparecen en la sección de idiomas. */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ============================================================================
    base.css — Reset y elementos comunes
    ========================================================================== */
 
