@@ -30,11 +30,11 @@ export default function Faq() {
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Lo que todos preguntan primero
+            Lo que seguro te estás preguntando
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Y si falta alguna, el asistente de la aplicación contesta a cualquier
-            hora.
+            Y si te queda una duda, adentro de la aplicación hay un asistente que
+            responde a cualquier hora.
           </p>
         </header>
 

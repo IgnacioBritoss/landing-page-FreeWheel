@@ -96,6 +96,28 @@
   flex-shrink: 0;
 }
 
+/* El interruptor de tema. Sin recuadro: solo el ícono, que cambia de color al
+   pasar el mouse. Es una preferencia, no una acción principal. */
+.nav__theme {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--text-3);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav__theme:hover {
+  background: var(--paper-2);
+  color: var(--text);
+}
+
+.nav__theme svg {
+  width: 18px;
+  height: 18px;
+}
+
 .nav__login {
   font-size: var(--t-sm);
   font-weight: 500;
@@ -238,7 +260,29 @@
 /* ── Puntos de corte ─────────────────────────────────────────────────── */
 @media (max-width: 1040px) {
   .nav__links,
-  .nav__login {
+  /* El interruptor de tema. Sin recuadro: solo el ícono, que cambia de color al
+   pasar el mouse. Es una preferencia, no una acción principal. */
+.nav__theme {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--text-3);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav__theme:hover {
+  background: var(--paper-2);
+  color: var(--text);
+}
+
+.nav__theme svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav__login {
     display: none;
   }
   .nav__burger {

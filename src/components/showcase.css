@@ -236,140 +236,80 @@
 .map {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: var(--paper-2);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   overflow: hidden;
 }
 
-.map__plane {
+/* El contenedor que Leaflet toma para dibujar. Tiene que tener alto propio: si
+   midiera 0, el mapa se inicializa en blanco y no hay forma de darse cuenta
+   mirando la consola. */
+.map__canvas {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
 }
 
-.map__river {
-  fill: #dfe7f2;
+/* ── Leaflet, adaptado a la página ────────────────────────────────────────
+   La librería trae su propia hoja de estilos con tipografías, sombras y
+   esquinas que no son las de acá. Esto la alinea, sin tocar su funcionamiento.
+   El z-index es la parte importante: por defecto Leaflet usa valores muy
+   altos y el mapa se le monta encima a la barra de navegación fija. */
+.map .leaflet-pane,
+.map .leaflet-top,
+.map .leaflet-bottom {
+  z-index: 1 !important;
 }
 
-.map__land {
-  fill: #f7f7f5;
-}
-
-.map__streets line {
-  stroke: #e3e3df;
-  stroke-width: 1;
-}
-
-.map__aves path {
-  stroke: #d2d2cc;
-  stroke-width: 3.4;
-  stroke-linecap: round;
-  fill: none;
-}
-
-.map__parks {
-  fill: #dbe9dc;
-}
-
-.map__edge {
-  fill: none;
-  stroke: var(--line-2);
-  stroke-width: 1.4;
-  stroke-linejoin: round;
-}
-
-.map__hood {
-  fill: #9a9a94;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
+.map .leaflet-container {
   font-family: var(--font);
+  background: var(--paper-2);
 }
 
-.map__water {
-  fill: #93a8c4;
-  font-size: 7px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-  font-family: var(--font);
-  /* El nombre del río acompaña la costa. */
-  transform: rotate(58deg);
-  transform-origin: 352px 96px;
+.map .leaflet-control-zoom a {
+  border-radius: 4px;
+  color: var(--text-2);
 }
 
-/* ── Los pines ───────────────────────────────────────────────────────── */
-.map__pin {
-  position: absolute;
-  /* El punto se centra en su coordenada; sin esto cuelga hacia abajo y a la
-     derecha. */
-  transform: translate(-50%, -50%);
+.map .leaflet-control-attribution {
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.75);
 }
 
-/* El círculo celeste de "zona aproximada" se sacó: con cinco pines juntos, los
-   círculos se pisaban entre sí y tapaban las calles y los nombres de los
-   barrios. Queda solo el punto, que es lo que se lee. */
-
-/* El punto: 14px, azul, borde blanco. Igual que el divIcon de la aplicación. */
-.map__dot {
-  position: relative;
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--blue);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-  transition: transform 0.3s var(--ease);
-}
-
-.map__pin.is-open .map__dot {
-  transform: scale(1.25);
-}
-
-/* La tarjeta, como el popup del mapa real. */
-.map__card {
-  position: absolute;
-  bottom: 22px;
-  left: 50%;
-  width: 152px;
-  padding: 10px 12px;
-  background: var(--paper);
-  border: 1px solid var(--line-2);
+.map .leaflet-popup-content-wrapper {
   border-radius: var(--r-sm);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-
-  opacity: 0;
-  transform: translate(-50%, 6px);
-  transition: opacity 0.25s ease, transform 0.25s var(--ease);
-  pointer-events: none;
+  padding: 0;
 }
 
-.map__pin.is-open .map__card {
-  opacity: 1;
-  transform: translate(-50%, 0);
+.map .leaflet-popup-content {
+  margin: 0;
 }
 
-.map__card strong {
+/* El contenido del popup, con la misma pinta que la tarjeta de la app. */
+.map-pop {
+  padding: 10px 12px;
+}
+
+.map-pop strong {
   display: block;
   font-size: 11.5px;
   font-weight: 650;
+  color: var(--text);
 }
 
-.map__card-zone {
+.map-pop span {
   display: block;
   font-size: 10px;
   color: var(--text-3);
   margin-top: 1px;
 }
 
-.map__card-zone em {
+.map-pop em {
   font-style: normal;
   color: var(--text-4);
 }
 
-.map__card-price {
+.map-pop b {
   display: block;
   font-size: 13px;
   font-weight: 700;
@@ -377,19 +317,10 @@
   margin-top: 5px;
 }
 
-.map__card-price em {
-  font-style: normal;
+.map-pop b em {
   font-size: 10px;
   font-weight: 500;
   color: var(--text-3);
-}
-
-.map__credit {
-  position: absolute;
-  right: 9px;
-  bottom: 7px;
-  font-size: 9px;
-  color: var(--text-4);
 }
 
 /* ============================================================================

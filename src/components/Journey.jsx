@@ -55,9 +55,9 @@ export default function Journey() {
               Cómo funciona
             </span>
             <h2 className="journey__title">
-              De la búsqueda a las llaves,
+              Sin mostrador, sin fila
               <br />
-              sin mostrador ni fila
+              y sin depósito en garantía
             </h2>
           </div>
 

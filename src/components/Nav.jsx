@@ -15,6 +15,7 @@
 //     atrás se mueve debajo del menú.
 // ============================================================================
 import { useState, useEffect } from "react";
+import { isDark, toggleTheme } from "../services/theme";
 import { useScroll } from "../hooks/useScroll";
 import { NAV_LINKS, APP_URL } from "../data/content";
 import Logo from "./ui/Logo";
@@ -24,6 +25,12 @@ import "./nav.css";
 export default function Nav() {
   const { progress, scrolled } = useScroll();
   const [open, setOpen] = useState(false);
+  // Arranca en false y se corrige apenas monta. No se lee el tema directo en
+  // el useState porque esa función corre también si algún día la página se
+  // renderiza en el servidor, donde no existe ni window ni localStorage.
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => setDark(isDark()), []);
 
   useEffect(() => {
     if (!open) return;
@@ -65,6 +72,26 @@ export default function Nav() {
           </nav>
 
           <div className="nav__actions">
+            {/* Claro / oscuro. El ícono muestra a qué se va a cambiar, no en
+                qué modo se está: si estoy en claro, muestra la luna. */}
+            <button
+              className="nav__theme"
+              onClick={() => setDark(toggleTheme() === "dark")}
+              aria-label={dark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              title={dark ? "Modo claro" : "Modo oscuro"}
+            >
+              {dark ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="4.2" />
+                  <path d="M12 2v2.6M12 19.4V22M4.2 4.2l1.9 1.9M17.9 17.9l1.9 1.9M2 12h2.6M19.4 12H22M4.2 19.8l1.9-1.9M17.9 6.1l1.9-1.9" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" />
+                </svg>
+              )}
+            </button>
+
             {/* El único enlace que saca de la landing, y lleva a la aplicación
                 de verdad. Antes acá había un "Iniciar sesión" y un "Crear
                 cuenta" que apuntaban a otra sección de esta misma página: dos

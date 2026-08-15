@@ -53,19 +53,19 @@ export default function Earnings() {
           </span>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Tu auto está parado veintitrés horas por día
+            Tu auto pierde plata todos los días que no lo usás
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Y en esas veintitrés horas sigue pagando seguro, patente y garage.
-            Publicarlo no cuesta nada, los días disponibles los elegís vos, y
-            quien lo alquila pasó la misma verificación que pasaste vos.
+            Seguro, patente y garage se pagan igual esté en la calle o en tu
+            cochera. Publicarlo es gratis, vos elegís qué días está disponible, y
+            quien lo alquila mostró su DNI y su licencia antes de poder reservar.
           </p>
 
           <dl className="earnings__points" data-reveal="up" style={{ "--i": 3 }}>
             {[
-              ["Vos elegís los días", "Bloqueás los que usás el auto y desaparecen del calendario para todos."],
-              ["Solo cuentas verificadas", "Nadie reserva sin DNI y licencia aprobados."],
-              ["La comisión se descuenta sola", "Cobrás por reserva; el resto es tuyo."],
+              ["Nunca te quedás sin auto", "Bloqueás los días que lo necesitás y nadie te los puede reservar."],
+              ["Sabés quién lo maneja", "Ves su nombre, sus reseñas y su rango antes de aceptar."],
+              ["Cobrás sin perseguir a nadie", "El pago entra con la reserva, antes de que le des las llaves."],
             ].map(([title, text]) => (
               <div key={title}>
                 <dt>{title}</dt>

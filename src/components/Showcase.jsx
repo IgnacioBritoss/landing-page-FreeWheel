@@ -17,7 +17,9 @@
 //  cargar la página, para cuando alguien baje hasta acá ya habrían terminado.
 // ============================================================================
 import { useState, useRef, useCallback, useEffect } from "react";
-import { MAP_CARS, CHAT, CHAT_PEER, CHAT_PHOTO } from "../data/content";
+import { MAP_CARS, MAP_CENTER, MAP_ZOOM, CHAT, CHAT_PEER, CHAT_PHOTO } from "../data/content";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { useInView } from "../hooks/useReveal";
 import TierShield from "./ui/TierShield";
 import "./showcase.css";
@@ -33,27 +35,27 @@ export default function Showcase() {
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Tres pantallas, sin maquillaje
+            Mirá cómo se ve por dentro
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Son las de la aplicación funcionando, redibujadas para que se vean
-            nítidas en cualquier pantalla.
+            No son bocetos: es la aplicación andando. Tocá el mapa, escuchá el
+            audio, abrí el perfil.
           </p>
         </header>
 
         <div className="showcase__list">
           <Block
             n="01"
-            title="El documento se revisa solo"
-            text="Subís la foto del DNI y el modelo la lee en el momento: confirma que sea el documento que se pidió, que el nombre y el número se lean, y que esté vigente. Si algo no se ve, te lo dice y lo volvés a sacar."
+            title="Te verificás en un minuto, no en tres días"
+            text="Sacás la foto del DNI y te decimos ahí mismo si está bien. Nada de mandar un correo y esperar a que alguien lo mire el lunes. Y si salió movida, la repetís en el momento."
           >
             <ScanDni />
           </Block>
 
           <Block
             n="02"
-            title="Los autos, sobre el mapa"
-            text="Cada punto es un auto publicado en la Ciudad, ubicado sobre su barrio y no sobre su puerta: la dirección exacta aparece recién cuando la reserva está confirmada."
+            title="Encontrá uno a la vuelta de tu casa"
+            text="Cada punto es un auto disponible. Vas a ver el barrio donde está, no la puerta del dueño: la dirección exacta aparece cuando la reserva ya está hecha. Es la privacidad que vos también vas a querer cuando publiques el tuyo."
             reverse
           >
             <MapCars />
@@ -61,8 +63,8 @@ export default function Showcase() {
 
           <Block
             n="03"
-            title="Se coordina por chat"
-            text="Texto, fotos, archivos y notas de voz. Los audios se transcriben solos para poder leerlos cuando no se puede escuchar, y tocando el nombre se abre el perfil de la otra persona con sus reseñas."
+            title="Arreglan la entrega sin dar el teléfono"
+            text="Todo pasa dentro de la aplicación: mensajes, fotos del estado del auto y audios que se transcriben para leerlos en el colectivo. Y tocando el nombre ves quién es la otra persona antes de encontrarte con ella."
           >
             <ChatDemo />
           </Block>
@@ -155,115 +157,74 @@ function ScanDni() {
 /* ============================================================================
    2) El mapa de la Ciudad de Buenos Aires
    ----------------------------------------------------------------------------
-   El contorno es el de CABA: el Río de la Plata al noreste, la Avenida General
-   Paz cerrando por el oeste y el Riachuelo por el sur. Adentro van la trama de
-   calles y las avenidas principales.
+   ES EL MISMO MAPA QUE LA APLICACIÓN: Leaflet sobre mosaicos de OpenStreetMap,
+   con coordenadas reales de cada barrio. No es un dibujo.
 
-   Está dibujado y no es un mapa de imágenes por una razón práctica: un mapa de
-   verdad son decenas de pedidos a un servidor de mosaicos, que tardan, a veces
-   fallan y dejan el recuadro gris. Acá el plano ya está en la página. El mapa
-   de VERDAD, con Leaflet y OpenStreetMap, está en la aplicación.
+   El pin es idéntico al que arma la app en pages/Home/Home.jsx: un divIcon con
+   un punto azul de 14px y borde blanco de 2px. Y el popup repite la misma
+   información —modelo, barrio con la aclaración de que es zona aproximada, y
+   precio por día—.
+
+   scrollWheelZoom desactivado, igual que en la app: si la rueda hiciera zoom,
+   scrollear la página encima del mapa quedaría trabado en él.
    ========================================================================== */
 function MapCars() {
-  const [open, setOpen] = useState(MAP_CARS[1].id);
+  const boxRef = useRef(null);
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    // Guardas: si el efecto corre dos veces (React en modo estricto lo hace en
+    // desarrollo), Leaflet tira "Map container is already initialized".
+    if (!boxRef.current || mapRef.current) return;
+
+    const map = L.map(boxRef.current, {
+      center: MAP_CENTER,
+      zoom: MAP_ZOOM,
+      scrollWheelZoom: false,
+      zoomControl: true,
+      attributionControl: true,
+    });
+    mapRef.current = map;
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap",
+      maxZoom: 19,
+    }).addTo(map);
+
+    MAP_CARS.forEach((car) => {
+      const icon = L.divIcon({
+        className: "",
+        html:
+          '<div style="width:14px;height:14px;background:#2563eb;' +
+          "border:2px solid #fff;border-radius:50%;" +
+          'box-shadow:0 2px 6px rgba(0,0,0,.35);cursor:pointer"></div>',
+        iconAnchor: [7, 7],
+      });
+
+      L.marker([car.lat, car.lng], { icon })
+        .addTo(map)
+        .bindPopup(
+          L.popup({ closeButton: false, maxWidth: 190 }).setContent(
+            '<div class="map-pop">' +
+              "<strong>" + car.name + "</strong>" +
+              '<span>' + car.zone + " <em>(zona aprox.)</em></span>" +
+              '<b>' + car.price + "<em>/día</em></b>" +
+            "</div>",
+          ),
+        );
+    });
+
+    // Al desmontar hay que destruir el mapa: si no, Leaflet deja escuchando
+    // eventos de la ventana sobre un contenedor que ya no existe.
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
 
   return (
     <div className="map">
-      <svg className="map__plane" viewBox="0 0 400 300" aria-hidden="true">
-        <defs>
-          {/* Todo lo que se dibuje adentro de este recorte queda dentro de los
-              límites de la Ciudad: así las calles no se salen al río. */}
-          <clipPath id="caba">
-            <path d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
-                     L232 252 L168 258 L118 250 L86 214 L64 168 L62 120 L86 74
-                     L128 40 L182 18 Z" />
-          </clipPath>
-        </defs>
-
-        {/* El río, detrás de todo */}
-        <path
-          className="map__river"
-          d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
-             L400 300 L400 0 Z"
-        />
-
-        <g clipPath="url(#caba)">
-          {/* La superficie de la ciudad */}
-          <rect x="0" y="0" width="400" height="300" className="map__land" />
-
-          {/* La trama de calles, en diagonal: el damero de Buenos Aires está
-              girado respecto del norte, y esa inclinación es justamente lo que
-              lo hace reconocible. */}
-          <g className="map__streets" transform="rotate(-33 200 150)">
-            {Array.from({ length: 26 }).map((_, i) => (
-              <line key={`a${i}`} x1="-140" y1={-40 + i * 18} x2="540" y2={-40 + i * 18} />
-            ))}
-            {Array.from({ length: 34 }).map((_, i) => (
-              <line key={`b${i}`} x1={-140 + i * 22} y1="-140" x2={-140 + i * 22} y2="440" />
-            ))}
-          </g>
-
-          {/* Las avenidas. Van sin rotar porque cada una tiene su traza. */}
-          <g className="map__aves">
-            {/* Rivadavia, que parte la ciudad al medio de este a oeste */}
-            <path d="M330 150 L64 160" />
-            {/* 9 de Julio */}
-            <path d="M296 96 L318 230" />
-            {/* Del Libertador, siguiendo la costa */}
-            <path d="M232 22 L286 92 L318 168" />
-            {/* Corrientes */}
-            <path d="M308 122 L96 96" />
-            {/* Juan B. Justo */}
-            <path d="M290 66 L92 148" />
-          </g>
-
-          {/* Los parques: Bosques de Palermo y Parque Centenario */}
-          <g className="map__parks">
-            <ellipse cx="268" cy="66" rx="30" ry="20" />
-            <circle cx="176" cy="150" r="9" />
-          </g>
-        </g>
-
-        {/* El borde de la Ciudad, encima de todo */}
-        <path
-          className="map__edge"
-          d="M243 14 L272 40 L305 78 L332 128 L336 168 L318 214 L296 246
-             L232 252 L168 258 L118 250 L86 214 L64 168 L62 120 L86 74
-             L128 40 L182 18 Z"
-        />
-
-        <text className="map__hood" x="252" y="46">BELGRANO</text>
-        <text className="map__hood" x="278" y="128">PALERMO</text>
-        <text className="map__hood" x="196" y="176">ALMAGRO</text>
-        <text className="map__hood" x="132" y="196">CABALLITO</text>
-        <text className="map__hood" x="92" y="228">FLORES</text>
-        <text className="map__water" x="352" y="96">RÍO DE LA PLATA</text>
-      </svg>
-
-      {MAP_CARS.map((car) => (
-        <div
-          key={car.id}
-          className={`map__pin ${open === car.id ? "is-open" : ""}`}
-          style={{ left: `${car.x}%`, top: `${car.y}%` }}
-          onMouseEnter={() => setOpen(car.id)}
-          onFocus={() => setOpen(car.id)}
-        >
-          <button className="map__dot" aria-label={`${car.name} en ${car.zone}`} />
-
-          <div className="map__card">
-            <strong>{car.name}</strong>
-            <span className="map__card-zone">
-              {car.zone} <em>(zona aprox.)</em>
-            </span>
-            <span className="map__card-price">
-              {car.price}
-              <em>/día</em>
-            </span>
-          </div>
-        </div>
-      ))}
-
-      <span className="map__credit">Ciudad de Buenos Aires</span>
+      <div className="map__canvas" ref={boxRef} />
     </div>
   );
 }

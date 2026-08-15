@@ -31,6 +31,26 @@
          ícono de la pestaña aparezca sin un pedido extra al servidor. -->
   </head>
   <body>
+    <!-- ANTIPARPADEO. Este script corre ANTES de que se pinte nada: lee el tema
+         guardado y lo escribe en el <html> al instante. Sin esto, alguien con
+         el modo oscuro elegido vería la página un momento en blanco y después
+         saltaría a oscuro. Va en línea, y no importado, porque un archivo
+         aparte se descargaría después del primer pintado. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("fw-theme");
+          if (t === "dark" || t === "light") {
+            document.documentElement.setAttribute("data-theme", t);
+          } else {
+            t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", t === "dark" ? "#0f141c" : "#ffffff");
+        } catch (e) { /* si falla, queda el modo claro */ }
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

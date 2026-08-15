@@ -16,10 +16,10 @@ import TierShield from "./ui/TierShield";
 import "./trust.css";
 
 const KYC = [
-  ["Email confirmado", "Un código de seis dígitos antes de poder entrar."],
-  ["DNI, frente y dorso", "Revisado por el modelo: tipo, legibilidad y vigencia."],
-  ["Licencia de conducir", "Sin licencia válida no se puede reservar."],
-  ["Revisión del panel", "Un administrador puede volver a pedir lo que no se lea."],
+  ["Confirma su mail", "Un código de seis dígitos. Sin eso no entra."],
+  ["Muestra el DNI", "Frente y dorso. Revisamos que sea el documento y que esté vigente."],
+  ["Muestra la licencia", "Sin licencia al día no puede manejar tu auto. Punto."],
+  ["Alguien lo revisa", "Si una foto no se lee, se la volvemos a pedir antes de habilitarlo."],
 ];
 
 export default function Trust() {
@@ -33,11 +33,12 @@ export default function Trust() {
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Del otro lado hay una persona con nombre y apellido
+            Del otro lado hay alguien con nombre, apellido y antecedentes
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Ninguna cuenta puede publicar ni reservar sin pasar por acá. Y el
-            historial no se compra: se construye alquilando.
+            No le estás dejando el auto a un usuario anónimo. Es una persona que
+            mostró su documento, su licencia y todo lo que hizo antes en la
+            plataforma.
           </p>
         </header>
 
@@ -45,7 +46,7 @@ export default function Trust() {
           {/* ── Verificación ───────────────────────────────────────── */}
           <div className="kyc" data-reveal="up">
             <h3 className="trust__sub">Verificación de identidad</h3>
-            <p className="trust__sub-note">Una sola vez, al crear la cuenta.</p>
+            <p className="trust__sub-note">Cuatro pasos que hace cada persona antes de poder usar Freewheel.</p>
 
             <ol className="kyc__steps">
               {KYC.map(([title, text], i) => (
@@ -60,8 +61,8 @@ export default function Trust() {
             </ol>
 
             <p className="kyc__foot">
-              La dirección exacta del auto aparece recién cuando la reserva está
-              confirmada. Antes se ve la zona.
+              Tu dirección no se publica. Quien mira tu auto ve el barrio; la
+              esquina exacta la sabe recién cuando la reserva está paga.
             </p>
           </div>
 
@@ -69,7 +70,7 @@ export default function Trust() {
           <div className="tiers" data-reveal="up" style={{ "--i": 1 }}>
             <h3 className="trust__sub">Rangos por reseñas reales</h3>
             <p className="trust__sub-note">
-              Los umbrales piden cantidad <em>y</em> promedio a la vez.
+              El rango no se compra ni se acelera: <em>se gana alquilando bien</em>.
             </p>
 
             <ul className="tiers__list">
@@ -85,8 +86,8 @@ export default function Trust() {
             </ul>
 
             <p className="kyc__foot">
-              Sin ninguna reseña no se muestra rango ni promedio: se dice que
-              todavía no hay. Un puntaje inventado es peor que no mostrar nada.
+              Si alguien recién arranca, te lo decimos: no vas a ver cinco
+              estrellas de una cuenta creada ayer.
             </p>
           </div>
         </div>

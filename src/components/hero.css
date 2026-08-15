@@ -105,47 +105,8 @@
   pointer-events: none;
 }
 
-/* ── La maniobra de estacionamiento ──────────────────────────────────────
-   El auto entra desde afuera de la pantalla por la izquierda, se pasa de
-   largo y vuelve MARCHA ATRÁS hasta quedar estacionado.
-
-   Los tres tramos del @keyframes:
-     0%   → fuera de pantalla a la izquierda;
-     55%  → llegó y se pasó 8% para el lado de la trompa (viene y frena);
-     100% → RETROCEDE ese 8% y queda estacionado.
-
-   Este auto mira a la izquierda, así que ir hacia la izquierda es marcha
-   adelante y volver hacia la derecha es marcha atrás. Por eso el tramo final
-   va hacia la derecha, y es ahí donde se encienden las luces de atrás y sale
-   el humo por el escape.
-
-   Las curvas de cada tramo importan más que las posiciones: el primero
-   desacelera fuerte (llega y frena), el segundo es lento y parejo (la marcha
-   atrás siempre es más despacio que la entrada). Con una sola curva pareja
-   para todo, el movimiento se lee como un deslizamiento y no como un auto
-   maniobrando.
-
-   El `both` deja el auto en el estado final cuando termina, y el retardo de
-   0.3s le da tiempo al titular a aparecer primero. */
-.hero__car-move {
-  animation: park 2.9s both 0.3s;
-}
-
-@keyframes park {
-  0% {
-    transform: translateX(-125%);
-    animation-timing-function: cubic-bezier(0.16, 0.84, 0.44, 1);
-  }
-  55% {
-    /* Se pasa de largo hacia la IZQUIERDA (marcha adelante, porque mira para
-       ese lado) y después vuelve hacia la derecha en marcha atrás. */
-    transform: translateX(-8%);
-    animation-timing-function: cubic-bezier(0.5, 0, 0.35, 1);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
+/* El auto no se mueve. La única animación que le queda es el trazo azul que
+   se dibuja con el scroll, más abajo. */
 
 .hero__car svg {
   width: min(780px, 86vw);
@@ -182,65 +143,6 @@
   stroke-dashoffset: calc(1 - min(var(--progress, 0) * 1.6, 1));
 }
 
-/* ── Las luces de atrás ──────────────────────────────────────────────────
-   Se encienden justo cuando arranca la marcha atrás (al 55% de una animación
-   de 2.9s que empieza a los 0.3s, o sea a los ~1.9s) y se apagan cuando
-   termina de estacionar. Van rojas, que es el color de las luces traseras. */
-.hero__lamps {
-  opacity: 0;
-  animation: lamps 2.9s both 0.3s;
-}
-
-@keyframes lamps {
-  0%, 52%   { opacity: 0; }
-  57%       { opacity: 1; }
-  92%       { opacity: 1; }
-  100%      { opacity: 0; }
-}
-
-.hero__lamp {
-  fill: #e5484d;
-}
-
-/* El faro de abajo es el de marcha atrás propiamente dicho: en un auto real es
-   blanco y más chico que el piloto de freno. Acá va en un rojo más claro para
-   que se distinga del de arriba sin romper la paleta. */
-.hero__lamp--low {
-  fill: #f08a8d;
-}
-
-.hero__lamp-glow {
-  fill: #e5484d;
-  opacity: 0.22;
-  /* El desenfoque es lo que convierte un rectángulo rojo en una luz. */
-  filter: blur(7px);
-}
-
-/* ── El humo del escape ──────────────────────────────────────────────────
-   Tres bocanadas que salen por atrás mientras maniobra. Cada una arranca en
-   un momento distinto para que no salgan las tres pegadas. */
-/* Tres repeticiones y listo: el auto terminó de maniobrar y apagó el motor.
-   Como la animación no lleva `forwards`, al terminar el círculo vuelve solo a
-   su opacidad base, que es 0. Antes esto se resolvía con un display:none
-   animado, que no todos los navegadores aplican igual. */
-.hero__smoke circle {
-  fill: #9ca3af;
-  opacity: 0;
-  animation: puff 1.5s ease-out 3;
-}
-
-.hero__smoke circle:nth-child(1) { animation-delay: 1.9s; }
-.hero__smoke circle:nth-child(2) { animation-delay: 2.35s; }
-.hero__smoke circle:nth-child(3) { animation-delay: 2.8s; }
-
-/* La bocanada crece, se aleja del caño hacia la derecha y arriba, y se
-   disipa. */
-@keyframes puff {
-  0%   { opacity: 0;    transform: translate(0, 0) scale(0.3); }
-  18%  { opacity: 0.34; }
-  100% { opacity: 0;    transform: translate(52px, -30px) scale(1.5); }
-}
-
 /* La calle sobre la que llega. Crece desde el centro hacia los costados con el
    scroll. */
 .hero__ground {
@@ -257,17 +159,8 @@
    bucles que se mueven solos.
    El llenado azul SÍ se mantiene, porque no avanza solo: avanza con el scroll
    de la persona, así que nunca la sorprende. */
-@media (prefers-reduced-motion: reduce) {
-  .hero__car-move {
-    animation: fade-in 0.9s ease 0.3s both;
-    transform: none;
-  }
-
-  .hero__lamps,
-  .hero__smoke {
-    display: none;
-  }
-}
+/* El llenado azul se mantiene incluso con "reducir movimiento" activado: no
+   avanza solo, avanza con el scroll de la persona, así que nunca sorprende. */
 
 /* ── El indicador de scroll ──────────────────────────────────────────── */
 .hero__scroll {

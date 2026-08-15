@@ -38,7 +38,7 @@ export const HERO = {
   kicker: "Alquiler de autos entre particulares · Argentina",
   titleLines: ["El auto que necesitás", "está a tres cuadras"],
   lead:
-    "Freewheel conecta a quien tiene un auto parado con quien lo necesita. Identidad verificada, disponibilidad real y entrega registrada de las dos partes.",
+    "Alquilá el auto de alguien de tu barrio por el día que lo necesites, o hacé que el tuyo trabaje los días que está parado. Las dos partes verifican su identidad antes de empezar, y la entrega queda registrada.",
   scrollHint: "Seguí bajando",
 };
 
@@ -57,27 +57,27 @@ export const STATEMENT = {
 export const STEPS = [
   {
     n: "01",
-    title: "Verificás quién sos",
-    text: "Registro en cuatro pasos: tus datos, un código al mail, el DNI y la licencia de conducir. Cada documento lo revisa un modelo de visión en el momento y te avisa si la foto salió movida o cortada. Se hace una sola vez.",
-    aside: "Sin esto no se puede publicar ni reservar.",
+    title: "Creás tu cuenta en cinco minutos",
+    text: "Cargás tus datos, confirmás el mail y sacás una foto del DNI y de la licencia. Se revisan al instante y te avisamos ahí mismo si alguna salió movida, así no esperás dos días para enterarte de que hay que repetirla.",
+    aside: "Lo hacés una sola vez. Después reservás en dos toques.",
   },
   {
     n: "02",
-    title: "Buscás y elegís las fechas",
-    text: "Filtrás por zona, categoría, caja, combustible y precio, en lista o sobre el mapa. El calendario ya viene con los días ocupados marcados, así que no podés reservar algo que no está libre.",
-    aside: "El mapa muestra la zona, no la puerta.",
+    title: "Encontrás el auto que te sirve",
+    text: "Buscás cerca tuyo, ponés los días que lo necesitás y ves solamente los autos que están libres en esas fechas. Filtrás por tamaño, caja automática o manual, combustible y hasta cuánto querés gastar por día.",
+    aside: "Nunca vas a escribirle a alguien para que te diga que justo esos días no puede.",
   },
   {
     n: "03",
-    title: "Reservás y coordinan",
-    text: "Pagás desde la app y se abre el chat con el dueño. Coordinan dónde y a qué hora con mensajes, fotos, archivos y notas de voz que se transcriben solas.",
-    aside: "El pago queda registrado antes de la entrega.",
+    title: "Reservás y arreglan la entrega",
+    text: "Pagás desde la aplicación y se abre el chat con el dueño para acordar dónde y a qué hora. Podés mandarle un audio mientras manejás o una foto de la esquina donde lo esperás.",
+    aside: "El pago queda hecho antes de que se vean, así nadie anda con efectivo encima.",
   },
   {
     n: "04",
-    title: "Se entrega con código",
-    text: "Al entregar el auto, uno muestra su código y el otro lo confirma. Queda asentado quién entregó, quién recibió y a qué hora. Al devolverlo, lo mismo al revés.",
-    aside: "Ninguna de las dos partes queda sin respaldo.",
+    title: "Se entregan el auto con un código",
+    text: "En el momento de la entrega, uno muestra su código en la pantalla y el otro lo confirma. Queda asentado quién entregó, quién recibió y a qué hora. Al devolverlo se repite al revés.",
+    aside: "Si después aparece un desacuerdo, hay un registro con hora, no la palabra de uno contra la del otro.",
   },
 ];
 
@@ -88,43 +88,43 @@ export const STEPS = [
 export const PLATFORM = [
   {
     n: "01",
-    title: "Verificación de identidad",
-    text: "DNI y licencia de conducir, revisados por un modelo de visión que confirma el tipo de documento, que se lea el número y que esté vigente. Lo que no se lee, se vuelve a pedir.",
+    title: "Nadie entra sin decir quién es",
+    text: "Para publicar o para reservar hay que subir el DNI y la licencia de conducir. Los revisamos antes de habilitar la cuenta. La persona que te va a alquilar el auto tuvo que hacer exactamente lo mismo que vos.",
   },
   {
     n: "02",
-    title: "Revisión de las fotos publicadas",
-    text: "Cada imagen que se sube pasa por el mismo modelo, que confirma que sea realmente un vehículo. Se aprueba o se rechaza una por una, antes de que la publicación salga.",
+    title: "Las fotos son del auto que vas a recibir",
+    text: "Cada imagen que se publica se revisa antes de salir. No entran fotos bajadas de internet ni de un modelo distinto: lo que ves en la publicación es el auto que te van a entregar.",
   },
   {
     n: "03",
-    title: "Ficha técnica completada por IA",
-    text: "Con la marca, el modelo y el año se completan solos el baúl, las puertas, la potencia, el consumo y la tracción. Después se corrige a mano lo que haga falta.",
+    title: "Publicar te lleva un minuto",
+    text: "Ponés la marca, el modelo y el año, y la ficha se completa sola: baúl, puertas, potencia, consumo. No tenés que buscar el manual del auto para llenar quince campos.",
   },
   {
     n: "04",
-    title: "Disponibilidad que el dueño controla",
-    text: "Los días en que usa el auto se bloquean y desaparecen del calendario para todo el mundo. Lo ocupado nunca aparece como libre.",
+    title: "Tu auto solo se alquila cuando vos querés",
+    text: "Marcás los días que lo vas a usar y desaparecen del calendario. Nadie puede reservarte el fin de semana que te vas a la costa.",
   },
   {
     n: "05",
-    title: "Mensajería con notas de voz",
-    text: "Texto, imágenes, archivos y audios. Las notas de voz se transcriben para poder leerlas cuando no se puede escuchar.",
+    title: "Se arregla todo por chat, sin dar tu teléfono",
+    text: "Mensajes, fotos, archivos y audios dentro de la aplicación. Los audios se transcriben, así que podés leerlos en el colectivo sin auriculares.",
   },
   {
     n: "06",
-    title: "Reportes con prueba adjunta",
-    text: "Para reportar una publicación o a una persona hay que adjuntar evidencia. Un panel de administración revisa cada caso.",
+    title: "Si algo sale mal, hay a quién avisarle",
+    text: "Podés reportar una publicación o a una persona adjuntando la prueba. Cada caso lo revisa alguien del equipo, y las cuentas que no corresponden se dan de baja.",
   },
   {
     n: "07",
-    title: "Rangos por reseñas reales",
-    text: "Bronce, plata, oro y platino. Los umbrales piden cantidad y promedio a la vez, así que muchas reseñas flojas no suben a nadie. Sin reseñas no se muestra ningún promedio.",
+    title: "Sabés con quién estás tratando",
+    text: "Cada persona arrastra las reseñas de sus alquileres terminados y un rango que se gana con el tiempo. Un platino no se compra: son treinta alquileres con casi cinco estrellas de promedio.",
   },
   {
     n: "08",
-    title: "Cinco idiomas, la app entera",
-    text: "Español, inglés, portugués, italiano y chino. No solo el menú: cada pantalla, cada aviso y cada mensaje de error.",
+    title: "Funciona igual si no hablás castellano",
+    text: "La aplicación entera está en español, inglés, portugués, italiano y chino. Un turista se verifica, reserva y coordina la entrega en su idioma.",
   },
 ];
 
@@ -141,7 +141,7 @@ export const AI_USES = [
       "Consumo mixto 6.8 l/100km",
       "Tracción delantera",
     ],
-    note: "Se cargan marca, modelo y año. El resto de la ficha se completa sola y después se corrige a mano.",
+    note: "Ponés marca, modelo y año. El resto se completa solo, y si algo no coincide lo corregís vos.",
   },
   {
     key: "fotos",
@@ -153,7 +153,7 @@ export const AI_USES = [
       "Imagen 3 · no se reconoce un vehículo",
       "Imagen 4 · vehículo detectado",
     ],
-    note: "Un modelo de visión aprueba o rechaza cada foto antes de que la publicación salga.",
+    note: "Cada foto se revisa antes de publicarse. Lo que ves en el aviso es el auto que te van a entregar.",
   },
   {
     key: "documento",
@@ -165,7 +165,7 @@ export const AI_USES = [
       "Número legible",
       "Dentro de la fecha de vigencia",
     ],
-    note: "El mismo modelo revisa el DNI y la licencia, y avisa cuando la foto no permite leer un dato.",
+    note: "Revisamos el DNI y la licencia en el momento y te avisamos ahí mismo si hay que repetir la foto.",
   },
   {
     key: "asistente",
@@ -177,16 +177,16 @@ export const AI_USES = [
       "Tocá Cancelar y elegí el motivo",
       "El dueño recibe el aviso al instante",
     ],
-    note: "Un asistente disponible en todas las pantallas de la aplicación, con el contexto de la cuenta.",
+    note: "Un asistente que está en todas las pantallas y conoce tu reserva, a cualquier hora.",
   },
 ];
 
 /** Los rangos, con los umbrales reales de services/rank.js de la app. */
 export const TIERS = [
-  { key: "bronze", name: "Bronce", bars: 1, req: "desde 1 reseña" },
-  { key: "silver", name: "Plata", bars: 2, req: "5 reseñas · 4.0 de promedio" },
-  { key: "gold", name: "Oro", bars: 3, req: "15 reseñas · 4.5 de promedio" },
-  { key: "platinum", name: "Platino", bars: 4, req: "30 reseñas · 4.8 de promedio" },
+  { key: "bronze", name: "Bronce", bars: 1, req: "su primer alquiler terminado" },
+  { key: "silver", name: "Plata", bars: 2, req: "5 alquileres, 4 estrellas o más" },
+  { key: "gold", name: "Oro", bars: 3, req: "15 alquileres, 4.5 de promedio" },
+  { key: "platinum", name: "Platino", bars: 4, req: "30 alquileres, casi cinco estrellas" },
 ];
 
 /**
@@ -213,17 +213,21 @@ export const SCREENS = [
 ];
 
 /**
- * Los autos sobre el mapa de la Ciudad de Buenos Aires.
- * `x` e `y` son porcentajes dentro del recuadro, ubicados sobre el barrio que
- * corresponde en el dibujo. El mapa de la aplicación es Leaflet sobre
- * OpenStreetMap con coordenadas reales; el de acá es el mismo plano dibujado.
+ * Los autos publicados, sobre el mapa REAL de la Ciudad de Buenos Aires.
+ *
+ * `lat` y `lng` son coordenadas de verdad, las del centro de cada barrio: el
+ * mapa de la landing es el mismo Leaflet sobre OpenStreetMap que usa la
+ * aplicación, así que acá van coordenadas y no porcentajes.
  */
+export const MAP_CENTER = [-34.5985, -58.4265];
+export const MAP_ZOOM = 12;
+
 export const MAP_CARS = [
-  { id: 1, x: 68, y: 22, name: "Volkswagen T-Cross", price: "$12.000", zone: "Belgrano" },
-  { id: 2, x: 74, y: 42, name: "Toyota Corolla", price: "$8.500", zone: "Palermo" },
-  { id: 3, x: 52, y: 56, name: "Peugeot 208", price: "$6.800", zone: "Almagro" },
-  { id: 4, x: 38, y: 62, name: "Fiat Cronos", price: "$7.200", zone: "Caballito" },
-  { id: 5, x: 24, y: 72, name: "Renault Duster", price: "$11.000", zone: "Flores" },
+  { id: 1, lat: -34.5620, lng: -58.4560, name: "Volkswagen T-Cross", price: "$12.000", zone: "Belgrano" },
+  { id: 2, lat: -34.5780, lng: -58.4240, name: "Toyota Corolla", price: "$8.500", zone: "Palermo" },
+  { id: 3, lat: -34.6100, lng: -58.4200, name: "Peugeot 208", price: "$6.800", zone: "Almagro" },
+  { id: 4, lat: -34.6180, lng: -58.4430, name: "Fiat Cronos", price: "$7.200", zone: "Caballito" },
+  { id: 5, lat: -34.6280, lng: -58.4640, name: "Renault Duster", price: "$11.000", zone: "Flores" },
 ];
 
 /**
@@ -349,27 +353,27 @@ export const LANGUAGES = [
 export const FAQS = [
   {
     q: "¿Qué necesito para alquilar un auto?",
-    a: "Ser mayor de 18, tener la cuenta verificada con DNI y licencia de conducir vigente, y un medio de pago cargado. La verificación se hace una sola vez: después se reserva en dos toques.",
+    a: "Ser mayor de 18, tener la licencia de conducir vigente y un medio de pago. Subís la licencia y el DNI una sola vez, cuando creás la cuenta; a partir de ahí reservás en dos toques.",
   },
   {
-    q: "¿Cómo sé que la otra persona es quien dice ser?",
-    a: "Porque no se puede publicar ni reservar sin pasar la verificación de identidad. Cada cuenta subió su DNI y su licencia, y esos documentos los revisó primero un modelo de visión y después el panel de administración. Además cada persona arrastra sus reseñas y su rango, que salen de alquileres terminados.",
+    q: "¿Cómo sé que la persona que me alquila es de fiar?",
+    a: "Porque pasó por lo mismo que vos: sin DNI y licencia aprobados no se puede publicar un auto ni reservar uno. Además vas a ver sus reseñas de alquileres terminados y su rango, que se gana con el tiempo y no se puede comprar.",
   },
   {
-    q: "¿Qué pasa si el auto aparece con un daño?",
-    a: "El retiro y la devolución quedan registrados con el código de cada parte, con fecha y hora. Desde el chat se pueden mandar fotos en el momento, y cualquiera de los dos puede abrir un reporte adjuntando esa prueba. Sin prueba adjunta el reporte no se envía.",
+    q: "¿Y si el auto aparece con un golpe?",
+    a: "La entrega y la devolución quedan registradas con un código de cada parte, con fecha y hora. En el momento pueden sacarse fotos por el chat, y cualquiera de los dos puede abrir un reporte adjuntando esa prueba. No queda en la palabra de uno contra la del otro.",
   },
   {
-    q: "¿Puedo bloquear los días que uso mi auto?",
-    a: "Sí. Desde el panel de dueño se marcan los días no disponibles y esos días desaparecen del calendario para todo el mundo. Nadie puede reservar un día bloqueado.",
+    q: "¿Puedo usar mi auto cuando lo necesito?",
+    a: "Es tuyo, así que sí. Marcás los días que lo vas a usar y desaparecen del calendario: nadie te lo puede reservar esos días. Lo publicás cuando querés y lo sacás cuando querés.",
   },
   {
-    q: "¿Cuánto puedo ganar publicando mi auto?",
-    a: "Depende de la categoría, del estado del vehículo y de cuántos días por mes quede disponible. Más arriba hay una calculadora para estimarlo. La plataforma cobra una comisión sobre cada reserva y el resto es del dueño.",
+    q: "¿Cuánto se puede ganar con un auto parado?",
+    a: "Depende del modelo, del estado y de cuántos días al mes lo dejes disponible. Más arriba en esta página hay una calculadora para hacerte una idea con tu caso. Publicar no cuesta nada: Freewheel cobra una comisión solamente cuando alguien te alquila.",
   },
   {
-    q: "¿El pago es real?",
-    a: "No. Freewheel es un proyecto académico y el pago está simulado: se crea la intención de pago, se procesa y se confirma o falla, pero no se mueve dinero. El flujo completo está implementado.",
+    q: "¿Qué pasa si tengo un problema en el medio del alquiler?",
+    a: "Tenés el chat con la otra persona y un asistente dentro de la aplicación que responde a cualquier hora. Y si el problema es serio, el reporte llega a alguien del equipo que lo revisa.",
   },
 ];
 

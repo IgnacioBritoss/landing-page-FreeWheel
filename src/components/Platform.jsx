@@ -27,12 +27,11 @@ export default function Platform() {
           </span>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Publicar es fácil. Lo difícil es que salga bien.
+            Todo lo que hicimos para que puedas confiar
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Ocho piezas que existen porque, en un alquiler entre dos personas que
-            no se conocen, cada una resuelve algo que de otro modo termina en una
-            discusión.
+            Prestar el auto o manejar el de otro da nervios. Cada una de estas
+            ocho cosas saca uno de esos nervios del medio.
           </p>
         </header>
 

@@ -98,42 +98,22 @@ export default function Hero() {
       </div>
 
       {/* ── El auto ─────────────────────────────────────────────────────
-          LLEGA MANEJANDO. Entra desde la izquierda, pasa de largo el lugar y
-          vuelve marcha atrás para estacionar, como cuando uno se pasa de la
-          cochera. Toda la maniobra está en el @keyframes `park` de hero.css.
+          Queda QUIETO. Antes llegaba manejando, con luces de marcha atrás y
+          humo del escape: eran tres efectos peleando por la atención en el
+          primer bloque de la página, justo donde hay que leer el titular. Se
+          sacaron. Lo único que se mueve es el trazo azul, que se dibuja con el
+          scroll: eso lo maneja la persona, no la página.
 
-          aria-hidden porque es decorativo: no aporta información que no esté
-          escrita en el titular, y describírselo a un lector de pantalla sería
-          ruido. */}
+          aria-hidden porque es decorativo. */}
       <div className="hero__car">
         <div className="hero__car-move">
           <svg viewBox="0 0 720 260" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
-            {/* El humo, saliendo del caño de escape. Va en el extremo DERECHO
-                (x≈700), que es la cola de este auto: la trompa es la izquierda,
-                donde el capó sube lento y largo hasta el parabrisas. */}
-            <g className="hero__smoke">
-              <circle cx="706" cy="208" r="9" />
-              <circle cx="706" cy="208" r="7" />
-              <circle cx="706" cy="208" r="11" />
-            </g>
-
             {/* El contorno gris: el auto que llega. */}
             <path className="hero__car-ghost" d={CAR_PATH} pathLength="1" />
 
             {/* El trazo azul, que se va dibujando con el scroll por encima del
                 contorno. Es el auto "llenándose". */}
             <path className="hero__car-line" d={CAR_PATH} pathLength="1" />
-
-            {/* Las luces traseras, sobre la cola: extremo DERECHO del dibujo.
-                El auto mira a la IZQUIERDA —el capó largo y bajo que sube hasta
-                el parabrisas está de ese lado, y la caída corta y empinada de
-                la luneta está acá—. Antes estaban en la trompa.
-                Se encienden cuando pone la marcha atrás. */}
-            <g className="hero__lamps">
-              <rect className="hero__lamp-glow" x="654" y="132" width="56" height="48" rx="24" />
-              <rect className="hero__lamp" x="664" y="142" width="34" height="16" rx="8" />
-              <rect className="hero__lamp hero__lamp--low" x="670" y="165" width="24" height="9" rx="4.5" />
-            </g>
 
           </svg>
         </div>

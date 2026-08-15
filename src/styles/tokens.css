@@ -88,3 +88,76 @@
      que hace que un movimiento se sienta caro en vez de brusco. */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* ============================================================================
+   MODO OSCURO
+   ----------------------------------------------------------------------------
+   Toda la página lee de las variables de arriba, así que el modo oscuro es
+   redefinirlas una vez. Ningún componente sabe en qué modo está.
+
+   POR QUÉ NO SE INVIERTE LA PÁGINA CON UN FILTRO
+   La aplicación resuelve el modo oscuro invirtiendo todo con `filter:
+   invert()`, y por eso tiene que ir marcando a mano los bloques que ya son
+   oscuros para volver a invertirlos. Funciona, pero arrastra dos problemas: el
+   azul de la marca se convierte en naranja, y toda foto o mapa que aparezca
+   sale en negativo. Acá, con las variables, el azul sigue siendo azul y el
+   mapa se ve normal.
+
+   TRES ESTADOS, no dos:
+     · sin atributo  → lo que diga el sistema operativo (@media);
+     · [data-theme="dark"]  → oscuro, elegido a mano;
+     · [data-theme="light"] → claro, elegido a mano.
+   El atributo lo escribe services/theme.js sobre el <html>.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f141c;
+    --paper-2: #151b25;
+    --paper-3: #1c232f;
+
+    --ink: #060a10;
+    --ink-2: #0d131b;
+
+    --text: #edf1f7;
+    --text-2: #b3bdcb;
+    --text-3: #93a0b1;
+    --text-4: #71808f;
+
+    --line: #232b37;
+    --line-2: #333d4c;
+
+    /* El azul se aclara un punto: el #2563eb sobre fondo oscuro queda apagado
+       y no llega al contraste mínimo para texto. */
+    --blue: #4d84f3;
+    --blue-dark: #6f9df7;
+    --blue-wash: #16233c;
+
+    --ok: #34d399;
+    --alert: #fbbf24;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0f141c;
+  --paper-2: #151b25;
+  --paper-3: #1c232f;
+
+  --ink: #060a10;
+  --ink-2: #0d131b;
+
+  --text: #edf1f7;
+  --text-2: #b3bdcb;
+  --text-3: #93a0b1;
+  --text-4: #71808f;
+
+  --line: #232b37;
+  --line-2: #333d4c;
+
+  --blue: #4d84f3;
+  --blue-dark: #6f9df7;
+  --blue-wash: #16233c;
+
+  --ok: #34d399;
+  --alert: #fbbf24;
+}

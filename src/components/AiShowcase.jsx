@@ -74,12 +74,13 @@ export default function AiShowcase() {
           </span>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            No está de adorno: hace el trabajo que nadie quiere hacer
+            Te sacamos de encima la parte tediosa
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Completar una ficha técnica a mano lleva quince minutos y termina con
-            la mitad de los campos vacíos. Revisar que cada foto sea un auto y que
-            cada documento se lea, lleva más todavía.
+            Publicar un auto en otro lado son quince minutos llenando campos que
+            no sabés de memoria. Acá ponés marca, modelo y año, y el resto sale
+            solo. Lo mismo con los documentos: los revisamos al instante en vez de
+            hacerte esperar dos días.
           </p>
 
           <ul className="ai__tabs" data-reveal="up" style={{ "--i": 3 }}>

@@ -28,10 +28,10 @@ export default function Close() {
       <div className="wrap close__cta">
         <h2 className="close__title" data-reveal="up">
           <span className="curtain">
-            <span>Tu próximo viaje empieza</span>
+            <span>Hay un auto libre</span>
           </span>
           <span className="curtain">
-            <span style={{ "--i": 1 }}>con un auto que ya está acá</span>
+            <span style={{ "--i": 1 }}>a tres cuadras de tu casa</span>
           </span>
         </h2>
 
@@ -48,8 +48,9 @@ export default function Close() {
         </div>
 
         <p className="close__note" data-reveal="up" style={{ "--i": 3 }}>
-          La aplicación está funcionando. El registro es gratis, no pide tarjeta
-          y la verificación de identidad se hace una sola vez.
+          Crear la cuenta es gratis y no pide tarjeta. Verificás tu identidad una
+          sola vez y ya podés reservar, o publicar el tuyo y empezar a cobrar por
+          los días que no lo usás.
         </p>
       </div>
 
