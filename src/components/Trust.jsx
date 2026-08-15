@@ -44,7 +44,7 @@ export default function Trust() {
 
             <ol className="kyc__steps">
               {t.trust.kyc.map(([title, text], i) => (
-                <li key={title}>
+                <li key={i}>
                   <span className="kyc__n">{String(i + 1).padStart(2, "0")}</span>
                   <div>
                     <strong>{title}</strong>

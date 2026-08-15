@@ -22,10 +22,37 @@
 //  Después de mostrar un elemento se lo deja de observar (unobserve). Si no, al
 //  volver a subir el elemento se escondería otra vez y la página "parpadearía"
 //  al scrollear para atrás.
+//
+//  ─────────────────────────────────────────────────────────────────────────
+//  POR QUÉ RECIBE UNA LLAVE (y no es un adorno)
+//
+//  El barrido del documento se hace UNA vez, cuando la página monta. Todo lo
+//  que tenga [data-reveal] en ese momento queda observado; lo que aparezca
+//  DESPUÉS, no, y como el CSS lo arranca en opacity:0, se queda invisible para
+//  siempre.
+//
+//  Eso es exactamente lo que pasó al agregar los idiomas: al cambiar de idioma,
+//  React vuelve a montar los elementos de una lista si su `key` es el texto
+//  traducido —cambió la llave, cambió el elemento—, y los nodos nuevos no
+//  estaban en el barrido inicial. La sección "La plataforma" quedaba en blanco.
+//
+//  Se arregló de las dos puntas: las listas ahora usan llaves que no dependen
+//  del idioma (así no se remontan), y además el barrido se rehace cuando esta
+//  llave cambia. Con una sola de las dos alcanzaba; con las dos, el día que
+//  alguien agregue una sección nueva no tiene que acordarse de esto.
+//
+//  Rehacer el barrido es barato y pasa una vez por cambio de idioma. A lo ya
+//  mostrado no lo afecta: conserva su clase .is-visible y volver a observarlo
+//  no lo hace parpadear.
+//  ─────────────────────────────────────────────────────────────────────────
 // ============================================================================
 import { useEffect } from "react";
 
-export function useReveal() {
+/**
+ * @param {unknown} key  Cambiala para rehacer el barrido. La página le pasa el
+ *                       idioma, que es lo único que remonta elementos.
+ */
+export function useReveal(key) {
   useEffect(() => {
     // Si el navegador es viejo y no tiene la API, se muestra todo directamente.
     // Siempre es mejor una página sin animación que una página en blanco.
@@ -60,7 +87,7 @@ export function useReveal() {
     // Al desmontar hay que desconectar el observer, si no queda escuchando
     // sobre nodos que ya no existen (fuga de memoria).
     return () => observer.disconnect();
-  }, []);
+  }, [key]);
 }
 
 /**

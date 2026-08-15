@@ -74,7 +74,7 @@ export default function Journey() {
 
             {steps.map((step, i) => (
               <li
-                key={step.title}
+                key={i}
                 className={`journey__tick ${i === active ? "is-active" : ""} ${
                   i < active ? "is-done" : ""
                 }`}
@@ -99,7 +99,7 @@ export default function Journey() {
           <div className="journey__panels">
             {steps.map((step, i) => (
               <article
-                key={step.title}
+                key={i}
                 className={`journey__panel ${i === active ? "is-active" : ""}`}
               >
                 <span className="journey__panel-n">{num(i)}</span>

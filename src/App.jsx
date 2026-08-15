@@ -29,8 +29,14 @@
 //  useReveal() se llama UNA sola vez, acá. Un único IntersectionObserver se
 //  ocupa de todos los [data-reveal] de la página; no hace falta uno por
 //  sección.
+//
+//  Se le pasa el idioma porque es lo único capaz de reemplazar elementos ya
+//  montados: cuando cambia, el observador vuelve a barrer el documento y toma
+//  los nodos nuevos. Sin eso, una sección remontada se quedaba invisible (está
+//  contado en detalle en hooks/useReveal.js).
 // ============================================================================
 import { useReveal } from "./hooks/useReveal";
+import { useI18n } from "./i18n/core";
 
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
@@ -47,7 +53,8 @@ import Faq from "./components/Faq";
 import Close from "./components/Close";
 
 export default function App() {
-  useReveal();
+  const { lang } = useI18n();
+  useReveal(lang);
 
   return (
     <>

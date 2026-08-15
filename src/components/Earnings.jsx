@@ -83,8 +83,8 @@ export default function Earnings() {
           </p>
 
           <dl className="earnings__points" data-reveal="up" style={{ "--i": 3 }}>
-            {t.earnings.points.map(([title, text]) => (
-              <div key={title}>
+            {t.earnings.points.map(([title, text], i) => (
+              <div key={i}>
                 <dt>{title}</dt>
                 <dd>{text}</dd>
               </div>

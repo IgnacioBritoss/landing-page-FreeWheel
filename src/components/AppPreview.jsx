@@ -86,7 +86,7 @@ export default function AppPreview() {
 
                 <div className="phone__nav" aria-hidden="true">
                   {t.preview.tabs.map((l, i) => (
-                    <span key={l} className={i === 0 ? "is-active" : ""}>
+                    <span key={i} className={i === 0 ? "is-active" : ""}>
                       {l}
                     </span>
                   ))}
@@ -105,8 +105,8 @@ function ScreenSearch({ t }) {
   return (
     <>
       <div className="ph-form">
-        {t.preview.search.rows.map(([k, v]) => (
-          <div className="ph-form__row" key={k}>
+        {t.preview.search.rows.map(([k, v], i) => (
+          <div className="ph-form__row" key={i}>
             <span>{k}</span>
             <strong>{v}</strong>
           </div>
@@ -115,7 +115,7 @@ function ScreenSearch({ t }) {
       </div>
 
       {t.preview.search.results.map(([name, price, meta], i) => (
-        <div className="ph-item" key={name} style={{ "--i": i }}>
+        <div className="ph-item" key={i} style={{ "--i": i }}>
           <div>
             <strong>{name}</strong>
             <span>{meta}</span>
@@ -133,7 +133,7 @@ function ScreenDetail({ t }) {
     <>
       <div className="ph-specs">
         {t.preview.detail.specs.map(([k, v], i) => (
-          <div key={k} style={{ "--i": i }}>
+          <div key={i} style={{ "--i": i }}>
             <span>{k}</span>
             <strong>{v}</strong>
           </div>
@@ -221,7 +221,7 @@ function ScreenQr({ t }) {
             estructura de la pantalla, no texto, así que se decide por
             posición y no repitiendo un booleano en los cinco diccionarios. */}
         {t.preview.qr.steps.map((label, i) => (
-          <div key={label} className={i < 2 ? "is-done" : ""} style={{ "--i": i }}>
+          <div key={i} className={i < 2 ? "is-done" : ""} style={{ "--i": i }}>
             <span className="ph-steps__bar" />
             {label}
           </div>

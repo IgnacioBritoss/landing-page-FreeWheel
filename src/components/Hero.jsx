@@ -73,7 +73,7 @@ export default function Hero() {
           {t.hero.titleLines.map((line, i) => (
             // Cada línea es una "cortina": el <span> de adentro sube desde
             // abajo y el contenedor recorta lo que sobresale.
-            <span className="curtain" key={line} style={{ "--i": i }}>
+            <span className="curtain" key={i} style={{ "--i": i }}>
               <span>{line}</span>
             </span>
           ))}

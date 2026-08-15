@@ -133,7 +133,7 @@ function ScanDni() {
 
       <ul className="scan__checks">
         {t.showcase.scan.checks.map((label, i) => (
-          <li key={label} style={{ "--i": i }}>
+          <li key={i} style={{ "--i": i }}>
             <span className="scan__mark" aria-hidden="true" />
             {label}
           </li>
@@ -619,7 +619,7 @@ function ProfileModal({ onClose }) {
             {p.reviewsTitle} ({CHAT_PEER.reviewCount})
           </h5>
           {CHAT_PEER.reviews.map((r, i) => (
-            <article key={r.author}>
+            <article key={i}>
               <div className="profile__review-top">
                 <strong>{r.author}</strong>
                 <Stars n={r.stars} label={p.stars} />

@@ -65,7 +65,7 @@ export default function Close() {
 
             <nav className="close__cols" aria-label={t.close.footerNav}>
               {t.close.columns.map((col, c) => (
-                <div key={col.title}>
+                <div key={c}>
                   <h3>{col.title}</h3>
                   <ul>
                     {/* Cada enlace baja a una sección real de esta página.
@@ -75,7 +75,7 @@ export default function Close() {
                         El destino sale de content.js y la etiqueta del
                         diccionario, emparejados por posición. */}
                     {col.links.map((label, i) => (
-                      <li key={label}>
+                      <li key={i}>
                         <a href={FOOTER_HREFS[c][i]}>{label}</a>
                       </li>
                     ))}

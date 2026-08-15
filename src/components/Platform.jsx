@@ -37,17 +37,22 @@ export default function Platform() {
         </header>
 
         <ol className="platform__list">
+          {/* La llave es el número de la fila y NO el título: el título cambia
+              con el idioma, y una llave distinta hace que React tire el
+              elemento y monte uno nuevo. El nuevo nacía invisible porque no
+              estaba en el barrido del observador, y esta lista entera quedaba
+              en blanco al cambiar de idioma. */}
           {t.platform.items.map((item, i) => (
             <li
               className="platform__row"
-              key={item.title}
+              key={i}
               data-reveal="up"
               // El retardo se reinicia cada tres filas: si siguiera creciendo,
               // la octava tardaría casi un segundo en aparecer y se vería
               // como un retraso, no como una cascada.
               style={{ "--i": i % 3 }}
             >
-              <span className="platform__n">{String(i + 1).padStart(2, "0")}</span>
+              <span className="platform__n">{num(i)}</span>
               <h3 className="platform__title">{item.title}</h3>
               <p className="platform__text">{item.text}</p>
             </li>
@@ -56,4 +61,9 @@ export default function Platform() {
       </div>
     </section>
   );
+}
+
+/** "01", "02"... El número sale de la posición: es igual en los cinco idiomas. */
+function num(i) {
+  return String(i + 1).padStart(2, "0");
 }

@@ -43,7 +43,7 @@ export default function Faq() {
           {t.faq.items.map((item, i) => {
             const isOpen = open === i;
             return (
-              <li key={item.q} className={`faq__item ${isOpen ? "is-open" : ""}`}>
+              <li key={i} className={`faq__item ${isOpen ? "is-open" : ""}`}>
                 <h3>
                   <button
                     className="faq__q"

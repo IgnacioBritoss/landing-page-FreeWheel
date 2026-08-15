@@ -127,7 +127,7 @@ export default function AiShowcase() {
                   // y no una búsqueda de texto: buscar "no se reconoce" dentro
                   // de la frase andaba en castellano y fallaba en los otros
                   // cuatro idiomas.
-                  <li key={line} className={shape.bad?.includes(i) ? "is-bad" : ""}>
+                  <li key={i} className={shape.bad?.includes(i) ? "is-bad" : ""}>
                     {line}
                   </li>
                 ))}

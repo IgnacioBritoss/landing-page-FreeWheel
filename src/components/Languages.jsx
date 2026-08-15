@@ -63,8 +63,14 @@ export default function Languages() {
         </div>
 
         {/* La `key` remonta el bloque en cada cambio para que la animación de
-            entrada vuelva a correr. */}
-        <div className="langs__demo" key={current.code} data-reveal="up" style={{ "--i": 2 }}>
+            entrada vuelva a correr.
+
+            NO LLEVA data-reveal, y es a propósito: este elemento se remonta
+            cada vez que se toca un idioma, y lo que se remonta se sale del
+            barrido del observador de apariciones y queda invisible. Su entrada
+            ya la hace la animación `pop-in` del CSS, que es justamente la que
+            tiene que volver a correr en cada cambio. */}
+        <div className="langs__demo" key={current.code}>
           <span className="langs__demo-label">{t.languages.demoLabel}</span>
           <strong lang={current.code}>{current.greeting}</strong>
           <span className="langs__caret" aria-hidden="true" />
