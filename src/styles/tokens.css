@@ -52,6 +52,13 @@
   --ok: #059669;
   --alert: #b45309;
 
+  /* Los botones al pasar el mouse. Van como token y no como color fijo porque
+     en cada modo tienen que moverse hacia un lado distinto: en claro el botón
+     negro se pone más negro, en oscuro el botón blanco se pone más blanco. Con
+     un valor fijo, uno de los dos modos terminaba invirtiendo el botón. */
+  --btn-solid-hover: #000000;
+  --btn-paper-hover: #e9ebef;
+
   /* ── Radios ───────────────────────────────────────────────────────────
      Chicos y parejos. Las píldoras muy redondeadas se sacaron a propósito:
      con esquinas de 999px todo se lee como una etiqueta de aplicación y la
@@ -141,6 +148,9 @@
 
     --ok: #34d399;
     --alert: #fbbf24;
+
+    --btn-solid-hover: #ffffff;
+    --btn-paper-hover: #1c232f;
   }
 }
 
@@ -166,4 +176,7 @@
 
   --ok: #34d399;
   --alert: #fbbf24;
+
+  --btn-solid-hover: #ffffff;
+  --btn-paper-hover: #1c232f;
 }

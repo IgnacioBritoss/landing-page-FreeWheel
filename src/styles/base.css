@@ -256,22 +256,25 @@ h1, h2, h3, h4 {
 }
 
 /* ── El botón que lleva a la aplicación ──────────────────────────────────
-   VA SIEMPRE EN AZUL, en los dos modos. Antes usaba `var(--text)` de fondo y
-   `var(--paper)` de texto, y como esos dos tokens se dan vuelta con el modo
-   oscuro, el botón se invertía solo: de negro con letras blancas pasaba a
-   blanco con letras negras. Quedaba como si fuera otro botón.
+   El fondo y el texto salen de los tokens, así que se invierte con el tema: en
+   claro es negro con letras blancas, en oscuro blanco con letras oscuras. Eso
+   es a propósito y se ve bien.
 
-   El azul es el color de la marca y tiene contraste suficiente contra el
-   blanco Y contra el negro, así que es el único que puede quedarse quieto. En
-   modo oscuro se aclara un punto (lo hace la variable), pero sigue siendo
-   azul: no cambia de identidad. */
+   LO QUE ESTABA MAL ERA EL HOVER. Estaba escrito con un color fijo (#000), que
+   en modo claro oscurece —bien— pero en modo oscuro convertía un botón blanco
+   en uno negro, con el texto también oscuro encima: desaparecía al pasarle el
+   mouse.
+
+   Ahora el hover también sale de un token, y en cada modo se mueve HACIA EL
+   MISMO LADO que el fondo: en claro va al negro puro, en oscuro al blanco
+   puro. El botón se intensifica en vez de darse vuelta. */
 .btn--solid {
-  background: var(--blue);
-  color: #fff;
+  background: var(--text);
+  color: var(--paper);
 }
 
 .btn--solid:hover {
-  background: var(--blue-dark);
+  background: var(--btn-solid-hover);
 }
 
 .btn--blue {
@@ -292,17 +295,16 @@ h1, h2, h3, h4 {
   border-color: var(--text);
 }
 
-/* En el bloque de cierre el botón es el mismo que arriba: azul. Antes era
-   blanco con letras oscuras, y en modo oscuro `var(--paper)` se volvía casi
-   negro: quedaba un botón negro con letras grises sobre fondo negro, ilegible.
-   Un mismo destino tiene que verse siempre igual. */
+/* El botón del bloque de cierre. Mismo criterio: el hover ya no es un gris
+   fijo —que en modo oscuro aclaraba el fondo y dejaba el texto claro encima,
+   ilegible— sino un token que acompaña al tema. */
 .btn--paper {
-  background: var(--blue);
-  color: #fff;
+  background: var(--paper);
+  color: var(--text);
 }
 
 .btn--paper:hover {
-  background: var(--blue-dark);
+  background: var(--btn-paper-hover);
 }
 
 .btn--line-ink {
