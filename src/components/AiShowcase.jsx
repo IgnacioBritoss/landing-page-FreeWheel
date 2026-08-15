@@ -19,6 +19,7 @@
 // ============================================================================
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AI_USES } from "../data/content";
+import { useT } from "../i18n/core";
 import { useInView } from "../hooks/useReveal";
 import "./ai.css";
 
@@ -26,13 +27,17 @@ const LINE_MS = 420;   // cuánto tarda en aparecer cada renglón
 const HOLD_MS = 2200;  // cuánto se queda la respuesta completa antes de pasar
 
 export default function AiShowcase() {
+  const t = useT();
   const [active, setActive] = useState(0);
   const [lines, setLines] = useState(0);
   const [auto, setAuto] = useState(true);
   const [running, setRunning] = useState(false);
 
   const ref = useRef(null);
-  const use = AI_USES[active];
+  // La demo se arma de dos mitades: los textos salen del diccionario y de
+  // content.js sale lo estructural —cuál de los renglones es un rechazo—.
+  const use = t.ai.uses[active];
+  const shape = AI_USES[active];
 
   // La demo no arranca hasta que la sección se ve. Si arrancara al cargar la
   // página, para cuando la persona baje hasta acá ya habría terminado.
@@ -69,23 +74,20 @@ export default function AiShowcase() {
         <div className="ai__copy">
           <span className="label" data-reveal="up">
             <span className="label__n">03</span>
-            Inteligencia artificial
+            {t.ai.label}
             <span className="label__rule" />
           </span>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Te sacamos de encima la parte tediosa
+            {t.ai.title}
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Publicar un auto en otro lado son quince minutos llenando campos que
-            no sabés de memoria. Acá ponés marca, modelo y año, y el resto sale
-            solo. Lo mismo con los documentos: los revisamos al instante en vez de
-            hacerte esperar dos días.
+            {t.ai.lead}
           </p>
 
           <ul className="ai__tabs" data-reveal="up" style={{ "--i": 3 }}>
-            {AI_USES.map((item, i) => (
-              <li key={item.key}>
+            {t.ai.uses.map((item, i) => (
+              <li key={AI_USES[i].key}>
                 <button
                   className={`ai__tab ${i === active ? "is-active" : ""}`}
                   onClick={() => pick(i)}
@@ -106,34 +108,32 @@ export default function AiShowcase() {
         {/* ── Derecha: la consola ───────────────────────────────────── */}
         <div className="ai__console" data-reveal="up" style={{ "--i": 2 }}>
           <div className="ai__bar">
-            <span className="ai__bar-title">Freewheel · asistente</span>
-            <span className="ai__bar-state">en curso</span>
+            <span className="ai__bar-title">{t.ai.barTitle}</span>
+            <span className="ai__bar-state">{t.ai.barState}</span>
           </div>
 
           <div className="ai__screen">
             <div className="ai__msg">
-              <span className="ai__who">Entrada</span>
+              <span className="ai__who">{t.ai.input}</span>
               <p className="ai__prompt">{use.prompt}</p>
             </div>
 
             <div className="ai__msg">
-              <span className="ai__who ai__who--out">Respuesta</span>
+              <span className="ai__who ai__who--out">{t.ai.output}</span>
 
               <ul className="ai__out">
-                {use.output.slice(0, lines).map((line) => {
-                  // Un renglón que dice "no se reconoce" es un rechazo: se
-                  // marca distinto. Es la misma lógica de la app, donde cada
-                  // foto queda aprobada o rechazada.
-                  const rejected = /no se reconoce/i.test(line);
-                  return (
-                    <li key={line} className={rejected ? "is-bad" : ""}>
-                      {line}
-                    </li>
-                  );
-                })}
+                {use.output.slice(0, lines).map((line, i) => (
+                  // Cuál renglón es un rechazo lo dice content.js por posición
+                  // y no una búsqueda de texto: buscar "no se reconoce" dentro
+                  // de la frase andaba en castellano y fallaba en los otros
+                  // cuatro idiomas.
+                  <li key={line} className={shape.bad?.includes(i) ? "is-bad" : ""}>
+                    {line}
+                  </li>
+                ))}
 
                 {lines < use.output.length && (
-                  <li className="ai__typing" aria-label="escribiendo">
+                  <li className="ai__typing" aria-label={t.ai.typing}>
                     <i /><i /><i />
                   </li>
                 )}

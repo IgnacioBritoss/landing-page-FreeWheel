@@ -9,12 +9,24 @@
 //  usan el corrector ortográfico del navegador y los lectores de pantalla para
 //  elegir la voz correcta. La app hace lo mismo con el <html>.
 // ============================================================================
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LANGUAGES } from "../data/content";
+import { useI18n } from "../i18n/core";
 import "./languages.css";
 
 export default function Languages() {
-  const [active, setActive] = useState("es");
+  const { t, lang } = useI18n();
+  // La demo arranca mostrando el idioma en el que se está leyendo la página, y
+  // desde ahí la persona prueba los otros cuatro. Antes arrancaba siempre en
+  // castellano: alguien que entraba en inglés veía la sección que promete
+  // cinco idiomas abriendo en un idioma que no eligió.
+  const [active, setActive] = useState(lang);
+
+  // El idioma de la página se resuelve recién después de montar (hay que leer
+  // el navegador y el almacenamiento), así que la demo se sincroniza acá. Y de
+  // paso queda atada al selector de arriba: cambiar el idioma de la página
+  // mueve también esta muestra.
+  useEffect(() => setActive(lang), [lang]);
   const current = LANGUAGES.find((l) => l.code === active);
 
   return (
@@ -23,21 +35,18 @@ export default function Languages() {
         <div className="langs__copy">
           <span className="label" data-reveal="up">
             <span className="label__n">08</span>
-            Idiomas
+            {t.languages.label}
             <span className="label__rule" />
           </span>
 
           <h2 className="langs__title" data-reveal="up" style={{ "--i": 1 }}>
-            Un turista puede alquilar un auto acá
+            {t.languages.title}
           </h2>
           <p className="langs__text" data-reveal="up" style={{ "--i": 2 }}>
-            La aplicación está traducida entera a cinco idiomas: cada pantalla,
-            cada aviso y cada mensaje de error. Alguien que llega de afuera se
-            verifica, reserva y coordina la entrega sin tener que entender una
-            palabra de castellano.
+            {t.languages.text}
           </p>
 
-          <ul className="langs__list" role="tablist" aria-label="Idiomas" data-reveal="up" style={{ "--i": 3 }}>
+          <ul className="langs__list" role="tablist" aria-label={t.languages.list} data-reveal="up" style={{ "--i": 3 }}>
             {LANGUAGES.map((lang) => (
               <li key={lang.code}>
                 <button
@@ -56,7 +65,7 @@ export default function Languages() {
         {/* La `key` remonta el bloque en cada cambio para que la animación de
             entrada vuelva a correr. */}
         <div className="langs__demo" key={current.code} data-reveal="up" style={{ "--i": 2 }}>
-          <span className="langs__demo-label">Pantalla de inicio</span>
+          <span className="langs__demo-label">{t.languages.demoLabel}</span>
           <strong lang={current.code}>{current.greeting}</strong>
           <span className="langs__caret" aria-hidden="true" />
         </div>

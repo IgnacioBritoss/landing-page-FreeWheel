@@ -15,57 +15,52 @@
 //
 //  Las tres arrancan cuando entran en pantalla, no antes: si empezaran al
 //  cargar la página, para cuando alguien baje hasta acá ya habrían terminado.
+//
+//  CÓMO SE ARMAN LOS MENSAJES DEL CHAT
+//  Cada mensaje sale de dos lugares: de content.js su FORMA —quién lo manda, si
+//  es texto, audio o foto, la hora— y del diccionario su CONTENIDO. Se juntan
+//  por posición. Así el mismo audio de ocho segundos dice lo suyo en los cinco
+//  idiomas sin repetir cinco veces que es un audio de ocho segundos.
 // ============================================================================
 import { useState, useRef, useCallback, useEffect } from "react";
 import { MAP_CARS, MAP_CENTER, MAP_ZOOM, CHAT, CHAT_PEER, CHAT_PHOTO } from "../data/content";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useI18n, useT } from "../i18n/core";
 import { useInView } from "../hooks/useReveal";
 import TierShield from "./ui/TierShield";
 import "./showcase.css";
 
 export default function Showcase() {
+  const t = useT();
+
   return (
     <section className="section showcase" id="pantallas">
       <div className="wrap">
         <header className="showcase__head">
           <span className="label" data-reveal="up">
             <span className="label__n">05</span>
-            Así se ve
+            {t.showcase.label}
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Mirá cómo se ve por dentro
+            {t.showcase.title}
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            No son bocetos: es la aplicación andando. Tocá el mapa, escuchá el
-            audio, abrí el perfil.
+            {t.showcase.lead}
           </p>
         </header>
 
         <div className="showcase__list">
-          <Block
-            n="01"
-            title="Te verificás en un minuto, no en tres días"
-            text="Sacás la foto del DNI y te decimos ahí mismo si está bien. Nada de mandar un correo y esperar a que alguien lo mire el lunes. Y si salió movida, la repetís en el momento."
-          >
+          <Block n="01" block={t.showcase.blocks[0]}>
             <ScanDni />
           </Block>
 
-          <Block
-            n="02"
-            title="Encontrá uno a la vuelta de tu casa"
-            text="Cada punto es un auto disponible. Vas a ver el barrio donde está, no la puerta del dueño: la dirección exacta aparece cuando la reserva ya está hecha. Es la privacidad que vos también vas a querer cuando publiques el tuyo."
-            reverse
-          >
+          <Block n="02" block={t.showcase.blocks[1]} reverse>
             <MapCars />
           </Block>
 
-          <Block
-            n="03"
-            title="Arreglan la entrega sin dar el teléfono"
-            text="Todo pasa dentro de la aplicación: mensajes, fotos del estado del auto y audios que se transcriben para leerlos en el colectivo. Y tocando el nombre ves quién es la otra persona antes de encontrarte con ella."
-          >
+          <Block n="03" block={t.showcase.blocks[2]}>
             <ChatDemo />
           </Block>
         </div>
@@ -75,13 +70,13 @@ export default function Showcase() {
 }
 
 /** El armazón de cada bloque: texto de un lado, pantalla del otro. */
-function Block({ n, title, text, children, reverse = false }) {
+function Block({ n, block, children, reverse = false }) {
   return (
     <article className={`showcase__block ${reverse ? "is-reverse" : ""}`}>
       <div className="showcase__copy" data-reveal="up">
         <span className="showcase__n">{n}</span>
-        <h3 className="showcase__title">{title}</h3>
-        <p className="showcase__text">{text}</p>
+        <h3 className="showcase__title">{block.title}</h3>
+        <p className="showcase__text">{block.text}</p>
       </div>
       <div className="showcase__art" data-reveal="up" style={{ "--i": 1 }}>
         {children}
@@ -94,25 +89,19 @@ function Block({ n, title, text, children, reverse = false }) {
    1) El escaneo del DNI
    ========================================================================== */
 function ScanDni() {
+  const t = useT();
   const [started, setStarted] = useState(false);
   const ref = useRef(null);
 
   const begin = useCallback(() => setStarted(true), []);
   useInView(ref, begin, { threshold: 0.35 });
 
-  const checks = [
-    "Tipo de documento correcto",
-    "Nombre legible",
-    "Número legible",
-    "Dentro de la fecha de vigencia",
-  ];
-
   return (
     <div className={`scan ${started ? "is-on" : ""}`} ref={ref}>
       <div className="scan__doc">
         <div className="scan__doc-top">
-          <span className="scan__doc-country">REPÚBLICA ARGENTINA</span>
-          <span className="scan__doc-kind">DNI</span>
+          <span className="scan__doc-country">{t.showcase.scan.country}</span>
+          <span className="scan__doc-kind">{t.showcase.scan.kind}</span>
         </div>
 
         <div className="scan__doc-body">
@@ -126,11 +115,11 @@ function ScanDni() {
           <div className="scan__fields">
             {/* Los renglones del documento son barras, no texto: no hace falta
                 inventar un nombre y un número para que se entienda qué va ahí. */}
-            <span className="scan__label">Apellido y nombre</span>
+            <span className="scan__label">{t.showcase.scan.fields[0]}</span>
             <span className="scan__bar" style={{ "--w": "78%" }} />
-            <span className="scan__label">Documento</span>
+            <span className="scan__label">{t.showcase.scan.fields[1]}</span>
             <span className="scan__bar" style={{ "--w": "52%" }} />
-            <span className="scan__label">Vencimiento</span>
+            <span className="scan__label">{t.showcase.scan.fields[2]}</span>
             <span className="scan__bar" style={{ "--w": "38%" }} />
           </div>
         </div>
@@ -143,7 +132,7 @@ function ScanDni() {
       </div>
 
       <ul className="scan__checks">
-        {checks.map((label, i) => (
+        {t.showcase.scan.checks.map((label, i) => (
           <li key={label} style={{ "--i": i }}>
             <span className="scan__mark" aria-hidden="true" />
             {label}
@@ -167,10 +156,19 @@ function ScanDni() {
 
    scrollWheelZoom desactivado, igual que en la app: si la rueda hiciera zoom,
    scrollear la página encima del mapa quedaría trabado en él.
+
+   EL IDIOMA Y EL MAPA
+   Los globitos son HTML armado a mano, fuera de React, así que no se vuelven a
+   dibujar solos cuando cambia el idioma. Por eso hay DOS efectos: uno crea el
+   mapa una única vez —volver a crearlo obligaría a bajar de nuevo todos los
+   mosaicos— y otro reescribe el contenido de los cinco globitos cada vez que
+   cambia el diccionario.
    ========================================================================== */
 function MapCars() {
+  const { t, locale } = useI18n();
   const boxRef = useRef(null);
   const mapRef = useRef(null);
+  const marksRef = useRef([]);
 
   useEffect(() => {
     // Guardas: si el efecto corre dos veces (React en modo estricto lo hace en
@@ -191,7 +189,7 @@ function MapCars() {
       maxZoom: 19,
     }).addTo(map);
 
-    MAP_CARS.forEach((car) => {
+    marksRef.current = MAP_CARS.map((car) => {
       const icon = L.divIcon({
         className: "",
         html:
@@ -201,17 +199,9 @@ function MapCars() {
         iconAnchor: [7, 7],
       });
 
-      L.marker([car.lat, car.lng], { icon })
+      return L.marker([car.lat, car.lng], { icon })
         .addTo(map)
-        .bindPopup(
-          L.popup({ closeButton: false, maxWidth: 190 }).setContent(
-            '<div class="map-pop">' +
-              "<strong>" + car.name + "</strong>" +
-              '<span>' + car.zone + " <em>(zona aprox.)</em></span>" +
-              '<b>' + car.price + "<em>/día</em></b>" +
-            "</div>",
-          ),
-        );
+        .bindPopup(L.popup({ closeButton: false, maxWidth: 190 }));
     });
 
     // Al desmontar hay que destruir el mapa: si no, Leaflet deja escuchando
@@ -219,14 +209,56 @@ function MapCars() {
     return () => {
       map.remove();
       mapRef.current = null;
+      marksRef.current = [];
     };
   }, []);
+
+  // El contenido de los globitos, cada vez que cambia el idioma. Corre también
+  // en el primer montaje, así que el mapa nunca queda con globitos vacíos.
+  useEffect(() => {
+    marksRef.current.forEach((marker, i) => {
+      const car = MAP_CARS[i];
+      marker.setPopupContent(
+        '<div class="map-pop">' +
+          "<strong>" + car.name + "</strong>" +
+          "<span>" + car.zone + " <em>" + t.showcase.map.approx + "</em></span>" +
+          "<b>" + price(locale, car.price) + "<em>" + t.showcase.map.perDay + "</em></b>" +
+        "</div>",
+      );
+    });
+  }, [t, locale]);
 
   return (
     <div className="map">
       <div className="map__canvas" ref={boxRef} />
     </div>
   );
+}
+
+/**
+ * El precio del globito, con el separador de miles del idioma que se está
+ * leyendo: $8.500 en castellano, $8,500 en inglés.
+ *
+ * `narrowSymbol` fuerza el símbolo corto ($) en vez de las tres letras (ARS).
+ * Acá corresponde el símbolo: el globito está imitando la pantalla de la
+ * aplicación, que muestra $. Donde sí van las tres letras es en la calculadora
+ * de ganancias, que es plata de verdad y no puede quedar ambigua.
+ */
+const prices = new Map();
+
+function price(locale, value) {
+  if (!prices.has(locale)) {
+    prices.set(
+      locale,
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: "ARS",
+        currencyDisplay: "narrowSymbol",
+        maximumFractionDigits: 0,
+      }),
+    );
+  }
+  return prices.get(locale).format(value);
 }
 
 /* ============================================================================
@@ -236,6 +268,9 @@ function MapCars() {
    así se lee como una conversación pasando y no como una captura.
    ========================================================================== */
 function ChatDemo() {
+  const { t, locale } = useI18n();
+  const chat = t.showcase.chat;
+
   const [shown, setShown] = useState(0);
   const [profileOpen, setProfileOpen] = useState(false);
   // Lo que la persona escribe y manda de verdad. Se guarda aparte de la
@@ -263,7 +298,9 @@ function ChatDemo() {
     e.preventDefault();
     const text = draft.trim();
     if (!text) return;
-    const time = new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+    // La hora se escribe con el formato del idioma que se está leyendo: en
+    // inglés sale "10:07 AM" y en castellano "10:07".
+    const time = new Date().toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
     setSent((list) => [...list, { body: text, time }]);
     setDraft("");
   };
@@ -286,23 +323,27 @@ function ChatDemo() {
       </header>
 
       <div className="chat__body">
-        {CHAT.slice(0, shown).map((msg, i) => (
-          <div key={i} className={`msg msg--${msg.side}`}>
-            {msg.kind === "text" && <p className="msg__text">{msg.body}</p>}
-            {msg.kind === "voice" && <VoiceNote msg={msg} />}
-            {msg.kind === "image" && <PhotoMessage caption={msg.caption} />}
+        {CHAT.slice(0, shown).map((msg, i) => {
+          // La forma viene de content.js y el contenido del diccionario.
+          const said = chat.messages[i] ?? {};
+          return (
+            <div key={i} className={`msg msg--${msg.side}`}>
+              {msg.kind === "text" && <p className="msg__text">{said.body}</p>}
+              {msg.kind === "voice" && <VoiceNote seconds={msg.seconds} said={said} chat={chat} />}
+              {msg.kind === "image" && <PhotoMessage caption={said.caption} />}
 
-            <span className="msg__meta">
-              {msg.time}
-              {/* Los tildes solo van en los mensajes propios. */}
-              {msg.side === "me" && <Ticks />}
-            </span>
-          </div>
-        ))}
+              <span className="msg__meta">
+                {msg.time}
+                {/* Los tildes solo van en los mensajes propios. */}
+                {msg.side === "me" && <Ticks chat={chat} />}
+              </span>
+            </div>
+          );
+        })}
 
         {shown > 0 && shown < CHAT.length && (
           <div className="msg msg--them">
-            <div className="msg__typing" aria-label="escribiendo">
+            <div className="msg__typing" aria-label={chat.typing}>
               <i /><i /><i />
             </div>
           </div>
@@ -315,7 +356,7 @@ function ChatDemo() {
             <p className="msg__text">{m.body}</p>
             <span className="msg__meta">
               {m.time}
-              <Ticks />
+              <Ticks chat={chat} />
             </span>
           </div>
         ))}
@@ -337,8 +378,8 @@ function ChatDemo() {
           className="chat__input"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Escribí un mensaje..."
-          aria-label="Escribí un mensaje"
+          placeholder={chat.placeholder}
+          aria-label={chat.placeholder}
           maxLength={140}
         />
 
@@ -351,7 +392,7 @@ function ChatDemo() {
 
         {/* Deshabilitado mientras no haya nada escrito: un botón de enviar que
             no envía nada es un botón que miente. */}
-        <button className="chat__send" type="submit" disabled={!draft.trim()} aria-label="Enviar">
+        <button className="chat__send" type="submit" disabled={!draft.trim()} aria-label={chat.send}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4.5 12 20 4.5 15.5 20l-4-6.5-7-1.5Z" />
           </svg>
@@ -368,7 +409,7 @@ function ChatDemo() {
  * pausa—, solo que sin audio: es una maqueta. El botón existe porque una nota
  * de voz sin botón de reproducir no se lee como una nota de voz.
  */
-function VoiceNote({ msg }) {
+function VoiceNote({ seconds, said, chat }) {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -378,7 +419,7 @@ function VoiceNote({ msg }) {
     if (!playing) return;
     const id = setInterval(() => {
       setProgress((p) => {
-        const next = p + 100 / (msg.seconds * 10);
+        const next = p + 100 / (seconds * 10);
         if (next >= 100) {
           setPlaying(false);
           return 0;
@@ -387,11 +428,11 @@ function VoiceNote({ msg }) {
       });
     }, 100);
     return () => clearInterval(id);
-  }, [playing, msg.seconds]);
+  }, [playing, seconds]);
 
   // El segundo en el que va, para el contador.
-  const current = Math.round((progress / 100) * msg.seconds);
-  const label = playing ? `0:0${current}` : `0:0${msg.seconds}`;
+  const current = Math.round((progress / 100) * seconds);
+  const label = playing ? `0:0${current}` : `0:0${seconds}`;
 
   return (
     <div className="voice">
@@ -399,7 +440,7 @@ function VoiceNote({ msg }) {
         <button
           className="voice__play"
           onClick={() => setPlaying((v) => !v)}
-          aria-label={playing ? "Pausar la nota de voz" : "Reproducir la nota de voz"}
+          aria-label={playing ? chat.pause : chat.play}
         >
           {playing ? (
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -427,8 +468,8 @@ function VoiceNote({ msg }) {
       </div>
 
       <p className="voice__transcript">
-        <span>Transcripción</span>
-        {msg.transcript}
+        <span>{chat.transcript}</span>
+        {said.transcript}
       </p>
     </div>
   );
@@ -482,7 +523,7 @@ function PhotoMessage({ caption }) {
  * celestes (leído). Avanzan solos apenas se monta el mensaje, que es lo que
  * pasa de verdad cuando uno manda algo y del otro lado lo abren.
  */
-function Ticks() {
+function Ticks({ chat }) {
   const [state, setState] = useState("sent");
 
   useEffect(() => {
@@ -495,9 +536,7 @@ function Ticks() {
   }, []);
 
   return (
-    <span className={`ticks is-${state}`} aria-label={
-      state === "read" ? "Leído" : state === "delivered" ? "Entregado" : "Enviado"
-    }>
+    <span className={`ticks is-${state}`} aria-label={chat[state]}>
       <svg viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {/* El segundo tilde aparece recién en "entregado". */}
         <path className="ticks__b" d="M9 8.5 12.5 12 19 3" />
@@ -516,6 +555,8 @@ function Ticks() {
  * modal roto.
  */
 function ProfileModal({ onClose }) {
+  const t = useT();
+  const p = t.showcase.profile;
   const closeRef = useRef(null);
 
   useEffect(() => {
@@ -527,15 +568,19 @@ function ProfileModal({ onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  // El nombre del rango sale del mismo lugar que la sección de confianza: si
+  // "Platino" cambia allá, cambia acá.
+  const tierName = t.trust.tiers[3].name;
+
   return (
-    <div className="profile" role="dialog" aria-modal="true" aria-label="Perfil">
+    <div className="profile" role="dialog" aria-modal="true" aria-label={p.open}>
       {/* El fondo también cierra al tocarlo: es lo que la gente intenta primero. */}
-      <button className="profile__scrim" onClick={onClose} aria-label="Cerrar el perfil" />
+      <button className="profile__scrim" onClick={onClose} aria-label={p.closeScrim} />
 
       <div className="profile__card">
         <header className="profile__top">
-          <h4>Perfil</h4>
-          <button className="profile__close" onClick={onClose} ref={closeRef} aria-label="Cerrar">
+          <h4>{p.open}</h4>
+          <button className="profile__close" onClick={onClose} ref={closeRef} aria-label={p.close}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
@@ -546,39 +591,43 @@ function ProfileModal({ onClose }) {
           <span className="profile__avatar">{CHAT_PEER.initials}</span>
           <div>
             <strong>{CHAT_PEER.name}</strong>
-            <span>{CHAT_PEER.since}</span>
+            <span>{p.since}</span>
             <div className="profile__chips">
-              <span className="chip chip--ok">Identidad verificada</span>
+              <span className="chip chip--ok">{p.verified}</span>
               <span className="chip chip--tier">
-                <TierShield tier="platinum" size={15} />
-                {CHAT_PEER.tier}
+                <TierShield tier={CHAT_PEER.tier} size={15} />
+                {tierName}
               </span>
             </div>
           </div>
         </div>
 
         <div className="profile__ratings">
-          <h5>Calificaciones</h5>
+          <h5>{p.ratings}</h5>
           <p>
-            Como dueño: <Stars n={5} />
+            {p.asOwner} <Stars n={5} label={p.stars} />
             <strong>{CHAT_PEER.ratingAsOwner.toFixed(1)}</strong>
             <em>({CHAT_PEER.reviewCount})</em>
           </p>
-          <p className="profile__trips">{CHAT_PEER.trips} alquileres completados</p>
+          <p className="profile__trips">
+            {CHAT_PEER.trips} {p.trips}
+          </p>
         </div>
 
         <div className="profile__reviews">
-          <h5>Reseñas recibidas ({CHAT_PEER.reviewCount})</h5>
-          {CHAT_PEER.reviews.map((r) => (
+          <h5>
+            {p.reviewsTitle} ({CHAT_PEER.reviewCount})
+          </h5>
+          {CHAT_PEER.reviews.map((r, i) => (
             <article key={r.author}>
               <div className="profile__review-top">
                 <strong>{r.author}</strong>
-                <Stars n={r.stars} />
+                <Stars n={r.stars} label={p.stars} />
               </div>
               <span className="profile__review-meta">
-                {r.role} · {r.date}
+                {p.reviews[i].role} · {p.reviews[i].date}
               </span>
-              <p>{r.body}</p>
+              <p>{p.reviews[i].body}</p>
             </article>
           ))}
         </div>
@@ -588,9 +637,9 @@ function ProfileModal({ onClose }) {
 }
 
 /** Las estrellas del promedio. Rellenas, que es como se leen de un vistazo. */
-function Stars({ n }) {
+function Stars({ n, label }) {
   return (
-    <span className="stars" aria-label={`${n} de 5 estrellas`}>
+    <span className="stars" aria-label={`${n} ${label}`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <svg key={i} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={i < n ? "" : "is-off"}>
           <path d="m12 2.8 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.4l6.2-.9L12 2.8Z" />

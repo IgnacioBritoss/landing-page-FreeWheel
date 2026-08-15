@@ -15,10 +15,16 @@ import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/animations.css";
 
+import { I18nProvider } from "./i18n";
 import App from "./App.jsx";
 
+// El proveedor de idioma envuelve TODO. Va acá y no adentro de App para que no
+// haya un solo componente de la página que pueda quedar afuera: si mañana se
+// agrega una sección nueva, ya nace traducida.
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <I18nProvider>
+      <App />
+    </I18nProvider>
   </StrictMode>,
 );

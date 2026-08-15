@@ -14,12 +14,14 @@
 //  solo bloque visual: separarlos obligaría a repetir el fondo, el borde y las
 //  reglas de color invertido en dos archivos.
 // ============================================================================
-import { FOOTER, APP_URL } from "../data/content";
+import { FOOTER_HREFS, APP_URL } from "../data/content";
+import { useT } from "../i18n/core";
 import Logo from "./ui/Logo";
 import { ExternalArrow } from "./Hero";
 import "./close.css";
 
 export default function Close() {
+  const t = useT();
   const year = new Date().getFullYear();
 
   return (
@@ -28,10 +30,10 @@ export default function Close() {
       <div className="wrap close__cta">
         <h2 className="close__title" data-reveal="up">
           <span className="curtain">
-            <span>Hay un auto libre</span>
+            <span>{t.close.titleLines[0]}</span>
           </span>
           <span className="curtain">
-            <span style={{ "--i": 1 }}>a tres cuadras de tu casa</span>
+            <span style={{ "--i": 1 }}>{t.close.titleLines[1]}</span>
           </span>
         </h2>
 
@@ -42,15 +44,13 @@ export default function Close() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Abrir Freewheel
+            {t.close.cta}
             <ExternalArrow />
           </a>
         </div>
 
         <p className="close__note" data-reveal="up" style={{ "--i": 3 }}>
-          Crear la cuenta es gratis y no pide tarjeta. Verificás tu identidad una
-          sola vez y ya podés reservar, o publicar el tuyo y empezar a cobrar por
-          los días que no lo usás.
+          {t.close.note}
         </p>
       </div>
 
@@ -60,20 +60,23 @@ export default function Close() {
           <div className="close__top">
             <div className="close__brand">
               <Logo height={20} className="logo--ink" />
-              <p>{FOOTER.tagline}</p>
+              <p>{t.close.tagline}</p>
             </div>
 
-            <nav className="close__cols" aria-label="Enlaces del pie de página">
-              {FOOTER.columns.map((col) => (
+            <nav className="close__cols" aria-label={t.close.footerNav}>
+              {t.close.columns.map((col, c) => (
                 <div key={col.title}>
                   <h3>{col.title}</h3>
                   <ul>
                     {/* Cada enlace baja a una sección real de esta página.
                         Antes los nueve apuntaban al tope: nueve enlaces que
-                        hacían exactamente lo mismo, que es nada. */}
-                    {col.links.map((link) => (
-                      <li key={link.label}>
-                        <a href={link.href}>{link.label}</a>
+                        hacían exactamente lo mismo, que es nada.
+
+                        El destino sale de content.js y la etiqueta del
+                        diccionario, emparejados por posición. */}
+                    {col.links.map((label, i) => (
+                      <li key={label}>
+                        <a href={FOOTER_HREFS[c][i]}>{label}</a>
                       </li>
                     ))}
                   </ul>
@@ -84,7 +87,7 @@ export default function Close() {
 
           <div className="close__bottom">
             <span>© {year} Freewheel</span>
-            <span>Alquiler de autos entre particulares · Argentina</span>
+            <span>{t.close.bottom}</span>
           </div>
         </div>
       </footer>

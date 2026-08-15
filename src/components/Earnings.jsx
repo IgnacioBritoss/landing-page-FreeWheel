@@ -17,17 +17,40 @@
 // ============================================================================
 import { useState, useEffect, useRef, useMemo } from "react";
 import { CALC } from "../data/content";
+import { useI18n } from "../i18n/core";
 import "./earnings.css";
 
-// Se crea UNA vez fuera del componente: construir un Intl.NumberFormat es caro
-// y acá se usaría en cada cuadro de la animación.
-const money = new Intl.NumberFormat("es-AR", {
-  style: "currency",
-  currency: "ARS",
-  maximumFractionDigits: 0,
-});
+/**
+ * El formateador de plata.
+ *
+ * LA MONEDA NO CAMBIA CON EL IDIOMA: los autos están en Argentina y se cobran
+ * en pesos, así que alguien leyendo en inglés tiene que ver pesos igual. Lo que
+ * sí cambia es CÓMO SE ESCRIBE ese número, que es cosa de la región y no de la
+ * moneda: en castellano de Argentina son $8.500 con punto, en inglés $8,500 con
+ * coma, y en chino se escribe el símbolo pegado al número.
+ *
+ * Se guardan en un caché porque construir un Intl.NumberFormat es caro y acá se
+ * usa en cada cuadro de la animación del número.
+ */
+const formatters = new Map();
+
+function moneyFor(locale) {
+  if (!formatters.has(locale)) {
+    formatters.set(
+      locale,
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: "ARS",
+        maximumFractionDigits: 0,
+      }),
+    );
+  }
+  return formatters.get(locale);
+}
 
 export default function Earnings() {
+  const { t, locale } = useI18n();
+  const money = moneyFor(locale);
   const [categoryId, setCategoryId] = useState("sedan");
   const [days, setDays] = useState(10);
 
@@ -48,25 +71,19 @@ export default function Earnings() {
         <div>
           <span className="label" data-reveal="up">
             <span className="label__n">07</span>
-            Para dueños
+            {t.earnings.label}
             <span className="label__rule" />
           </span>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Tu auto pierde plata todos los días que no lo usás
+            {t.earnings.title}
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Seguro, patente y garage se pagan igual esté en la calle o en tu
-            cochera. Publicarlo es gratis, vos elegís qué días está disponible, y
-            quien lo alquila mostró su DNI y su licencia antes de poder reservar.
+            {t.earnings.lead}
           </p>
 
           <dl className="earnings__points" data-reveal="up" style={{ "--i": 3 }}>
-            {[
-              ["Nunca te quedás sin auto", "Bloqueás los días que lo necesitás y nadie te los puede reservar."],
-              ["Sabés quién lo maneja", "Ves su nombre, sus reseñas y su rango antes de aceptar."],
-              ["Cobrás sin perseguir a nadie", "El pago entra con la reserva, antes de que le des las llaves."],
-            ].map(([title, text]) => (
+            {t.earnings.points.map(([title, text]) => (
               <div key={title}>
                 <dt>{title}</dt>
                 <dd>{text}</dd>
@@ -78,14 +95,14 @@ export default function Earnings() {
         {/* ── Derecha: la calculadora ────────────────────────────────── */}
         <div className="calc" data-reveal="up" style={{ "--i": 2 }}>
           <div className="calc__head">
-            <h3>¿Cuánto podrías ganar?</h3>
-            <p>Movelo y mirá el número.</p>
+            <h3>{t.earnings.calcTitle}</h3>
+            <p>{t.earnings.calcSub}</p>
           </div>
 
           <fieldset className="calc__field">
-            <legend className="calc__label">Tipo de auto</legend>
-            <div className="calc__cats" role="radiogroup" aria-label="Tipo de auto">
-              {CALC.categories.map((c) => (
+            <legend className="calc__label">{t.earnings.type}</legend>
+            <div className="calc__cats" role="radiogroup" aria-label={t.earnings.type}>
+              {CALC.categories.map((c, i) => (
                 <button
                   key={c.id}
                   role="radio"
@@ -93,7 +110,9 @@ export default function Earnings() {
                   className={`calc__cat ${c.id === categoryId ? "is-active" : ""}`}
                   onClick={() => setCategoryId(c.id)}
                 >
-                  <strong>{c.label}</strong>
+                  {/* El nombre de la categoría se traduce; los modelos de
+                      ejemplo son nombres propios y quedan igual. */}
+                  <strong>{t.earnings.categories[i]}</strong>
                   <small>{c.example}</small>
                 </button>
               ))}
@@ -103,7 +122,7 @@ export default function Earnings() {
           <div className="calc__field">
             <div className="calc__label-row">
               <label className="calc__label" htmlFor="dias">
-                Días alquilado por mes
+                {t.earnings.daysLabel}
               </label>
               <output className="calc__days" htmlFor="dias">
                 {days}
@@ -132,7 +151,7 @@ export default function Earnings() {
           </div>
 
           <div className="calc__result">
-            <span className="calc__result-label">Te queda por mes</span>
+            <span className="calc__result-label">{t.earnings.result}</span>
             <div className="calc__amount" aria-live="polite">
               {money.format(shown)}
             </div>
@@ -141,12 +160,14 @@ export default function Earnings() {
               <div>
                 <span>
                   {money.format(category.pricePerDay)} × {days}{" "}
-                  {days === 1 ? "día" : "días"}
+                  {days === 1 ? t.earnings.day : t.earnings.days}
                 </span>
                 <strong>{money.format(gross)}</strong>
               </div>
               <div>
-                <span>Comisión Freewheel ({Math.round(CALC.fee * 100)}%)</span>
+                <span>
+                  {t.earnings.fee} ({Math.round(CALC.fee * 100)}%)
+                </span>
                 <strong>−{money.format(fee)}</strong>
               </div>
             </div>
@@ -155,9 +176,7 @@ export default function Earnings() {
                 cierre de esta misma página. La nota alcanza: la acción real
                 está en la aplicación, y el enlace a la aplicación ya está
                 arriba y abajo. */}
-            <p className="calc__note">
-              Estimación orientativa. El precio final lo ponés vos al publicar.
-            </p>
+            <p className="calc__note">{t.earnings.note}</p>
           </div>
         </div>
       </div>

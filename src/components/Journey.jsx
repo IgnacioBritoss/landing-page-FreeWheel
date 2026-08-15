@@ -30,11 +30,13 @@
 //  ─────────────────────────────────────────────────────────────────────────
 // ============================================================================
 import { useState, useCallback } from "react";
-import { STEPS } from "../data/content";
+import { useT } from "../i18n/core";
 import { useScrollProgress } from "../hooks/useScrollProgress";
 import "./journey.css";
 
 export default function Journey() {
+  const t = useT();
+  const steps = t.journey.steps;
   const [active, setActive] = useState(0);
 
   const onStep = useCallback((index) => setActive(index), []);
@@ -42,7 +44,7 @@ export default function Journey() {
   // mode "fill": el avance va de 0 (la sección toca el borde de arriba) a 1
   // (su final llega a ese borde). Es el modo que corresponde para una sección
   // con contenido pegado.
-  const ref = useScrollProgress({ mode: "fill", steps: STEPS.length, onStep });
+  const ref = useScrollProgress({ mode: "fill", steps: steps.length, onStep });
 
   return (
     <section className="journey" id="recorrido" ref={ref}>
@@ -52,12 +54,12 @@ export default function Journey() {
           <div className="journey__head">
             <span className="label">
               <span className="label__n">01</span>
-              Cómo funciona
+              {t.journey.label}
             </span>
             <h2 className="journey__title">
-              Sin mostrador, sin fila
+              {t.journey.titleLines[0]}
               <br />
-              y sin depósito en garantía
+              {t.journey.titleLines[1]}
             </h2>
           </div>
 
@@ -70,16 +72,16 @@ export default function Journey() {
               <span className="journey__fill" />
             </span>
 
-            {STEPS.map((s, i) => (
+            {steps.map((step, i) => (
               <li
-                key={s.n}
+                key={step.title}
                 className={`journey__tick ${i === active ? "is-active" : ""} ${
                   i < active ? "is-done" : ""
                 }`}
               >
                 <span className="journey__dot" aria-hidden="true" />
-                <span className="journey__tick-n">{s.n}</span>
-                <span className="journey__tick-label">{s.title}</span>
+                <span className="journey__tick-n">{num(i)}</span>
+                <span className="journey__tick-label">{step.title}</span>
               </li>
             ))}
           </ol>
@@ -95,15 +97,15 @@ export default function Journey() {
               cambio, porque un elemento que pasa de display:none a visible
               reinicia sus animaciones. */}
           <div className="journey__panels">
-            {STEPS.map((s, i) => (
+            {steps.map((step, i) => (
               <article
-                key={s.n}
+                key={step.title}
                 className={`journey__panel ${i === active ? "is-active" : ""}`}
               >
-                <span className="journey__panel-n">{s.n}</span>
-                <h3 className="journey__panel-title">{s.title}</h3>
-                <p className="journey__panel-text">{s.text}</p>
-                <p className="journey__panel-aside">{s.aside}</p>
+                <span className="journey__panel-n">{num(i)}</span>
+                <h3 className="journey__panel-title">{step.title}</h3>
+                <p className="journey__panel-text">{step.text}</p>
+                <p className="journey__panel-aside">{step.aside}</p>
               </article>
             ))}
           </div>
@@ -116,4 +118,11 @@ export default function Journey() {
       </div>
     </section>
   );
+}
+
+/** "01", "02"... El número del paso sale de su posición y no del diccionario:
+ *  es lo mismo en los cinco idiomas y repetirlo cinco veces sería pedir que
+ *  algún día no coincidan. */
+function num(i) {
+  return String(i + 1).padStart(2, "0");
 }

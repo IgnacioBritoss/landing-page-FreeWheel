@@ -7,49 +7,43 @@
 //  Dos mitades:
 //   · los cuatro pasos de la verificación, como una línea de tiempo vertical;
 //   · los cuatro rangos, con el escudo redibujado igual que en la app
-//     (components/RankBadge.jsx). El rango se lee por CANTIDAD DE BARRAS, no
-//     por color: así se distingue igual con daltonismo o impreso en blanco y
-//     negro. Ese detalle está en la app y se respeta acá.
+//     (components/RankBadge.jsx). Cada escudo lleva el color de su metal, y el
+//     platino además un brillo: el rango se distingue de un vistazo sin tener
+//     que leer el nombre.
 // ============================================================================
 import { TIERS } from "../data/content";
+import { useT } from "../i18n/core";
 import TierShield from "./ui/TierShield";
 import "./trust.css";
 
-const KYC = [
-  ["Confirma su mail", "Un código de seis dígitos. Sin eso no entra."],
-  ["Muestra el DNI", "Frente y dorso. Revisamos que sea el documento y que esté vigente."],
-  ["Muestra la licencia", "Sin licencia al día no puede manejar tu auto. Punto."],
-  ["Alguien lo revisa", "Si una foto no se lee, se la volvemos a pedir antes de habilitarlo."],
-];
-
 export default function Trust() {
+  const t = useT();
+
   return (
     <section className="section trust" id="confianza">
       <div className="wrap">
         <header className="trust__head">
           <span className="label" data-reveal="up">
             <span className="label__n">04</span>
-            Confianza
+            {t.trust.label}
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Del otro lado hay alguien con nombre, apellido y antecedentes
+            {t.trust.title}
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            No le estás dejando el auto a un usuario anónimo. Es una persona que
-            mostró su documento, su licencia y todo lo que hizo antes en la
-            plataforma.
+            {t.trust.lead}
           </p>
         </header>
 
         <div className="trust__grid">
           {/* ── Verificación ───────────────────────────────────────── */}
           <div className="kyc" data-reveal="up">
-            <h3 className="trust__sub">Verificación de identidad</h3>
-            <p className="trust__sub-note">Cuatro pasos que hace cada persona antes de poder usar Freewheel.</p>
+            <h3 className="trust__sub">{t.trust.kycTitle}</h3>
+            <p className="trust__sub-note">{t.trust.kycNote}</p>
 
             <ol className="kyc__steps">
-              {KYC.map(([title, text], i) => (
+              {t.trust.kyc.map(([title, text], i) => (
                 <li key={title}>
                   <span className="kyc__n">{String(i + 1).padStart(2, "0")}</span>
                   <div>
@@ -60,35 +54,31 @@ export default function Trust() {
               ))}
             </ol>
 
-            <p className="kyc__foot">
-              Tu dirección no se publica. Quien mira tu auto ve el barrio; la
-              esquina exacta la sabe recién cuando la reserva está paga.
-            </p>
+            <p className="kyc__foot">{t.trust.kycFoot}</p>
           </div>
 
           {/* ── Rangos ─────────────────────────────────────────────── */}
           <div className="tiers" data-reveal="up" style={{ "--i": 1 }}>
-            <h3 className="trust__sub">Rangos por reseñas reales</h3>
+            <h3 className="trust__sub">{t.trust.tiersTitle}</h3>
             <p className="trust__sub-note">
-              El rango no se compra ni se acelera: <em>se gana alquilando bien</em>.
+              {t.trust.tiersNote} <em>{t.trust.tiersNoteEm}</em>.
             </p>
 
             <ul className="tiers__list">
-              {TIERS.map((tier) => (
-                <li className="tier" key={tier.key}>
-                  <TierShield tier={tier.key} size={28} />
+              {/* La clave del metal sale de content.js y el nombre del
+                  diccionario: "Oro", "Gold" y "黄金" son el mismo escudo. */}
+              {TIERS.map((key, i) => (
+                <li className="tier" key={key}>
+                  <TierShield tier={key} size={28} />
                   <div>
-                    <strong>{tier.name}</strong>
-                    <span>{tier.req}</span>
+                    <strong>{t.trust.tiers[i].name}</strong>
+                    <span>{t.trust.tiers[i].req}</span>
                   </div>
                 </li>
               ))}
             </ul>
 
-            <p className="kyc__foot">
-              Si alguien recién arranca, te lo decimos: no vas a ver cinco
-              estrellas de una cuenta creada ayer.
-            </p>
+            <p className="kyc__foot">{t.trust.tiersFoot}</p>
           </div>
         </div>
       </div>

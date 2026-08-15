@@ -43,22 +43,43 @@
   </head>
   <body>
     <!-- ANTIPARPADEO. Este script corre ANTES de que se pinte nada: lee el tema
-         guardado y lo escribe en el <html> al instante. Sin esto, alguien con
-         el modo oscuro elegido vería la página un momento en blanco y después
-         saltaría a oscuro. Va en línea, y no importado, porque un archivo
-         aparte se descargaría después del primer pintado. -->
+         y el idioma guardados y los escribe en el <html> al instante. Sin esto,
+         alguien con el modo oscuro elegido vería la página un momento en blanco
+         y después saltaría a oscuro. Va en línea, y no importado, porque un
+         archivo aparte se descargaría después del primer pintado. -->
     <script>
       (function () {
+        var root = document.documentElement;
+
         try {
           var t = localStorage.getItem("fw-theme");
           if (t === "dark" || t === "light") {
-            document.documentElement.setAttribute("data-theme", t);
+            root.setAttribute("data-theme", t);
           } else {
             t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           }
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.setAttribute("content", t === "dark" ? "#0f141c" : "#ffffff");
         } catch (e) { /* si falla, queda el modo claro */ }
+
+        // El idioma. Acá no hay parpadeo que evitar —los textos los pone React,
+        // que todavía no corrió— pero el atributo lang del <html> tiene que
+        // estar bien desde el primer momento: es lo que leen el traductor
+        // automático del navegador y los lectores de pantalla, y los dos miran
+        // el documento apenas carga.
+        try {
+          var langs = ["es", "en", "pt", "it", "zh"];
+          var l = localStorage.getItem("fw-lang");
+          if (langs.indexOf(l) === -1) {
+            l = null;
+            var list = navigator.languages || [navigator.language || "es"];
+            for (var i = 0; i < list.length && !l; i++) {
+              var base = String(list[i] || "").toLowerCase().split("-")[0];
+              if (langs.indexOf(base) !== -1) l = base;
+            }
+          }
+          root.setAttribute("lang", l || "es");
+        } catch (e) { /* queda el lang="es" del HTML */ }
       })();
     </script>
 

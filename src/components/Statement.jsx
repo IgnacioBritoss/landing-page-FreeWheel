@@ -27,36 +27,75 @@
 //  recalcula una opacidad por palabra, que es de las operaciones más baratas
 //  que sabe hacer.
 //  ─────────────────────────────────────────────────────────────────────────
+//
+//  ─────────────────────────────────────────────────────────────────────────
+//  EL CHINO NO TIENE ESPACIOS
+//
+//  En los cuatro idiomas latinos la frase se corta por espacios y cada palabra
+//  es una unidad. En chino no hay espacios: cortar por " " devolvería UNA sola
+//  unidad de setenta caracteres, y toda la frase se encendería de golpe.
+//
+//  Por eso en chino se corta por CARÁCTER. Sale incluso mejor que en los otros
+//  idiomas —el barrido es más fino— y de paso resuelve solo el corte de
+//  renglón, que en chino puede caer en cualquier carácter.
+//  ─────────────────────────────────────────────────────────────────────────
 // ============================================================================
-import { STATEMENT } from "../data/content";
+import { useI18n } from "../i18n/core";
 import { useScrollProgress } from "../hooks/useScrollProgress";
 import "./statement.css";
 
 export default function Statement() {
+  const { t, lang } = useI18n();
   const ref = useScrollProgress({ mode: "cover" });
 
-  const words = STATEMENT.text.split(" ");
+  const { text, highlight } = t.statement;
+  const byChar = lang === "zh";
+
+  // Las unidades que se encienden de a una: palabras, o caracteres en chino.
+  const units = byChar ? Array.from(text) : text.split(" ");
+
+  // ── Qué unidades van en azul ────────────────────────────────────────────
+  // Se resuelve por POSICIÓN dentro de la frase y no comparando palabra contra
+  // palabra. Comparar strings obligaba a limpiar la puntuación a mano para que
+  // "confianza." coincidiera con "confianza", y en chino no funcionaba en
+  // absoluto porque ahí una unidad es un carácter suelto.
+  //
+  // Acá se busca dónde CAE cada palabra destacada dentro del texto, y después
+  // se marca toda unidad que se superponga con alguno de esos tramos.
+  const spans = [];
+  let cursor = 0;
+  for (const unit of units) {
+    spans.push([cursor, cursor + unit.length]);
+    cursor += unit.length + (byChar ? 0 : 1);
+  }
+
+  const marked = [];
+  for (const word of highlight) {
+    let at = text.indexOf(word);
+    while (at !== -1) {
+      marked.push([at, at + word.length]);
+      at = text.indexOf(word, at + word.length);
+    }
+  }
+
+  const isKey = (i) =>
+    marked.some(([from, to]) => spans[i][0] < to && spans[i][1] > from);
 
   return (
     <section className="statement" ref={ref}>
       <div className="wrap">
-        <p className="statement__text" style={{ "--count": words.length }}>
-          {words.map((word, i) => {
-            // La comparación saca los signos de puntuación para que
-            // "confianza." también coincida con "confianza".
-            const clean = word.replace(/[.,;:]/g, "").toLowerCase();
-            const isKey = STATEMENT.highlight.includes(clean);
-
-            return (
-              <span
-                key={`${word}-${i}`}
-                className={`statement__word ${isKey ? "is-key" : ""}`}
-                style={{ "--w": i }}
-              >
-                {word}{" "}
-              </span>
-            );
-          })}
+        <p className="statement__text" style={{ "--count": units.length }}>
+          {units.map((unit, i) => (
+            <span
+              key={`${unit}-${i}`}
+              className={`statement__word ${isKey(i) ? "is-key" : ""}`}
+              style={{ "--w": i }}
+            >
+              {/* El espacio va adentro del <span> para que se apague y se
+                  encienda junto con su palabra. En chino no lleva ninguno. */}
+              {byChar ? unit : `${unit} `}
+            </span>
+          ))}
         </p>
       </div>
     </section>

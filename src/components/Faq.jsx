@@ -12,10 +12,12 @@
 //  grilla de 0fr a 1fr, que evita tener que medir el alto con JavaScript.
 // ============================================================================
 import { useState } from "react";
-import { FAQS } from "../data/content";
+import { useT } from "../i18n/core";
 import "./faq.css";
 
 export default function Faq() {
+  const t = useT();
+
   // Arranca con la primera abierta: una lista toda cerrada no deja ver que hay
   // respuestas adentro.
   const [open, setOpen] = useState(0);
@@ -26,20 +28,19 @@ export default function Faq() {
         <header className="faq__head">
           <span className="label" data-reveal="up">
             <span className="label__n">09</span>
-            Preguntas
+            {t.faq.label}
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Lo que seguro te estás preguntando
+            {t.faq.title}
           </h2>
           <p className="section-lead" data-reveal="up" style={{ "--i": 2 }}>
-            Y si te queda una duda, adentro de la aplicación hay un asistente que
-            responde a cualquier hora.
+            {t.faq.lead}
           </p>
         </header>
 
         <ul className="faq__list">
-          {FAQS.map((item, i) => {
+          {t.faq.items.map((item, i) => {
             const isOpen = open === i;
             return (
               <li key={item.q} className={`faq__item ${isOpen ? "is-open" : ""}`}>

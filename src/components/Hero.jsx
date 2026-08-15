@@ -24,7 +24,7 @@
 //  sobre el elemento, así que la página no se re-renderiza mientras se
 //  scrollea (ver el comentario largo en hooks/useScrollProgress.js).
 // ============================================================================
-import { HERO } from "../data/content";
+import { useT } from "../i18n/core";
 import { useScrollProgress } from "../hooks/useScrollProgress";
 import "./hero.css";
 
@@ -53,6 +53,8 @@ const CAR_PATH = `
 `;
 
 export default function Hero() {
+  const t = useT();
+
   // mode "out": el avance arranca EN CERO con la página recién cargada y
   // llega a 1 cuando la portada termina de salir por arriba. Es lo que hace
   // que el auto se vaya llenando a medida que se baja, en vez de aparecer ya
@@ -63,12 +65,12 @@ export default function Hero() {
     <section className="hero" id="top" ref={ref}>
       <div className="wrap">
         <p className="hero__kicker">
-          {HERO.kicker}
-          <Flag />
+          {t.hero.kicker}
+          <Flag label={t.hero.flag} />
         </p>
 
         <h1 className="hero__title">
-          {HERO.titleLines.map((line, i) => (
+          {t.hero.titleLines.map((line, i) => (
             // Cada línea es una "cortina": el <span> de adentro sube desde
             // abajo y el contenedor recorta lo que sobresale.
             <span className="curtain" key={line} style={{ "--i": i }}>
@@ -83,14 +85,14 @@ export default function Hero() {
             tenerlo. Lo único que saca de acá es el enlace a la aplicación de
             verdad, y está una sola vez, en la barra de arriba y en el cierre. */}
         <div className="hero__foot">
-          <p className="hero__lead">{HERO.lead}</p>
+          <p className="hero__lead">{t.hero.lead}</p>
         </div>
 
         {/* El aviso de que hay más abajo. Va DENTRO del flujo y no pegado al
             borde inferior: ahí abajo está el auto, y el cartel le quedaba
             encima del trazo. */}
         <a href="#recorrido" className="hero__scroll">
-          <span>{HERO.scrollHint}</span>
+          <span>{t.hero.scrollHint}</span>
           <span className="hero__mouse">
             <span className="hero__wheel" />
           </span>
@@ -138,14 +140,14 @@ export default function Hero() {
  * El sol va simplificado a un círculo con rayos cortos: a 16 píxeles, la cara
  * del sol de mayo se convierte en una mancha.
  */
-export function Flag({ width = 18 }) {
+export function Flag({ width = 18, label = "Argentina" }) {
   return (
     <svg
       className="flag"
       width={width}
       height={(width * 11) / 18}
       viewBox="0 0 18 11"
-      aria-label="Argentina"
+      aria-label={label}
       role="img"
     >
       <rect width="18" height="11" rx="1.6" fill="#fff" />

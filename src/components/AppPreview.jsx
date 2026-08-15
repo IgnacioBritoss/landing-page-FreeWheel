@@ -17,11 +17,16 @@
 // ============================================================================
 import { useState } from "react";
 import { SCREENS, QR_MATRIX, APP_URL } from "../data/content";
+import { useT } from "../i18n/core";
 import "./preview.css";
 
 export default function AppPreview() {
+  const t = useT();
   const [active, setActive] = useState(0);
-  const screen = SCREENS[active];
+  // `key` es cuál de las cuatro pantallas dibujar (dato estructural, de
+  // content.js) y `screen` son sus textos (del diccionario).
+  const key = SCREENS[active];
+  const screen = t.preview.screens[active];
 
   return (
     <section className="section section--tint preview" id="app">
@@ -29,19 +34,19 @@ export default function AppPreview() {
         <header className="preview__head">
           <span className="label" data-reveal="up">
             <span className="label__n">06</span>
-            La aplicación
+            {t.preview.label}
             <span className="label__rule" />
           </span>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
-            Cuatro pantallas, un solo recorrido
+            {t.preview.title}
           </h2>
         </header>
 
         <div className="preview__grid">
           {/* ── Selector ──────────────────────────────────────────── */}
           <ol className="preview__tabs" data-reveal="up">
-            {SCREENS.map((s, i) => (
-              <li key={s.key}>
+            {SCREENS.map((id, i) => (
+              <li key={id}>
                 <button
                   className={`preview__tab ${i === active ? "is-active" : ""}`}
                   onClick={() => setActive(i)}
@@ -50,7 +55,7 @@ export default function AppPreview() {
                   <span className="preview__tab-n">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="preview__tab-label">{s.label}</span>
+                  <span className="preview__tab-label">{t.preview.screens[i].label}</span>
                 </button>
               </li>
             ))}
@@ -68,19 +73,19 @@ export default function AppPreview() {
                 {/* La `key` fuerza a React a montar un nodo nuevo en cada
                     cambio: sin ella reutilizaría el mismo elemento y la
                     animación de entrada no volvería a correr. */}
-                <div className="phone__head" key={`h-${screen.key}`}>
+                <div className="phone__head" key={`h-${key}`}>
                   <h3>{screen.title}</h3>
                 </div>
 
-                <div className="phone__body" key={`b-${screen.key}`}>
-                  {screen.key === "buscar" && <ScreenSearch />}
-                  {screen.key === "detalle" && <ScreenDetail />}
-                  {screen.key === "reserva" && <ScreenBooking />}
-                  {screen.key === "qr" && <ScreenQr />}
+                <div className="phone__body" key={`b-${key}`}>
+                  {key === "buscar" && <ScreenSearch t={t} />}
+                  {key === "detalle" && <ScreenDetail t={t} />}
+                  {key === "reserva" && <ScreenBooking t={t} />}
+                  {key === "qr" && <ScreenQr t={t} />}
                 </div>
 
                 <div className="phone__nav" aria-hidden="true">
-                  {["Inicio", "Buscar", "Reservas", "Perfil"].map((l, i) => (
+                  {t.preview.tabs.map((l, i) => (
                     <span key={l} className={i === 0 ? "is-active" : ""}>
                       {l}
                     </span>
@@ -96,23 +101,20 @@ export default function AppPreview() {
 }
 
 /* ── Pantalla 1: buscar ─────────────────────────────────────────────── */
-function ScreenSearch() {
+function ScreenSearch({ t }) {
   return (
     <>
       <div className="ph-form">
-        {[["Dónde", "Palermo, CABA"], ["Retiro", "18 mar"], ["Devolución", "21 mar"]].map(
-          ([k, v]) => (
-            <div className="ph-form__row" key={k}>
-              <span>{k}</span>
-              <strong>{v}</strong>
-            </div>
-          ),
-        )}
-        <button className="ph-btn">Buscar autos</button>
+        {t.preview.search.rows.map(([k, v]) => (
+          <div className="ph-form__row" key={k}>
+            <span>{k}</span>
+            <strong>{v}</strong>
+          </div>
+        ))}
+        <button className="ph-btn">{t.preview.search.button}</button>
       </div>
 
-      {[["Toyota Corolla 2021", "$8.500", "Palermo · 4.8"],
-        ["Volkswagen T-Cross 2022", "$12.000", "Belgrano · 4.6"]].map(([name, price, meta], i) => (
+      {t.preview.search.results.map(([name, price, meta], i) => (
         <div className="ph-item" key={name} style={{ "--i": i }}>
           <div>
             <strong>{name}</strong>
@@ -126,37 +128,33 @@ function ScreenSearch() {
 }
 
 /* ── Pantalla 2: ficha ──────────────────────────────────────────────── */
-function ScreenDetail() {
+function ScreenDetail({ t }) {
   return (
     <>
       <div className="ph-specs">
-        {[["Baúl", "371 L"], ["Puertas", "4"], ["Potencia", "122 CV"], ["Consumo", "6.8 L"]].map(
-          ([k, v], i) => (
-            <div key={k} style={{ "--i": i }}>
-              <span>{k}</span>
-              <strong>{v}</strong>
-            </div>
-          ),
-        )}
+        {t.preview.detail.specs.map(([k, v], i) => (
+          <div key={k} style={{ "--i": i }}>
+            <span>{k}</span>
+            <strong>{v}</strong>
+          </div>
+        ))}
       </div>
 
       <div className="ph-owner">
-        <span className="ph-owner__initial">R</span>
+        <span className="ph-owner__initial">{t.preview.detail.owner.charAt(0)}</span>
         <div>
-          <strong>Roberto O.</strong>
-          <span>Rango oro · identidad verificada</span>
+          <strong>{t.preview.detail.owner}</strong>
+          <span>{t.preview.detail.ownerMeta}</span>
         </div>
       </div>
 
-      <p className="ph-note">
-        La dirección exacta se muestra cuando la reserva está confirmada.
-      </p>
+      <p className="ph-note">{t.preview.detail.note}</p>
     </>
   );
 }
 
 /* ── Pantalla 3: reserva ────────────────────────────────────────────── */
-function ScreenBooking() {
+function ScreenBooking({ t }) {
   // 0 = libre, 1 = ocupado, 2 = elegido.
   const days = [0, 0, 1, 1, 0, 0, 0, 2, 2, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -171,23 +169,23 @@ function ScreenBooking() {
       </div>
 
       <div className="ph-legend">
-        <span><i className="sw sw--picked" />Elegidos</span>
-        <span><i className="sw sw--taken" />Ocupados</span>
+        <span><i className="sw sw--picked" />{t.preview.booking.picked}</span>
+        <span><i className="sw sw--taken" />{t.preview.booking.taken}</span>
       </div>
 
       <div className="ph-total">
         <div className="ph-total__row">
-          <span>$8.500 × 3 días</span>
-          <strong>$25.500</strong>
+          <span>{t.preview.booking.total}</span>
+          <strong>{t.preview.booking.totalValue}</strong>
         </div>
-        <button className="ph-btn">Confirmar reserva</button>
+        <button className="ph-btn">{t.preview.booking.button}</button>
       </div>
     </>
   );
 }
 
 /* ── Pantalla 4: entrega ────────────────────────────────────────────── */
-function ScreenQr() {
+function ScreenQr({ t }) {
   return (
     <>
       {/* ES UN CÓDIGO QR DE VERDAD: escaneándolo con la cámara del teléfono
@@ -200,7 +198,7 @@ function ScreenQr() {
           className="ph-code__grid"
           style={{ "--n": QR_MATRIX.length }}
           role="img"
-          aria-label={`Código QR que abre ${APP_URL}`}
+          aria-label={`${t.preview.qr.alt} ${APP_URL}`}
         >
           {QR_MATRIX.map((row, y) =>
             row.split("").map((cell, x) => (
@@ -219,14 +217,15 @@ function ScreenQr() {
       <p className="ph-code__text">FW-8K2N-4XQ7</p>
 
       <div className="ph-steps">
-        {[["Pago confirmado", true], ["Auto listo para retiro", true], ["Retiro confirmado", false]].map(
-          ([label, done], i) => (
-            <div key={label} className={done ? "is-done" : ""} style={{ "--i": i }}>
-              <span className="ph-steps__bar" />
-              {label}
-            </div>
-          ),
-        )}
+        {/* Los dos primeros pasos están hechos y el tercero no: eso es
+            estructura de la pantalla, no texto, así que se decide por
+            posición y no repitiendo un booleano en los cinco diccionarios. */}
+        {t.preview.qr.steps.map((label, i) => (
+          <div key={label} className={i < 2 ? "is-done" : ""} style={{ "--i": i }}>
+            <span className="ph-steps__bar" />
+            {label}
+          </div>
+        ))}
       </div>
     </>
   );
