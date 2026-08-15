@@ -255,13 +255,23 @@ h1, h2, h3, h4 {
   transform: translateY(1px);
 }
 
+/* ── El botón que lleva a la aplicación ──────────────────────────────────
+   VA SIEMPRE EN AZUL, en los dos modos. Antes usaba `var(--text)` de fondo y
+   `var(--paper)` de texto, y como esos dos tokens se dan vuelta con el modo
+   oscuro, el botón se invertía solo: de negro con letras blancas pasaba a
+   blanco con letras negras. Quedaba como si fuera otro botón.
+
+   El azul es el color de la marca y tiene contraste suficiente contra el
+   blanco Y contra el negro, así que es el único que puede quedarse quieto. En
+   modo oscuro se aclara un punto (lo hace la variable), pero sigue siendo
+   azul: no cambia de identidad. */
 .btn--solid {
-  background: var(--text);
-  color: var(--paper);
+  background: var(--blue);
+  color: #fff;
 }
 
 .btn--solid:hover {
-  background: #000;
+  background: var(--blue-dark);
 }
 
 .btn--blue {
@@ -282,14 +292,17 @@ h1, h2, h3, h4 {
   border-color: var(--text);
 }
 
-/* Sobre el bloque oscuro los papeles se invierten: el sólido es blanco. */
+/* En el bloque de cierre el botón es el mismo que arriba: azul. Antes era
+   blanco con letras oscuras, y en modo oscuro `var(--paper)` se volvía casi
+   negro: quedaba un botón negro con letras grises sobre fondo negro, ilegible.
+   Un mismo destino tiene que verse siempre igual. */
 .btn--paper {
-  background: var(--paper);
-  color: var(--text);
+  background: var(--blue);
+  color: #fff;
 }
 
 .btn--paper:hover {
-  background: #e9ebef;
+  background: var(--blue-dark);
 }
 
 .btn--line-ink {
