@@ -420,7 +420,7 @@ export default {
     cta: "Abrir Freewheel",
     note:
       "Crear la cuenta es gratis y no pide tarjeta. Verificás tu identidad una sola vez y ya podés reservar, o publicar el tuyo y empezar a cobrar por los días que no lo usás.",
-    tagline: "Alquiler de autos entre particulares. Hecho en Argentina.",
+    tagline: "Autos entre particulares. Hecho en Argentina.",
     footerNav: "Enlaces del pie de página",
     columns: [
       {

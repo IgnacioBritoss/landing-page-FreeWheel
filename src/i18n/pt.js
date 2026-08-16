@@ -399,7 +399,7 @@ export default {
     cta: "Abrir a Freewheel",
     note:
       "Criar a conta é grátis e não pede cartão. Você verifica sua identidade uma vez só e já pode reservar, ou anunciar o seu e começar a receber pelos dias em que não o usa.",
-    tagline: "Aluguel de carros entre pessoas. Feito na Argentina.",
+    tagline: "Carros entre pessoas. Feito na Argentina.",
     footerNav: "Links do rodapé",
     columns: [
       {
