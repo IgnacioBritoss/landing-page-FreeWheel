@@ -30,7 +30,7 @@ export default {
   },
 
   hero: {
-    kicker: "Aluguel de carros entre pessoas · Argentina",
+    kicker: "Aluguel de carros entre pessoas",
     titleLines: ["O carro que você precisa", "está a três quadras"],
     lead:
       "Alugue o carro de alguém do seu bairro pelos dias em que realmente precisa dele, ou faça o seu trabalhar nos dias em que fica parado. Os dois lados verificam a identidade antes de começar, e a entrega fica registrada.",

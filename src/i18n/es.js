@@ -40,7 +40,7 @@ export default {
 
   /* ── La portada ────────────────────────────────────────────────────── */
   hero: {
-    kicker: "Alquiler de autos entre particulares · Argentina",
+    kicker: "Alquiler de autos entre particulares",
     titleLines: ["El auto que necesitás", "está a tres cuadras"],
     lead:
       "Alquilá el auto de alguien de tu barrio por el día que lo necesites, o hacé que el tuyo trabaje los días que está parado. Las dos partes verifican su identidad antes de empezar, y la entrega queda registrada.",

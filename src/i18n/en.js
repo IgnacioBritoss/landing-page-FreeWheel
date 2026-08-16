@@ -33,7 +33,7 @@ export default {
   },
 
   hero: {
-    kicker: "Peer-to-peer car rental · Argentina",
+    kicker: "Peer-to-peer car rental",
     titleLines: ["The car you need", "is three blocks away"],
     lead:
       "Rent a car from someone in your neighbourhood for the days you actually need it, or put yours to work on the days it sits still. Both sides verify their identity before anything starts, and every handover is on the record.",

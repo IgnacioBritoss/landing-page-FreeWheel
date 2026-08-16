@@ -30,7 +30,7 @@ export default {
   },
 
   hero: {
-    kicker: "Noleggio auto tra privati · Argentina",
+    kicker: "Noleggio auto tra privati",
     titleLines: ["L'auto che ti serve", "è a tre isolati"],
     lead:
       "Noleggia l'auto di qualcuno del tuo quartiere per i giorni in cui ti serve davvero, oppure fai lavorare la tua nei giorni in cui resta ferma. Entrambe le parti verificano l'identità prima di iniziare, e la consegna resta registrata.",
