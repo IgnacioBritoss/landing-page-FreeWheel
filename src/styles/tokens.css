@@ -18,8 +18,8 @@
      Un solo azul. Se usa únicamente en lo que se puede TOCAR (botones,
      enlaces, el estado activo) y en el trazo del auto que se dibuja. Nunca
      como decoración: si el azul aparece en todos lados, deja de señalar. */
-  --blue: #2563eb;
-  --blue-dark: #1d4ed8;
+  --blue: #0f6ce6;
+  --blue-dark: #0b55c0;
   --blue-wash: #eff6ff;
 
   /* ── Superficies ──────────────────────────────────────────────────── */
@@ -140,7 +140,7 @@
     --line: #232b37;
     --line-2: #333d4c;
 
-    /* El azul se aclara un punto: el #2563eb sobre fondo oscuro queda apagado
+    /* El azul se aclara un punto: el #0f6ce6 sobre fondo oscuro queda apagado
        y no llega al contraste mínimo para texto. */
     --blue: #4d84f3;
     --blue-dark: #6f9df7;

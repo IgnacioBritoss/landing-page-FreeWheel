@@ -193,7 +193,7 @@ function MapCars() {
       const icon = L.divIcon({
         className: "",
         html:
-          '<div style="width:14px;height:14px;background:#2563eb;' +
+          '<div style="width:14px;height:14px;background:#0f6ce6;' +
           "border:2px solid #fff;border-radius:50%;" +
           'box-shadow:0 2px 6px rgba(0,0,0,.35);cursor:pointer"></div>',
         iconAnchor: [7, 7],
