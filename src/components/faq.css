@@ -149,9 +149,20 @@
   .faq__q {
     padding: 18px 2px;
     font-size: var(--t-sm);
+    /* El aire entre la pregunta y el signo baja de 20 a 10: en una pantalla de
+       390px, diez píxeles de hueco son la diferencia entre que una pregunta
+       entre en un renglón o se parta en dos. */
+    gap: 10px;
   }
 
   .faq__panel-inner p {
-    padding-right: 20px;
+    /* Los 40px de la derecha estaban para que la respuesta no pasara por debajo
+       del signo "+", que en escritorio queda al costado. Apilado no hay nada
+       arriba, así que ese hueco era ancho de lectura tirado: cada renglón entra
+       un 10% más de texto y el bloque queda más corto. */
+    padding-right: 4px;
+    /* 1.72 de interlineado se lee cómodo en una columna ancha; en una angosta,
+       con renglones cortos, estira el párrafo y obliga a scrolear de más. */
+    line-height: 1.6;
   }
 }

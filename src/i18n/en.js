@@ -371,27 +371,27 @@ export default {
       "And if a doubt is left over, there's an assistant inside the app that answers at any hour.",
     items: [
       {
-        q: "What do I need to rent a car?",
+        q: "What do I need to rent?",
         a: "To be over 18, to hold a valid driving licence and to have a payment method. You upload your licence and ID once, when you create the account; from then on booking takes two taps.",
       },
       {
-        q: "How do I know the person renting to me is trustworthy?",
+        q: "How do I know I can trust them?",
         a: "Because they went through the same as you: without an approved ID and licence you can't list a car or book one. On top of that you'll see their reviews from completed rentals and their rank, which is earned over time and can't be bought.",
       },
       {
-        q: "What if the car comes back with a dent?",
+        q: "What if there is a dent?",
         a: "Handover and return are both recorded with a code from each side, with date and time. Photos can be taken through the chat at that moment, and either party can open a report attaching that evidence. It doesn't come down to one person's word against the other's.",
       },
       {
-        q: "Can I use my car when I need it?",
+        q: "Can I use it whenever I want?",
         a: "It's yours, so yes. Mark the days you'll be using it and they disappear from the calendar: nobody can book it on those days. You list it when you want and take it down when you want.",
       },
       {
-        q: "How much can you make from a car that sits still?",
+        q: "How much can you make?",
         a: "It depends on the model, its condition and how many days a month you leave it available. Further up this page there's a calculator to get a sense of your own case. Listing costs nothing: Freewheel only charges a fee when someone rents from you.",
       },
       {
-        q: "What if I have a problem in the middle of a rental?",
+        q: "What if something goes wrong?",
         a: "You have the chat with the other person and an assistant inside the app that answers at any hour. And if the problem is serious, the report reaches someone on the team who reviews it.",
       },
     ],

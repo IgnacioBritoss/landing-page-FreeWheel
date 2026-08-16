@@ -388,27 +388,27 @@ export default {
       "Y si te queda una duda, adentro de la aplicación hay un asistente que responde a cualquier hora.",
     items: [
       {
-        q: "¿Qué necesito para alquilar un auto?",
+        q: "¿Qué necesito para alquilar?",
         a: "Ser mayor de 18, tener la licencia de conducir vigente y un medio de pago. Subís la licencia y el DNI una sola vez, cuando creás la cuenta; a partir de ahí reservás en dos toques.",
       },
       {
-        q: "¿Cómo sé que la persona que me alquila es de fiar?",
+        q: "¿Cómo sé que puedo confiar?",
         a: "Porque pasó por lo mismo que vos: sin DNI y licencia aprobados no se puede publicar un auto ni reservar uno. Además vas a ver sus reseñas de alquileres terminados y su rango, que se gana con el tiempo y no se puede comprar.",
       },
       {
-        q: "¿Y si el auto aparece con un golpe?",
+        q: "¿Y si aparece un golpe?",
         a: "La entrega y la devolución quedan registradas con un código de cada parte, con fecha y hora. En el momento pueden sacarse fotos por el chat, y cualquiera de los dos puede abrir un reporte adjuntando esa prueba. No queda en la palabra de uno contra la del otro.",
       },
       {
-        q: "¿Puedo usar mi auto cuando lo necesito?",
+        q: "¿Puedo usarlo cuando quiera?",
         a: "Es tuyo, así que sí. Marcás los días que lo vas a usar y desaparecen del calendario: nadie te lo puede reservar esos días. Lo publicás cuando querés y lo sacás cuando querés.",
       },
       {
-        q: "¿Cuánto se puede ganar con un auto parado?",
+        q: "¿Cuánto se puede ganar?",
         a: "Depende del modelo, del estado y de cuántos días al mes lo dejes disponible. Más arriba en esta página hay una calculadora para hacerte una idea con tu caso. Publicar no cuesta nada: Freewheel cobra una comisión solamente cuando alguien te alquila.",
       },
       {
-        q: "¿Qué pasa si tengo un problema en el medio del alquiler?",
+        q: "¿Y si hay un problema?",
         a: "Tenés el chat con la otra persona y un asistente dentro de la aplicación que responde a cualquier hora. Y si el problema es serio, el reporte llega a alguien del equipo que lo revisa.",
       },
     ],

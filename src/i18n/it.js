@@ -368,27 +368,27 @@ export default {
       "E se ti resta un dubbio, dentro l'applicazione c'è un assistente che risponde a qualsiasi ora.",
     items: [
       {
-        q: "Cosa mi serve per noleggiare un'auto?",
+        q: "Cosa serve per noleggiare?",
         a: "Avere più di 18 anni, la patente in corso di validità e un metodo di pagamento. Carichi patente e documento una volta sola, quando crei l'account; da lì in poi prenoti con due tocchi.",
       },
       {
-        q: "Come faccio a sapere che chi mi noleggia è affidabile?",
+        q: "Come so che posso fidarmi?",
         a: "Perché ha fatto lo stesso percorso tuo: senza documento e patente approvati non si può pubblicare un'auto né prenotarne una. In più vedrai le recensioni dei noleggi conclusi e il livello, che si guadagna col tempo e non si può comprare.",
       },
       {
-        q: "E se l'auto torna con un'ammaccatura?",
+        q: "E se c'è un'ammaccatura?",
         a: "Consegna e restituzione restano registrate con un codice per parte, con data e ora. Sul momento si possono scattare foto dalla chat, e ognuno dei due può aprire una segnalazione allegando quella prova. Non resta la parola di uno contro quella dell'altro.",
       },
       {
-        q: "Posso usare la mia auto quando mi serve?",
+        q: "Posso usarla quando voglio?",
         a: "È tua, quindi sì. Segni i giorni in cui la userai e spariscono dal calendario: nessuno può prenotarla in quei giorni. La pubblichi quando vuoi e la togli quando vuoi.",
       },
       {
-        q: "Quanto si può guadagnare con un'auto ferma?",
+        q: "Quanto si può guadagnare?",
         a: "Dipende dal modello, dallo stato e da quanti giorni al mese la lasci disponibile. Più in alto in questa pagina c'è un calcolatore per farti un'idea sul tuo caso. Pubblicare non costa nulla: Freewheel trattiene una commissione solo quando qualcuno noleggia da te.",
       },
       {
-        q: "Cosa succede se ho un problema durante il noleggio?",
+        q: "E se c'è un problema?",
         a: "Hai la chat con l'altra persona e un assistente dentro l'applicazione che risponde a qualsiasi ora. E se il problema è serio, la segnalazione arriva a qualcuno del team che la esamina.",
       },
     ],

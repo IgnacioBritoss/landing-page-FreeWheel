@@ -368,27 +368,27 @@ export default {
       "E se ficar alguma dúvida, dentro do aplicativo tem um assistente que responde a qualquer hora.",
     items: [
       {
-        q: "O que eu preciso para alugar um carro?",
+        q: "O que preciso para alugar?",
         a: "Ter mais de 18 anos, habilitação válida e uma forma de pagamento. Você envia a habilitação e o documento uma vez só, quando cria a conta; a partir daí reserva em dois toques.",
       },
       {
-        q: "Como sei que a pessoa que me aluga é confiável?",
+        q: "Como sei que posso confiar?",
         a: "Porque ela passou pelo mesmo que você: sem documento e habilitação aprovados não dá para anunciar nem para reservar. Além disso você vê as avaliações dos aluguéis concluídos e o nível dela, que se conquista com o tempo e não se compra.",
       },
       {
-        q: "E se o carro aparecer com um amassado?",
+        q: "E se aparecer um amassado?",
         a: "A entrega e a devolução ficam registradas com um código de cada parte, com data e hora. Na hora dá para tirar fotos pelo chat, e qualquer um dos dois pode abrir uma denúncia anexando essa prova. Não fica na palavra de um contra a do outro.",
       },
       {
-        q: "Posso usar meu carro quando eu precisar?",
+        q: "Posso usar quando quiser?",
         a: "É seu, então sim. Marca os dias em que vai usá-lo e eles somem do calendário: ninguém pode reservar nesses dias. Você anuncia quando quer e tira do ar quando quer.",
       },
       {
-        q: "Quanto dá para ganhar com um carro parado?",
+        q: "Quanto dá para ganhar?",
         a: "Depende do modelo, do estado e de quantos dias por mês você o deixa disponível. Mais acima nesta página tem uma calculadora para ter uma ideia do seu caso. Anunciar não custa nada: a Freewheel cobra comissão só quando alguém aluga de você.",
       },
       {
-        q: "E se eu tiver um problema no meio do aluguel?",
+        q: "E se der algum problema?",
         a: "Você tem o chat com a outra pessoa e um assistente dentro do aplicativo que responde a qualquer hora. E se o problema for sério, a denúncia chega a alguém da equipe que revisa.",
       },
     ],
