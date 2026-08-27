@@ -162,12 +162,12 @@ h1, h2, h3, h4 {
 
 /* El gris cálido de la app, para dar ritmo sin cambiar de mundo.
 
-   Va con un 6% de transparencia para que el fondo de ambiente siga
-   asomando por debajo. Con el gris opaco, estas tres secciones eran las
-   únicas de toda la página donde el fondo desaparecía de golpe, y el corte
-   se notaba más que el propio ambiente. */
+   Va con un 10% de transparencia para que el fondo de ambiente siga
+   asomando por debajo. Con el gris opaco, estas secciones eran las únicas de
+   toda la página donde el fondo desaparecía de golpe, y el corte se notaba
+   más que el propio ambiente. */
 .section--tint {
-  background: color-mix(in srgb, var(--paper-2) 94%, transparent);
+  background: color-mix(in srgb, var(--paper-2) 90%, transparent);
 }
 
 /* La línea de 1px arriba de una sección. Es el separador de toda la página:

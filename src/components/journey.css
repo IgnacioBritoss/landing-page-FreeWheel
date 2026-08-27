@@ -7,7 +7,11 @@
 .journey {
   position: relative;
   height: 400vh;
-  background: var(--paper-2);
+  /* Con un 10% de transparencia, para que el fondo de ambiente siga asomando.
+     Esta sección mide CUATRO pantallas de alto: pintada opaca era el tramo más
+     largo de toda la página donde el fondo desaparecía, y el corte se notaba
+     más que el propio ambiente. */
+  background: color-mix(in srgb, var(--paper-2) 90%, transparent);
   border-top: 1px solid var(--line);
 }
 

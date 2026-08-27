@@ -90,7 +90,14 @@
      recién cuando uno la busca; si se ve de entrada, dejó de ser textura y
      pasó a ser un estampado. */
   --dot: rgba(17, 24, 39, 0.055);
-  --ambient: 0.5;
+  --ambient: 0.85;
+
+  /* La lluvia y las fotos de la ciudad. `--city` es cuánto se ven las fotos y
+     `--city-light` corrige su brillo: sobre papel blanco hay que aclararlas un
+     poco para que no ensucien, y sobre fondo oscuro al revés. */
+  --rain: rgba(17, 24, 39, 0.075);
+  --city: 0.17;
+  --city-light: 1.04;
 
   /* Los botones al pasar el mouse. Van como token y no como color fijo porque
      en cada modo tienen que moverse hacia un lado distinto: en claro el botón
@@ -196,7 +203,14 @@
     --own: #34d399;
 
     --dot: rgba(255, 255, 255, 0.055);
-    --ambient: 0.85;
+    --ambient: 1;
+
+    --rain: rgba(255, 255, 255, 0.055);
+    /* Las fotos se ven MÁS en oscuro: una foto en gris sobre fondo casi negro
+       aporta luz, que es justo lo que ese fondo necesita. La nocturna, con las
+       luces de la ciudad, es la que mejor queda acá. */
+    --city: 0.26;
+    --city-light: 0.88;
 
     --btn-solid-hover: #ffffff;
     --btn-paper-hover: #1c232f;
@@ -232,7 +246,11 @@
   /* En oscuro las manchas necesitan un poco más de fuerza: sobre un fondo casi
      negro, la misma opacidad que sobre papel blanco no se ve. */
   --dot: rgba(255, 255, 255, 0.055);
-  --ambient: 0.85;
+  --ambient: 1;
+
+  --rain: rgba(255, 255, 255, 0.055);
+  --city: 0.26;
+  --city-light: 0.88;
 
   --btn-solid-hover: #ffffff;
   --btn-paper-hover: #1c232f;

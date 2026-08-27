@@ -111,6 +111,31 @@ export const MAP_CARS = [
  */
 export const CHAT_PHOTO = null;
 
+/**
+ * ► LAS FOTOS DE BUENOS AIRES DEL FONDO
+ *
+ * Los archivos están en `public/ciudad/`. Esta lista tiene que coincidir con
+ * los nombres EXACTOS, extensión incluida: si acá dice .jpg y el archivo es
+ * .png, esa foto no carga.
+ * Si alguno falta, esa foto se saltea; si faltan las tres, el fondo dibuja la
+ * silueta de la ciudad en vectores (components/ui/Skyline.jsx) y no se ve
+ * ningún hueco. O sea: la página funciona con las fotos y sin ellas.
+ *
+ * ► obelisco.png pesa 475 KB, y es lo más pesado de todo el sitio. Guardada
+ *   como JPG con calidad 75 pesaría unos 70 KB: el PNG guarda cada píxel
+ *   exacto, que sirve para un logo con líneas netas y es exactamente lo que
+ *   sobra en una foto. Y esta encima se va a ver en gris y al 17%. Cambiándola
+ *   a .jpg —y actualizando el nombre en esta lista— la página baja 400 KB.
+ *
+ * Se cargan recién cuando el navegador está desocupado, después de dibujar la
+ * página: son decoración y no pueden retrasar el titular.
+ */
+export const CITY_PHOTOS = [
+  "/ciudad/avenida.jpg",
+  "/ciudad/noche.jpg",
+  "/ciudad/obelisco.png",
+];
+
 /** La otra persona de la conversación. Su perfil se abre al tocar el nombre.
  *  El nombre, el modelo del auto y quién escribió cada reseña son nombres
  *  propios; el resto del perfil está en i18n (`showcase.profile`). */
