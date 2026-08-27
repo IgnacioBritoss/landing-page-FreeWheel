@@ -13,6 +13,7 @@
 // ============================================================================
 import { useState } from "react";
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import "./faq.css";
 
 export default function Faq() {
@@ -26,11 +27,7 @@ export default function Faq() {
     <section className="section faq" id="preguntas">
       <div className="wrap faq__inner">
         <header className="faq__head">
-          <span className="label" data-reveal="up">
-            <span className="label__n">09</span>
-            {t.faq.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="09">{t.faq.label}</SectionLabel>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.faq.title}
           </h2>

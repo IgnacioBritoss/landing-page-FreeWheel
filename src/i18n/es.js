@@ -22,6 +22,14 @@ export default {
       "Freewheel es la plataforma argentina de alquiler de autos entre particulares: identidad verificada, reservas con calendario real, entrega con código, chat con notas de voz y soporte en cinco idiomas.",
   },
 
+  /* A cuál de los dos públicos le habla cada sección. Va como una palabra
+     al margen de la etiqueta del capítulo, junto al color. Corto, porque
+     entra en un renglón ya ocupado. */
+  audience: {
+    rent: "Para quien alquila",
+    own: "Para quien pone su auto",
+  },
+
   /* ── La barra de arriba ────────────────────────────────────────────── */
   nav: {
     links: ["Cómo funciona", "Plataforma", "Confianza", "Para dueños", "Preguntas"],
@@ -349,7 +357,7 @@ export default {
 
   /* ── La calculadora ────────────────────────────────────────────────── */
   earnings: {
-    label: "Para dueños",
+    label: "Ganancias",
     title: "Tu auto pierde plata todos los días que no lo usás",
     lead:
       "Seguro, patente y garage se pagan igual esté en la calle o en tu cochera. Publicarlo es gratis, vos elegís qué días está disponible, y quien lo alquila mostró su DNI y su licencia antes de poder reservar.",

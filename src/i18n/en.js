@@ -17,6 +17,12 @@ export default {
       "Freewheel is the Argentine peer-to-peer car rental platform: verified identity, real availability calendars, code-based handover, in-app chat with voice notes and support in five languages.",
   },
 
+  /* Which of the two audiences a section speaks to. */
+  audience: {
+    rent: "For renters",
+    own: "For car owners",
+  },
+
   nav: {
     links: ["How it works", "Platform", "Trust", "For owners", "Questions"],
     home: "Freewheel, back to top",
@@ -334,7 +340,7 @@ export default {
   },
 
   earnings: {
-    label: "For owners",
+    label: "Earnings",
     title: "Your car loses money every day you don't drive it",
     lead:
       "Insurance, tax and the garage cost the same whether it's on the road or in your driveway. Listing it is free, you choose which days it's available, and whoever rents it showed their ID and licence before they could book.",

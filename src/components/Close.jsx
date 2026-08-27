@@ -59,7 +59,7 @@ export default function Close() {
         <div className="wrap">
           <div className="close__top">
             <div className="close__brand">
-              <Logo height={20} className="logo--ink" />
+              <Logo height={26} className="logo--ink" />
               <p>{t.close.tagline}</p>
             </div>
 

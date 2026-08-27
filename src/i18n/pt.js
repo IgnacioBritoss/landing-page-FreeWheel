@@ -14,6 +14,12 @@ export default {
       "A Freewheel é a plataforma argentina de aluguel de carros entre pessoas: identidade verificada, calendário real de disponibilidade, entrega com código, chat com áudios e suporte em cinco idiomas.",
   },
 
+  /* A qual dos dois públicos cada seção fala. */
+  audience: {
+    rent: "Para quem aluga",
+    own: "Para quem anuncia",
+  },
+
   nav: {
     links: ["Como funciona", "Plataforma", "Confiança", "Para donos", "Perguntas"],
     home: "Freewheel, voltar ao início",
@@ -331,7 +337,7 @@ export default {
   },
 
   earnings: {
-    label: "Para donos",
+    label: "Ganhos",
     title: "Seu carro perde dinheiro todo dia em que você não o usa",
     lead:
       "Seguro, imposto e garagem custam o mesmo esteja ele na rua ou na sua vaga. Anunciar é grátis, você escolhe em que dias ele fica disponível, e quem aluga mostrou documento e habilitação antes de poder reservar.",

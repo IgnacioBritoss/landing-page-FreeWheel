@@ -41,6 +41,12 @@
   --text-on-ink: #f9fafb;
   --text-on-ink-2: #9ca3af;
 
+  /* El azul de la marca no sirve sobre el bloque oscuro del cierre: #0f6ce6
+     contra #111827 da 3.9 de contraste y el símbolo queda apagado. Este es el
+     mismo azul aclarado, y no cambia con el tema porque ese bloque es oscuro
+     en los dos. */
+  --blue-on-ink: #6f9df7;
+
   /* ── Líneas ───────────────────────────────────────────────────────────
      La línea de 1px es la herramienta principal de esta página: separa,
      alinea y da estructura sin agregar ni una sombra ni un recuadro. */
@@ -48,9 +54,43 @@
   --line-2: #d1d5db;
   --line-on-ink: rgba(255, 255, 255, 0.14);
 
+  /* ── Los dos públicos ─────────────────────────────────────────────────
+     Freewheel le habla a DOS personas distintas: la que necesita un auto por
+     unos días, y la que tiene uno parado y quiere que le rinda. Son objeciones
+     opuestas —una quiere que el auto esté cuando lo pide, la otra quiere que
+     nadie se lo toque el fin de semana que se va— y hasta ahora la página no
+     avisaba en ningún lado a cuál de las dos le estaba hablando.
+
+     Cada una tiene su color, y se usa en UN solo lugar por sección: el número
+     del capítulo y la línea de la etiqueta. Nada de fondos ni de recuadros de
+     color; es una marca al margen, del tamaño de una nota al pie.
+
+       violeta → quien alquila. Es el que viaja: el violeta ya está del lado
+                 frío del azul de la marca, así que acompaña sin pelear.
+       verde   → quien pone su auto. Verde de plata que entra, que es
+                 exactamente lo que esa persona vino a buscar.
+
+     Los dos tonos están elegidos para pasar el contraste mínimo sobre papel
+     blanco en texto chico (el #059669 clásico no llega: da 3.1 contra el 4.5
+     que hace falta). En oscuro se aclaran, por lo mismo. */
+  --rent: #6d28d9;
+  --own: #047857;
+
   /* ── Estados ──────────────────────────────────────────────────────── */
   --ok: #059669;
   --alert: #b45309;
+
+  /* ── El fondo con vida ────────────────────────────────────────────────
+     La página era blanco liso de punta a punta y se sentía fría. Estas dos
+     variables son lo único que hace falta para el ambiente (ver el componente
+     Ambient y ambient.css): el punto de la trama y cuánta fuerza tienen las
+     manchas de color que se mueven despacio detrás de todo.
+
+     Los valores son deliberadamente bajísimos. La trama tiene que notarse
+     recién cuando uno la busca; si se ve de entrada, dejó de ser textura y
+     pasó a ser un estampado. */
+  --dot: rgba(17, 24, 39, 0.055);
+  --ambient: 0.5;
 
   /* Los botones al pasar el mouse. Van como token y no como color fijo porque
      en cada modo tienen que moverse hacia un lado distinto: en claro el botón
@@ -82,7 +122,10 @@
 
   /* Tamaños fluidos: crecen con el ancho de la pantalla sin una media query
      por cada tamaño. clamp(mínimo, ideal, máximo). */
-  --t-display: clamp(2.75rem, 7.4vw, 6.5rem);
+  /* El titular bajó un escalón: a 6.5rem ocupaba media pantalla y empujaba
+     todo lo demás abajo del pliegue. Con 5.2 sigue mandando en la portada y
+     deja respirar al párrafo y al auto. */
+  --t-display: clamp(2.4rem, 6.1vw, 5.2rem);
   --t-h2: clamp(1.85rem, 4.4vw, 3.4rem);
   --t-h3: clamp(1.1rem, 1.9vw, 1.45rem);
   --t-lead: clamp(1.02rem, 1.35vw, 1.22rem);
@@ -149,6 +192,12 @@
     --ok: #34d399;
     --alert: #fbbf24;
 
+    --rent: #a78bfa;
+    --own: #34d399;
+
+    --dot: rgba(255, 255, 255, 0.055);
+    --ambient: 0.85;
+
     --btn-solid-hover: #ffffff;
     --btn-paper-hover: #1c232f;
   }
@@ -176,6 +225,14 @@
 
   --ok: #34d399;
   --alert: #fbbf24;
+
+  --rent: #a78bfa;
+  --own: #34d399;
+
+  /* En oscuro las manchas necesitan un poco más de fuerza: sobre un fondo casi
+     negro, la misma opacidad que sobre papel blanco no se ve. */
+  --dot: rgba(255, 255, 255, 0.055);
+  --ambient: 0.85;
 
   --btn-solid-hover: #ffffff;
   --btn-paper-hover: #1c232f;

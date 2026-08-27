@@ -1,0 +1,113 @@
+/* ============================================================================
+   ambient.css — El fondo que respira
+   ----------------------------------------------------------------------------
+   La capa va FIJA y detrás de todo (z-index -1). Para que se vea, el <body>
+   dejó de pintar el color de papel y ahora lo pinta el <html> (ver base.css):
+   si el body siguiera opaco, taparía esto.
+   ========================================================================== */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── La trama ─────────────────────────────────────────────────────────────
+   Un punto de 1px cada 34. Se desvanece hacia abajo con una máscara: arriba,
+   donde está la portada y hay mucho aire, se nota apenas; más abajo, donde
+   hay texto, desaparece del todo para no ensuciar la lectura. */
+.ambient__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at center, var(--dot) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 55%, transparent 100%);
+}
+
+/* ── Las manchas ──────────────────────────────────────────────────────────
+   Cada una es un círculo de color que se desvanece hasta transparente. Eso ya
+   se ve desenfocado sin usar filter: blur(), que en una superficie de este
+   tamaño y animándose es carísimo.
+
+   El tamaño va en vmax para que en una pantalla apaisada y en un celular
+   parado la mancha ocupe una porción parecida.
+
+   La opacidad sale de --ambient, que el modo oscuro sube: sobre fondo negro
+   hace falta un poco más de color para que se note lo mismo. */
+.ambient__blob {
+  position: absolute;
+  width: 78vmax;
+  height: 78vmax;
+  border-radius: 50%;
+  opacity: var(--ambient, 0.5);
+  will-change: transform;
+}
+
+/* Violeta: quien alquila. Entra por arriba a la izquierda, que es donde está
+   el titular. */
+.ambient__blob--rent {
+  top: -34vmax;
+  left: -26vmax;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--rent) 14%, transparent) 0%,
+    transparent 66%
+  );
+  animation: drift-a 41s ease-in-out infinite alternate;
+}
+
+/* Verde: quien pone su auto. A la derecha y más abajo, a la altura de la
+   calculadora de ganancias cuando se scrollea. */
+.ambient__blob--own {
+  top: 22vmax;
+  right: -32vmax;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--own) 13%, transparent) 0%,
+    transparent 66%
+  );
+  animation: drift-b 52s ease-in-out infinite alternate;
+}
+
+/* El azul de la marca, abajo, para que las dos puntas de la pantalla tengan
+   algo y el medio quede limpio. */
+.ambient__blob--blue {
+  bottom: -40vmax;
+  left: 12vmax;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--blue) 11%, transparent) 0%,
+    transparent 66%
+  );
+  animation: drift-c 34s ease-in-out infinite alternate;
+}
+
+/* Los recorridos son cortos —nunca más de un 8% de la pantalla— y los tres
+   duran distinto, así no vuelven a coincidir nunca y el movimiento no se lee
+   como un bucle. */
+@keyframes drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(7vmax, 5vmax, 0) scale(1.13); }
+}
+
+@keyframes drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.08); }
+  to   { transform: translate3d(-6vmax, -7vmax, 0) scale(1); }
+}
+
+@keyframes drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(5vmax, -4vmax, 0) scale(1.1); }
+}
+
+/* Quien pidió menos movimiento conserva el color y la textura: lo único que se
+   apaga es el desplazamiento. Sacarle también el fondo sería devolverle la
+   página lisa que justamente estamos arreglando. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient__blob {
+    animation: none !important;
+  }
+}

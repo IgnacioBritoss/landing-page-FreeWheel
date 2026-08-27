@@ -66,7 +66,11 @@
   padding: 0;
 }
 
+/* El color de papel lo pinta el <html> y NO el <body>. Es lo que deja ver la
+   capa de ambiente (components/ui/ambient.css), que va fija detrás de todo con
+   z-index -1: si el body siguiera pintando un fondo opaco, la taparía. */
 html {
+  background: var(--paper);
   scroll-behavior: smooth;
   /* La barra de navegación es fija: sin esto, un enlace a una sección la
      dejaría escondida abajo del menú. */
@@ -76,7 +80,7 @@ html {
 
 body {
   font-family: var(--font);
-  background: var(--paper);
+  background: transparent;
   color: var(--text);
   font-size: var(--t-body);
   line-height: 1.6;
@@ -156,9 +160,14 @@ h1, h2, h3, h4 {
   padding-block: var(--section-y);
 }
 
-/* El gris cálido de la app, para dar ritmo sin cambiar de mundo. */
+/* El gris cálido de la app, para dar ritmo sin cambiar de mundo.
+
+   Va con un 6% de transparencia para que el fondo de ambiente siga
+   asomando por debajo. Con el gris opaco, estas tres secciones eran las
+   únicas de toda la página donde el fondo desaparecía de golpe, y el corte
+   se notaba más que el propio ambiente. */
 .section--tint {
-  background: var(--paper-2);
+  background: color-mix(in srgb, var(--paper-2) 94%, transparent);
 }
 
 /* La línea de 1px arriba de una sección. Es el separador de toda la página:
@@ -179,6 +188,11 @@ h1, h2, h3, h4 {
 .label {
   display: flex;
   align-items: center;
+  /* En un celular angosto la marca de público no entra en el mismo renglón que
+     el nombre del capítulo, así que baja al de abajo en vez de empujar la
+     página a lo ancho. */
+  flex-wrap: wrap;
+  row-gap: 8px;
   gap: 12px;
   font-size: var(--t-label);
   font-weight: 600;
@@ -191,6 +205,43 @@ h1, h2, h3, h4 {
 .label__n {
   font-variant-numeric: tabular-nums;
   color: var(--blue);
+}
+
+/* ── A cuál de los dos públicos le habla esta sección ─────────────────────
+   Freewheel tiene dos clientes con miedos opuestos: el que necesita un auto
+   prestado y el que tiene uno parado. Hasta ahora la página no avisaba a cuál
+   de los dos le estaba hablando en cada momento.
+
+   La marca es una palabra al final de la etiqueta del capítulo, en el mismo
+   cuerpo diminuto y en versalitas que el resto, con una línea vertical de 1px
+   antes. Nada de recuadros ni de fondos de color: lo único que cambia es el
+   tono de la tinta.
+
+   Y solo la llevan CUATRO de las nueve secciones —las que de verdad le hablan
+   a uno solo—. Si la llevaran todas, dejaría de señalar nada. */
+.label__who {
+  padding-left: 12px;
+  border-left: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+/* Cuando hay marca de público, el número del capítulo y la línea que se
+   estira toman ese mismo color. Son los dos únicos acentos de la sección, así
+   que moverlos juntos alcanza para que se lea como una decisión y no como un
+   detalle suelto. */
+.label--rent { --label-tone: var(--rent); }
+.label--own  { --label-tone: var(--own); }
+
+.label--rent .label__n,
+.label--own .label__n,
+.label--rent .label__who,
+.label--own .label__who {
+  color: var(--label-tone);
+}
+
+.label--rent .label__rule,
+.label--own .label__rule {
+  background: color-mix(in srgb, var(--label-tone) 34%, var(--line));
 }
 
 /* La línea que se estira hacia la derecha después del texto de la etiqueta.

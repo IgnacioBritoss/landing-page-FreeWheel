@@ -12,6 +12,7 @@
 import { useState, useEffect } from "react";
 import { LANGUAGES } from "../data/content";
 import { useI18n } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import "./languages.css";
 
 export default function Languages() {
@@ -33,11 +34,7 @@ export default function Languages() {
     <section className="section section--tint langs" id="idiomas">
       <div className="wrap langs__inner">
         <div className="langs__copy">
-          <span className="label" data-reveal="up">
-            <span className="label__n">08</span>
-            {t.languages.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="08">{t.languages.label}</SectionLabel>
 
           <h2 className="langs__title" data-reveal="up" style={{ "--i": 1 }}>
             {t.languages.title}

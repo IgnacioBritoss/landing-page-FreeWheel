@@ -7,11 +7,19 @@
   color: var(--text-on-ink);
 }
 
-/* Dentro de este bloque el logo va en blanco. Como el símbolo usa
-   currentColor, alcanza con cambiar el color del contenedor. */
+/* Dentro de este bloque la palabra va en blanco y el símbolo en el azul
+   aclarado. Como el símbolo usa currentColor, alcanza con cambiar el color.
+
+   Acá el azul de la marca no alcanza: sobre este fondo casi negro da 3.9 de
+   contraste y el pin se apaga. --blue-on-ink es el mismo azul subido de brillo
+   para este único caso. */
 .close .logo,
 .close .logo__text {
   color: var(--text-on-ink);
+}
+
+.close .logo__mark {
+  color: var(--blue-on-ink);
 }
 
 /* ── La llamada a la acción ──────────────────────────────────────────── */

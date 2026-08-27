@@ -67,7 +67,7 @@ export default function Nav() {
 
         <div className="nav__inner wrap">
           <a href="#top" className="nav__brand" aria-label={t.nav.home}>
-            <Logo height={20} />
+            <Logo height={26} />
           </a>
 
           <nav className="nav__links" aria-label={t.nav.sections}>

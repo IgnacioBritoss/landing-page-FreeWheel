@@ -18,6 +18,7 @@
 import { useState } from "react";
 import { SCREENS, QR_MATRIX, APP_URL } from "../data/content";
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import "./preview.css";
 
 export default function AppPreview() {
@@ -32,11 +33,7 @@ export default function AppPreview() {
     <section className="section section--tint preview" id="app">
       <div className="wrap">
         <header className="preview__head">
-          <span className="label" data-reveal="up">
-            <span className="label__n">06</span>
-            {t.preview.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="06">{t.preview.label}</SectionLabel>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.preview.title}
           </h2>

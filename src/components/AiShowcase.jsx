@@ -20,6 +20,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { AI_USES } from "../data/content";
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import { useInView } from "../hooks/useReveal";
 import "./ai.css";
 
@@ -72,11 +73,7 @@ export default function AiShowcase() {
       <div className="wrap ai__inner">
         {/* ── Izquierda ──────────────────────────────────────────────── */}
         <div className="ai__copy">
-          <span className="label" data-reveal="up">
-            <span className="label__n">03</span>
-            {t.ai.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="03" audience="own">{t.ai.label}</SectionLabel>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.ai.title}

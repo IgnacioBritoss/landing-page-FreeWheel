@@ -38,6 +38,8 @@
 import { useReveal } from "./hooks/useReveal";
 import { useI18n } from "./i18n/core";
 
+import Ambient from "./components/ui/Ambient";
+
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Statement from "./components/Statement";
@@ -58,6 +60,11 @@ export default function App() {
 
   return (
     <>
+      {/* El fondo, detrás de todo. Va antes que la barra y que el contenido
+          para que quede claro que es la capa de más abajo, aunque quien lo
+          decide de verdad es el z-index de ambient.css. */}
+      <Ambient />
+
       <Nav />
 
       {/* <main> y no un <div>: le dice al navegador y a los lectores de

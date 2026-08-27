@@ -18,6 +18,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { CALC } from "../data/content";
 import { useI18n } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import "./earnings.css";
 
 /**
@@ -69,11 +70,7 @@ export default function Earnings() {
       <div className="wrap earnings__inner">
         {/* ── Izquierda ──────────────────────────────────────────────── */}
         <div>
-          <span className="label" data-reveal="up">
-            <span className="label__n">07</span>
-            {t.earnings.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="07" audience="own">{t.earnings.label}</SectionLabel>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.earnings.title}

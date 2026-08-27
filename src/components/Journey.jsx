@@ -31,6 +31,7 @@
 // ============================================================================
 import { useState, useCallback } from "react";
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import { useScrollProgress } from "../hooks/useScrollProgress";
 import "./journey.css";
 
@@ -52,10 +53,9 @@ export default function Journey() {
         <div className="wrap journey__inner">
           {/* ── Encabezado ──────────────────────────────────────────── */}
           <div className="journey__head">
-            <span className="label">
-              <span className="label__n">01</span>
+            <SectionLabel n="01" audience="rent" rule={false} reveal={false}>
               {t.journey.label}
-            </span>
+            </SectionLabel>
             <h2 className="journey__title">
               {t.journey.titleLines[0]}
               <br />

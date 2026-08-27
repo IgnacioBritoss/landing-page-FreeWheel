@@ -121,9 +121,13 @@
    Son DOS trazados encima del otro. El gris es el auto que llega; el azul se
    dibuja con el scroll por arriba, así el auto se va "llenando" a medida que
    se baja. Es el efecto que estaba antes, ahora combinado con la llegada. */
+/* Los dos trazos se engrosaron: a 2 y 2.5 el auto se leía como un boceto a
+   lápiz y, en una pantalla grande, la silueta casi desaparecía contra el
+   blanco. Con 3.2 y 4.5 el dibujo tiene cuerpo y el llenado azul se ve desde
+   lejos, que es todo el sentido de la pieza. */
 .hero__car-ghost {
   stroke: var(--line-2);
-  stroke-width: 2;
+  stroke-width: 3.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -136,7 +140,7 @@
    se dibujaría cuando ya nadie la ve. El min() lo frena en 1. */
 .hero__car-line {
   stroke: var(--blue);
-  stroke-width: 2.5;
+  stroke-width: 4.5;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 1;

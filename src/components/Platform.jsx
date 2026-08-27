@@ -13,6 +13,7 @@
 //  alcanza para que el bloque no se sienta muerto mientras se baja.
 // ============================================================================
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import "./platform.css";
 
 export default function Platform() {
@@ -22,11 +23,7 @@ export default function Platform() {
     <section className="section platform" id="plataforma">
       <div className="wrap">
         <header className="platform__head">
-          <span className="label" data-reveal="up">
-            <span className="label__n">02</span>
-            {t.platform.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="02">{t.platform.label}</SectionLabel>
 
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.platform.title}

@@ -5,11 +5,22 @@
   color: var(--text);
 }
 
+/* EL SÍMBOLO VA EN AZUL y la palabra en tinta.
+
+   Es lo que hace casi toda marca con símbolo + palabra: el color señala el
+   dibujo, que es la parte que hay que reconocer de un vistazo, y la palabra
+   queda en el color del texto para que se lea como texto. Pintar las dos
+   cosas de azul convierte el conjunto en un botón.
+
+   Va acá y no adentro del SVG a propósito: el símbolo usa currentColor, así
+   que quien lo pinta es el CSS y cualquier contexto puede cambiarlo con una
+   línea (es exactamente lo que hace el bloque oscuro del cierre, más abajo). */
 .logo__mark {
+  color: var(--blue);
   flex-shrink: 0;
-  /* Un empujón mínimo hacia abajo: el símbolo tiene las ruedas colgando por
-     debajo de su masa principal, así que alineado al centro exacto se ve
-     "flotando" al lado del texto. */
+  /* El pin es angosto y alto, y su peso está arriba —la cabeza redonda—
+     mientras la punta es casi aire. Alineado al centro exacto se ve corrido
+     hacia arriba, así que baja un pelo. */
   transform: translateY(1px);
 }
 

@@ -27,6 +27,7 @@ import { MAP_CARS, MAP_CENTER, MAP_ZOOM, CHAT, CHAT_PEER, CHAT_PHOTO } from "../
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useI18n, useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import { useInView } from "../hooks/useReveal";
 import TierShield from "./ui/TierShield";
 import "./showcase.css";
@@ -38,11 +39,7 @@ export default function Showcase() {
     <section className="section showcase" id="pantallas">
       <div className="wrap">
         <header className="showcase__head">
-          <span className="label" data-reveal="up">
-            <span className="label__n">05</span>
-            {t.showcase.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="05" audience="rent">{t.showcase.label}</SectionLabel>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.showcase.title}
           </h2>

@@ -13,6 +13,7 @@
 // ============================================================================
 import { TIERS } from "../data/content";
 import { useT } from "../i18n/core";
+import SectionLabel from "./ui/SectionLabel";
 import TierShield from "./ui/TierShield";
 import "./trust.css";
 
@@ -23,11 +24,7 @@ export default function Trust() {
     <section className="section trust" id="confianza">
       <div className="wrap">
         <header className="trust__head">
-          <span className="label" data-reveal="up">
-            <span className="label__n">04</span>
-            {t.trust.label}
-            <span className="label__rule" />
-          </span>
+          <SectionLabel n="04">{t.trust.label}</SectionLabel>
           <h2 className="section-title" data-reveal="up" style={{ "--i": 1 }}>
             {t.trust.title}
           </h2>

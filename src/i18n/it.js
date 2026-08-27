@@ -14,6 +14,12 @@ export default {
       "Freewheel è la piattaforma argentina di noleggio auto tra privati: identità verificata, calendario reale di disponibilità, consegna con codice, chat con note vocali e supporto in cinque lingue.",
   },
 
+  /* A quale dei due pubblici parla ogni sezione. */
+  audience: {
+    rent: "Per chi noleggia",
+    own: "Per chi mette l'auto",
+  },
+
   nav: {
     links: ["Come funziona", "Piattaforma", "Fiducia", "Per proprietari", "Domande"],
     home: "Freewheel, torna all'inizio",
@@ -331,7 +337,7 @@ export default {
   },
 
   earnings: {
-    label: "Per proprietari",
+    label: "Guadagni",
     title: "La tua auto perde soldi ogni giorno in cui non la usi",
     lead:
       "Assicurazione, bollo e box costano uguale che stia in strada o nel tuo garage. Pubblicarla è gratis, scegli tu in quali giorni è disponibile, e chi la noleggia ha mostrato documento e patente prima di poter prenotare.",
