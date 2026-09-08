@@ -177,6 +177,102 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================================
+   LAS BANDAS CON FOTO
+   ----------------------------------------------------------------------------
+   Tres secciones —la frase que se ilumina, los idiomas y el cierre— llevan una
+   foto de Buenos Aires de fondo, con un velo azul oscuro encima y el texto en
+   blanco. Es el mismo tratamiento que la portada de la aplicación, y sirve
+   para lo mismo: cortar el blanco y dar aire.
+
+   CÓMO ESTÁ ARMADO
+   La foto y el velo son los dos pseudoelementos de la sección, no dos <div>:
+   así el JSX no se llena de capas vacías y cualquier sección se convierte en
+   banda agregándole una clase y la ruta de la foto.
+
+   `isolation: isolate` es lo que hace que funcione. Crea un contexto de
+   apilamiento propio, y dentro de un contexto el orden de pintado es: primero
+   el fondo del elemento, después los hijos con z-index negativo, y al final el
+   contenido. O sea que los pseudoelementos quedan ARRIBA del color de respaldo
+   y ABAJO del texto, que es exactamente donde tienen que estar. Sin `isolate`,
+   el z-index: -1 se escaparía hacia arriba y la foto se metería detrás del
+   fondo de la página.
+
+   EL RESPALDO IMPORTA: el color de fondo es azul oscuro sólido. Si la foto no
+   carga —archivo renombrado, ruta mal escrita— la sección sigue siendo una
+   banda oscura legible en vez de un rectángulo de texto blanco sobre blanco.
+   ========================================================================== */
+
+.band {
+  position: relative;
+  isolation: isolate;
+  color: var(--text-on-ink);
+  background: var(--band-fallback);
+
+  /* El gris secundario se aclara DENTRO de la banda. El de siempre (#9ca3af)
+     alcanza sobre el negro plano del cierre viejo, pero sobre una foto la zona
+     más clara —un cielo de mediodía— sube el fondo lo suficiente como para
+     dejarlo en 4.3:1, apenas abajo del mínimo. Con este queda en 6.6:1 contra
+     esa misma zona.
+
+     Se redefine el token en vez de listar los selectores que lo usan: así el
+     pie, la nota del cierre y cualquier texto secundario que se agregue mañana
+     quedan cubiertos sin tocar nada. */
+  --text-on-ink-2: #c2cad6;
+
+  /* Lo mismo con el azul. El de los bloques oscuros (#6f9df7) queda en 4.08:1
+     sobre la zona más clara de las fotos —apenas abajo del mínimo de 4.5—, y
+     lo usa el número del capítulo, que es texto chico. Este llega a 6.23:1.
+     Medido sobre las fotos de verdad, no calculado sobre el color del velo. */
+  --blue-on-ink: #a8c4fb;
+}
+
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+/* La foto. Se le saca la mitad del color: a todo color pelea con el azul de la
+   marca, y en blanco y negro puro se ve vieja. */
+.band::before {
+  background-image: var(--photo);
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.55) contrast(1.04);
+}
+
+/* El velo. Va plano y no en degradado: es lo que garantiza que el texto blanco
+   tenga el mismo contraste en toda la banda, sin importar si detrás hay un
+   cielo claro o una calle en sombra. Con estos valores, el blanco sobre la
+   zona más clara de las tres fotos queda arriba de 8:1. */
+.band::after {
+  background: var(--band-veil);
+}
+
+/* Las piezas comunes, invertidas de una vez para las tres bandas. */
+.band .label {
+  color: var(--text-on-ink-2);
+}
+
+.band .label__n {
+  color: var(--blue-on-ink);
+}
+
+.band .label__rule {
+  background: var(--line-on-ink);
+}
+
+.band .section-title {
+  color: var(--text-on-ink);
+}
+
+.band .section-lead {
+  color: var(--text-on-ink-2);
+}
+
+/* ============================================================================
    El encabezado de sección
    ----------------------------------------------------------------------------
    En vez de la etiquetita redondeada con el puntito de color, cada sección
@@ -202,6 +298,10 @@ h1, h2, h3, h4 {
   margin-bottom: 26px;
 }
 
+/* El número queda SIEMPRE en el azul de la marca, tenga o no marca de público
+   el capítulo. Antes se teñía de violeta o verde junto con la palabra, y entre
+   el número, la palabra y la línea había tres señales del mismo dato: el color
+   dejaba de destacar por repetido. La señal ahora es una sola, el resaltador. */
 .label__n {
   font-variant-numeric: tabular-nums;
   color: var(--blue);
@@ -209,40 +309,64 @@ h1, h2, h3, h4 {
 
 /* ── A cuál de los dos públicos le habla esta sección ─────────────────────
    Freewheel tiene dos clientes con miedos opuestos: el que necesita un auto
-   prestado y el que tiene uno parado. Hasta ahora la página no avisaba a cuál
-   de los dos le estaba hablando en cada momento.
+   prestado y el que tiene uno parado. La marca es una palabra al final de la
+   etiqueta del capítulo.
 
-   La marca es una palabra al final de la etiqueta del capítulo, en el mismo
-   cuerpo diminuto y en versalitas que el resto, con una línea vertical de 1px
-   antes. Nada de recuadros ni de fondos de color: lo único que cambia es el
-   tono de la tinta.
+   VA RESALTADA CON MARCADOR, no escrita en color. Antes era texto violeta o
+   verde y se perdía: al lado del número y de la línea, que también estaban
+   teñidos, quedaban tres cosas de color diciendo lo mismo y ninguna resaltaba.
+   Ahora el color es un bloque y la palabra va en blanco encima, que es como
+   uno subraya a mano lo que no quiere que se le pase.
 
-   Y solo la llevan CUATRO de las nueve secciones —las que de verdad le hablan
-   a uno solo—. Si la llevaran todas, dejaría de señalar nada. */
+   ─────────────────────────────────────────────────────────────────────────
+   POR QUÉ ES UNA MÁSCARA Y NO UN FONDO DE COLOR
+
+   Un `background-color` da un rectángulo perfecto, y un rectángulo perfecto no
+   se parece a un marcador. La forma que hay acá es un trazo dibujado: los dos
+   extremos redondeados y desparejos —el marcador se apoya y se levanta, no
+   corta recto—, y el borde de arriba y el de abajo ondulando distinto entre
+   sí.
+
+   Ese dibujo entra como MÁSCARA y el color lo pone `background`. Así el mismo
+   trazo sirve para el violeta y para el verde sin repetir el SVG dos veces, y
+   cambiar el color mañana es cambiar un token.
+
+   Y va rotado 0.4 grados. Es casi nada y es lo que más hace: perfectamente
+   paralela al renglón, la marca se lee como una figura; torcida un pelo, se
+   lee como algo que alguien pasó por encima. Más que eso ya no parece hecho a
+   mano, parece una etiqueta puesta en diagonal.
+   ───────────────────────────────────────────────────────────────────────── */
+
 .label__who {
-  padding-left: 12px;
-  border-left: 1px solid currentColor;
+  position: relative;
+  /* Crea el contexto de apilamiento para que el z-index -1 de la marca se
+     quede adentro y no se escape detrás del fondo de la sección. */
+  isolation: isolate;
+  padding-inline: 0.55em 0.5em;
+  color: #fff;
   white-space: nowrap;
 }
 
-/* Cuando hay marca de público, el número del capítulo y la línea que se
-   estira toman ese mismo color. Son los dos únicos acentos de la sección, así
-   que moverlos juntos alcanza para que se lea como una decisión y no como un
-   detalle suelto. */
-.label--rent { --label-tone: var(--rent); }
-.label--own  { --label-tone: var(--own); }
+.label__who::before {
+  content: "";
+  position: absolute;
+  /* Desborda el texto por los cuatro lados, y de más a la izquierda: el
+     resaltador siempre arranca antes de la palabra y termina pasándose. */
+  inset: -0.55em -0.42em -0.5em -0.34em;
+  z-index: -1;
+  background: var(--mark);
+  transform: rotate(-0.4deg);
 
-.label--rent .label__n,
-.label--own .label__n,
-.label--rent .label__who,
-.label--own .label__who {
-  color: var(--label-tone);
+  -webkit-mask-image: var(--mark-shape);
+  mask-image: var(--mark-shape);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
-.label--rent .label__rule,
-.label--own .label__rule {
-  background: color-mix(in srgb, var(--label-tone) 34%, var(--line));
-}
+.label--rent { --mark: var(--rent); }
+.label--own  { --mark: var(--own); }
 
 /* La línea que se estira hacia la derecha después del texto de la etiqueta.
    Se anima con scaleX cuando la sección aparece. */

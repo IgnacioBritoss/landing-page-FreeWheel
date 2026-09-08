@@ -61,20 +61,37 @@
      nadie se lo toque el fin de semana que se va— y hasta ahora la página no
      avisaba en ningún lado a cuál de las dos le estaba hablando.
 
-     Cada una tiene su color, y se usa en UN solo lugar por sección: el número
-     del capítulo y la línea de la etiqueta. Nada de fondos ni de recuadros de
-     color; es una marca al margen, del tamaño de una nota al pie.
+     Cada una tiene su color, y se usa en UN SOLO lugar de toda la página: el
+     resaltador que subraya la palabra al final de la etiqueta del capítulo
+     (ver .label__who en base.css). En ningún otro lado.
 
        violeta → quien alquila. Es el que viaja: el violeta ya está del lado
                  frío del azul de la marca, así que acompaña sin pelear.
        verde   → quien pone su auto. Verde de plata que entra, que es
                  exactamente lo que esa persona vino a buscar.
 
-     Los dos tonos están elegidos para pasar el contraste mínimo sobre papel
-     blanco en texto chico (el #059669 clásico no llega: da 3.1 contra el 4.5
-     que hace falta). En oscuro se aclaran, por lo mismo. */
+     NO CAMBIAN CON EL TEMA, y eso es nuevo. Antes eran texto de color y en
+     oscuro había que aclararlos para que se leyeran. Ahora son el FONDO de un
+     texto blanco, así que tienen que quedarse oscuros en los dos modos: las
+     versiones claras (#a78bfa, #34d399) con letra blanca encima dan 2.2:1 y
+     1.9:1, muy por debajo del mínimo. Estos dan 7.1:1 y 5.5:1. */
   --rent: #6d28d9;
   --own: #047857;
+
+  /* EL TRAZO DEL RESALTADOR. Un SVG en línea que se usa como MÁSCARA de la
+     marca de público (ver .label__who en base.css): el dibujo lo pone esto y
+     el color lo pone --rent o --own, así el mismo trazo sirve para los dos.
+
+     La forma no es un rectángulo. Los dos extremos son redondeados y
+     desparejos —el marcador se apoya y se levanta, no corta recto— y los
+     bordes de arriba y de abajo ondulan distinto entre sí, con una amplitud de
+     casi el 15% de la altura. Esa amplitud grande es a propósito: la marca se
+     muestra a unos 20 píxeles de alto, y una ondulación sutil a ese tamaño
+     desaparece y deja un rectángulo.
+
+     Va en línea y no en un archivo aparte porque son 250 bytes: un pedido de
+     red para esto costaría más que el dibujo. */
+  --mark-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 44' preserveAspectRatio='none'%3E%3Cpath d='M6 7C1 11 0 23 2.5 34.5C34 39 70 34.5 108 36.5C158 39 214 33 290 37C296 34 300 21 297 6C252 2.5 206 8.5 156 5.5C112 2.8 60 10.5 6 7Z' fill='black'/%3E%3C/svg%3E");
 
   /* ── Estados ──────────────────────────────────────────────────────── */
   --ok: #059669;
@@ -92,12 +109,15 @@
   --dot: rgba(17, 24, 39, 0.055);
   --ambient: 0.85;
 
-  /* La lluvia y las fotos de la ciudad. `--city` es cuánto se ven las fotos y
-     `--city-light` corrige su brillo: sobre papel blanco hay que aclararlas un
-     poco para que no ensucien, y sobre fondo oscuro al revés. */
-  --rain: rgba(17, 24, 39, 0.075);
-  --city: 0.17;
-  --city-light: 1.04;
+  /* Las bandas con foto (ver .band en base.css). El velo es azul oscuro y va
+     fuerte: tiene que dejar el texto blanco legible tanto sobre un cielo de
+     mediodía como sobre una calle en sombra. El respaldo es el color que se ve
+     si la foto no carga.
+
+     No cambian con el tema: la banda es oscura en claro y en oscuro, igual que
+     el bloque del cierre. */
+  --band-veil: rgba(11, 26, 53, 0.82);
+  --band-fallback: #0b1a35;
 
   /* Los botones al pasar el mouse. Van como token y no como color fijo porque
      en cada modo tienen que moverse hacia un lado distinto: en claro el botón
@@ -199,18 +219,14 @@
     --ok: #34d399;
     --alert: #fbbf24;
 
-    --rent: #a78bfa;
-    --own: #34d399;
 
     --dot: rgba(255, 255, 255, 0.055);
     --ambient: 1;
 
-    --rain: rgba(255, 255, 255, 0.055);
-    /* Las fotos se ven MÁS en oscuro: una foto en gris sobre fondo casi negro
-       aporta luz, que es justo lo que ese fondo necesita. La nocturna, con las
-       luces de la ciudad, es la que mejor queda acá. */
-    --city: 0.26;
-    --city-light: 0.88;
+    /* En oscuro el velo se cierra un punto más: la banda tiene que seguir
+       leyéndose como el bloque más oscuro de la página. */
+    --band-veil: rgba(5, 12, 26, 0.86);
+    --band-fallback: #050c1a;
 
     --btn-solid-hover: #ffffff;
     --btn-paper-hover: #1c232f;
@@ -240,17 +256,14 @@
   --ok: #34d399;
   --alert: #fbbf24;
 
-  --rent: #a78bfa;
-  --own: #34d399;
 
   /* En oscuro las manchas necesitan un poco más de fuerza: sobre un fondo casi
      negro, la misma opacidad que sobre papel blanco no se ve. */
   --dot: rgba(255, 255, 255, 0.055);
   --ambient: 1;
 
-  --rain: rgba(255, 255, 255, 0.055);
-  --city: 0.26;
-  --city-light: 0.88;
+  --band-veil: rgba(5, 12, 26, 0.86);
+  --band-fallback: #050c1a;
 
   --btn-solid-hover: #ffffff;
   --btn-paper-hover: #1c232f;

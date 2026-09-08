@@ -7,9 +7,11 @@
    debajo del auto. Con el mismo padding arriba y abajo, quedaba hundida y muy
    lejos de lo anterior. */
 .statement {
-  padding-top: clamp(48px, 6vw, 92px);
-  padding-bottom: clamp(90px, 13vw, 190px);
-  border-top: 1px solid var(--line);
+  /* Como banda con foto necesita más aire arriba: apretada contra el borde, la
+     foto se lee como un recorte y no como un respiro. Abajo sigue teniendo más
+     que arriba, que es lo que la separa de la sección siguiente. */
+  padding-top: clamp(80px, 9vw, 140px);
+  padding-bottom: clamp(96px, 13vw, 190px);
 }
 
 .statement__text {
@@ -53,9 +55,12 @@
 }
 
 /* La palabra clave de la frase queda en azul. Es el único azul de esta
-   sección, así que se lleva toda la atención cuando le toca encenderse. */
+   sección, así que se lleva toda la atención cuando le toca encenderse.
+
+   Sobre la foto va el azul aclarado: el de la marca, contra el velo azul
+   oscuro, casi no se despega del blanco de las otras palabras. */
 .statement__word.is-key {
-  color: var(--blue);
+  color: var(--blue-on-ink);
 }
 
 /* Quien pidió menos movimiento lee la frase entera, en negro, de una vez. */

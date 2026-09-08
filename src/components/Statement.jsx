@@ -40,6 +40,7 @@
 //  renglón, que en chino puede caer en cualquier carácter.
 //  ─────────────────────────────────────────────────────────────────────────
 // ============================================================================
+import { BAND_PHOTOS } from "../data/content";
 import { useI18n } from "../i18n/core";
 import { useScrollProgress } from "../hooks/useScrollProgress";
 import "./statement.css";
@@ -82,7 +83,15 @@ export default function Statement() {
     marked.some(([from, to]) => spans[i][0] < to && spans[i][1] > from);
 
   return (
-    <section className="statement" ref={ref}>
+    // `band` la convierte en una franja con foto de Buenos Aires, velo azul
+    // oscuro y texto en blanco (ver `.band` en styles/base.css). La frase que
+    // se enciende palabra por palabra funciona igual: lo que cambia de gris a
+    // negro pasa a cambiar de blanco apagado a blanco.
+    <section
+      className="statement band"
+      ref={ref}
+      style={{ "--photo": `url(${BAND_PHOTOS.statement})` }}
+    >
       <div className="wrap">
         <p className="statement__text" style={{ "--count": units.length }}>
           {units.map((unit, i) => (

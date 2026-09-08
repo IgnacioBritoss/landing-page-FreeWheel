@@ -10,7 +10,7 @@
 //  elegir la voz correcta. La app hace lo mismo con el <html>.
 // ============================================================================
 import { useState, useEffect } from "react";
-import { LANGUAGES } from "../data/content";
+import { LANGUAGES, BAND_PHOTOS } from "../data/content";
 import { useI18n } from "../i18n/core";
 import SectionLabel from "./ui/SectionLabel";
 import "./languages.css";
@@ -31,7 +31,15 @@ export default function Languages() {
   const current = LANGUAGES.find((l) => l.code === active);
 
   return (
-    <section className="section section--tint langs" id="idiomas">
+    // La banda con la foto nocturna: es la sección del turista que llega a
+    // Buenos Aires, así que la ciudad de noche detrás no es decoración suelta.
+    // La tarjeta del saludo queda blanca encima, como la barra de búsqueda de
+    // la portada de la aplicación.
+    <section
+      className="section langs band"
+      id="idiomas"
+      style={{ "--photo": `url(${BAND_PHOTOS.languages})` }}
+    >
       <div className="wrap langs__inner">
         <div className="langs__copy">
           <SectionLabel n="08">{t.languages.label}</SectionLabel>

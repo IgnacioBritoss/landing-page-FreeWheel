@@ -2,9 +2,12 @@
    close.css — El bloque oscuro del cierre
    ========================================================================== */
 
+/* El color y el fondo los pone ahora `.band` (styles/base.css): la foto, el
+   velo azul oscuro y el texto en blanco. Acá queda solo lo propio del cierre. */
 .close {
-  background: var(--ink);
-  color: var(--text-on-ink);
+  /* El pie es alto y con poco contenido; sin un mínimo, en una pantalla ancha
+     la foto se ve como una tira. */
+  min-height: 92vh;
 }
 
 /* Dentro de este bloque la palabra va en blanco y el símbolo en el azul

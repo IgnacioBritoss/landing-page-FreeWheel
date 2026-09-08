@@ -14,7 +14,7 @@
 //  solo bloque visual: separarlos obligaría a repetir el fondo, el borde y las
 //  reglas de color invertido en dos archivos.
 // ============================================================================
-import { FOOTER_HREFS, APP_URL } from "../data/content";
+import { FOOTER_HREFS, APP_URL, BAND_PHOTOS } from "../data/content";
 import { useT } from "../i18n/core";
 import Logo from "./ui/Logo";
 import { ExternalArrow } from "./Hero";
@@ -25,7 +25,13 @@ export default function Close() {
   const year = new Date().getFullYear();
 
   return (
-    <section className="close" id="cierre">
+    // Ya era el único bloque oscuro de la página; ahora ese oscuro es una foto
+    // de Buenos Aires con el velo encima, igual que la portada de la app.
+    <section
+      className="close band"
+      id="cierre"
+      style={{ "--photo": `url(${BAND_PHOTOS.close})` }}
+    >
       {/* ── La llamada a la acción ─────────────────────────────────── */}
       <div className="wrap close__cta">
         <h2 className="close__title" data-reveal="up">

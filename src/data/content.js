@@ -112,29 +112,34 @@ export const MAP_CARS = [
 export const CHAT_PHOTO = null;
 
 /**
- * ► LAS FOTOS DE BUENOS AIRES DEL FONDO
+ * LAS FOTOS DE BUENOS AIRES
  *
- * Los archivos están en `public/ciudad/`. Esta lista tiene que coincidir con
- * los nombres EXACTOS, extensión incluida: si acá dice .jpg y el archivo es
- * .png, esa foto no carga.
- * Si alguno falta, esa foto se saltea; si faltan las tres, el fondo dibuja la
- * silueta de la ciudad en vectores (components/ui/Skyline.jsx) y no se ve
- * ningún hueco. O sea: la página funciona con las fotos y sin ellas.
+ * Tres secciones de la landing usan una foto de fondo, con un velo azul oscuro
+ * encima y el texto en blanco: el mismo tratamiento que la portada de la
+ * aplicación. Son los tres respiros oscuros de una página que si no es blanca
+ * de punta a punta.
  *
- * ► obelisco.png pesa 475 KB, y es lo más pesado de todo el sitio. Guardada
- *   como JPG con calidad 75 pesaría unos 70 KB: el PNG guarda cada píxel
- *   exacto, que sirve para un logo con líneas netas y es exactamente lo que
- *   sobra en una foto. Y esta encima se va a ver en gris y al 17%. Cambiándola
- *   a .jpg —y actualizando el nombre en esta lista— la página baja 400 KB.
+ * Cada foto está asignada a UNA sección y se nombra por ella, no por un número:
+ * así se sabe qué se rompe si se cambia una.
  *
- * Se cargan recién cuando el navegador está desocupado, después de dibujar la
- * página: son decoración y no pueden retrasar el titular.
+ * Los archivos están en `public/ciudad/`. Los nombres de acá tienen que
+ * coincidir EXACTO, extensión incluida: si acá dice .jpg y el archivo es .png,
+ * esa sección se queda con el azul oscuro liso de respaldo y nadie se entera
+ * hasta que la mira.
+ *
+ * ► obelisco.png pesa 475 KB y es lo más pesado del sitio. Guardada como JPG
+ *   con calidad 75 pesaría unos 70 KB: el PNG guarda cada píxel exacto, que
+ *   sirve para un logo de líneas netas y es justo lo que sobra en una foto.
+ *   Si la convertís, cambiá la extensión también acá abajo.
  */
-export const CITY_PHOTOS = [
-  "/ciudad/avenida.jpg",
-  "/ciudad/noche.jpg",
-  "/ciudad/obelisco.png",
-];
+export const BAND_PHOTOS = {
+  /** La frase que se ilumina, arriba de todo: la aérea del Obelisco. */
+  statement: "/ciudad/avenida.jpg",
+  /** Los cinco idiomas: la nocturna. Es la sección del turista que llega. */
+  languages: "/ciudad/noche.jpg",
+  /** El cierre: la panorámica del 9 de Julio. */
+  close: "/ciudad/obelisco.png",
+};
 
 /** La otra persona de la conversación. Su perfil se abre al tocar el nombre.
  *  El nombre, el modelo del auto y quién escribió cada reseña son nombres

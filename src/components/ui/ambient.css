@@ -6,8 +6,7 @@
    si el body siguiera opaco, taparía esto.
 
    El orden de apilamiento acá adentro es el orden del JSX (ninguna capa lleva
-   z-index propio): la ciudad abajo de todo, después la trama, después las
-   manchas de color, después la lluvia, y el velo arriba de todos.
+   z-index propio): la trama abajo y la mancha de color encima.
    ========================================================================== */
 
 .ambient {
@@ -19,66 +18,11 @@
 }
 
 /* ============================================================================
-   1) LA CIUDAD
-   ----------------------------------------------------------------------------
-   Las fotos y la silueta comparten tratamiento y lugar, así que comparten
-   reglas: pegadas al borde de abajo, del ancho completo, en gris y apagadas.
-   ========================================================================== */
-
-.ambient__photo,
-.ambient__city {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  width: 100%;
-  /* Alto en vh y no en píxeles: en un celular parado, 46vh de ciudad es la
-     misma proporción de pantalla que en un monitor. */
-  height: 46vh;
-  object-fit: cover;
-  object-position: center bottom;
-
-  /* El "filtro gris": se le saca todo el color y se le baja el contraste, que
-     es lo que convierte una foto en textura. Sin el contraste bajo, los negros
-     de la foto siguen siendo negros y se leen como manchas sucias. */
-  filter: grayscale(1) contrast(0.72) brightness(var(--city-light, 1.06));
-  opacity: var(--city, 0.17);
-
-  /* Se desvanece hacia arriba. Sin esto, la ciudad termina en un corte
-     horizontal a media pantalla y se ve como una imagen pegada. */
-  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.72) 46%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.72) 46%, transparent 100%);
-}
-
-/* Las fotos se apilan una encima de la otra y se cruzan con un fundido de tres
-   segundos. Largo a propósito: en un fundido corto se ve el cambio, y lo que
-   tiene que quedar es la sensación de que el fondo es otro, no el momento en
-   que cambió. */
-.ambient__photo {
-  opacity: 0;
-  transition: opacity 3s linear;
-}
-
-.ambient__photo.is-on {
-  opacity: var(--city, 0.17);
-}
-
-/* La silueta dibujada. Usa currentColor, que hereda del <html>. */
-.ambient__city {
-  color: var(--text);
-  transition: opacity 1.6s ease;
-}
-
-/* Cuando entra la primera foto, la silueta se va. */
-.ambient__city.is-out {
-  opacity: 0;
-}
-
-/* ============================================================================
-   2) LA TRAMA
+   1) LA TRAMA
    ----------------------------------------------------------------------------
    Un punto de 1px cada 34. Se desvanece hacia abajo con una máscara: arriba,
    donde está la portada y hay mucho aire, se nota apenas; más abajo, donde hay
-   texto y ahora además está la ciudad, desaparece del todo.
+   texto, desaparece del todo para no ensuciar la lectura.
    ========================================================================== */
 
 .ambient__grid {
@@ -91,168 +35,51 @@
 }
 
 /* ============================================================================
-   3) LAS MANCHAS DE COLOR
+   2) LA MANCHA
    ----------------------------------------------------------------------------
-   Cada una es un círculo de color que se desvanece hasta transparente. Eso ya
-   se ve desenfocado sin usar filter: blur(), que en una superficie de este
-   tamaño y animándose es carísimo.
+   Un círculo de color que se desvanece hasta transparente. Eso ya se ve
+   desenfocado sin usar filter: blur(), que en una superficie de este tamaño y
+   animándose es carísimo.
+
+   ERA UNA DE TRES. Había también una violeta y una verde. Se fueron: esos dos
+   colores son los de los dos públicos, y repartidos por el fondo le sacaban
+   fuerza justo a lo único que tiene que usarlos, que es la marca de público de
+   cada capítulo. Un color que está en todos lados deja de señalar.
 
    El tamaño va en vmax para que en una pantalla apaisada y en un celular
-   parado la mancha ocupe una porción parecida.
-
-   La opacidad sale de --ambient, que el modo oscuro sube: sobre fondo negro
-   hace falta un poco más de color para que se note lo mismo.
+   parado ocupe una porción parecida.
    ========================================================================== */
 
 .ambient__blob {
   position: absolute;
+  bottom: -40vmax;
+  left: 12vmax;
   width: 78vmax;
   height: 78vmax;
   border-radius: 50%;
   opacity: var(--ambient, 0.85);
-  will-change: transform;
-}
-
-/* Violeta: quien alquila. Entra por arriba a la izquierda, que es donde está
-   el titular. */
-.ambient__blob--rent {
-  top: -34vmax;
-  left: -26vmax;
-  background: radial-gradient(
-    circle at center,
-    color-mix(in srgb, var(--rent) 32%, transparent) 0%,
-    transparent 66%
-  );
-  animation: drift-a 41s ease-in-out infinite alternate;
-}
-
-/* Verde: quien pone su auto. A la derecha y más abajo, a la altura de la
-   calculadora de ganancias cuando se scrollea. */
-.ambient__blob--own {
-  top: 20vmax;
-  right: -32vmax;
-  background: radial-gradient(
-    circle at center,
-    color-mix(in srgb, var(--own) 30%, transparent) 0%,
-    transparent 66%
-  );
-  animation: drift-b 52s ease-in-out infinite alternate;
-}
-
-/* El azul de la marca, abajo, para que las dos puntas de la pantalla tengan
-   algo y el medio quede limpio. */
-.ambient__blob--blue {
-  bottom: -40vmax;
-  left: 12vmax;
   background: radial-gradient(
     circle at center,
     color-mix(in srgb, var(--blue) 19%, transparent) 0%,
     transparent 66%
   );
-  animation: drift-c 34s ease-in-out infinite alternate;
+  /* El recorrido es corto —nunca más de un 5% de la pantalla— y dura 34
+     segundos: no se la ve moverse, se nota que el fondo no está quieto. */
+  animation: drift 34s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
-/* Los recorridos son cortos —nunca más de un 8% de la pantalla— y los tres
-   duran distinto, así no vuelven a coincidir nunca y el movimiento no se lee
-   como un bucle. */
-@keyframes drift-a {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to   { transform: translate3d(7vmax, 5vmax, 0) scale(1.13); }
-}
-
-@keyframes drift-b {
-  from { transform: translate3d(0, 0, 0) scale(1.08); }
-  to   { transform: translate3d(-6vmax, -7vmax, 0) scale(1); }
-}
-
-@keyframes drift-c {
+@keyframes drift {
   from { transform: translate3d(0, 0, 0) scale(1); }
   to   { transform: translate3d(5vmax, -4vmax, 0) scale(1.1); }
 }
 
 /* ============================================================================
-   4) LA LLUVIA
-   ----------------------------------------------------------------------------
-   Hilos de 1px en diagonal, cayendo. Es un solo degradado que se repite: no
-   hay un elemento por gota, hay UN elemento.
-
-   ─────────────────────────────────────────────────────────────────────────
-   EL NÚMERO 243.4 NO ES CAPRICHOSO, Y ES LO ÚNICO DELICADO DE ESTE ARCHIVO
-
-   Para que el bucle no tenga costura, el desplazamiento tiene que valer un
-   número ENTERO de rayas medido sobre el eje del degradado. Si no, al volver
-   al principio las rayas saltan de lugar y se ve el corte.
-
-   El degradado va a 105°, así que su eje apunta en dirección
-   (sen 105°, −cos 105°) = (0.966, 0.259). El elemento se mueve solo hacia
-   abajo, o sea (0, D), y la proyección de ese movimiento sobre el eje vale
-   0.259 × D. Igualándola a tres rayas —3 × 21px = 63px—:
-
-       D = 63 / 0.259 = 243.4px
-
-   Por eso la capa se extiende 300px fuera de la pantalla arriba y abajo: si
-   midiera lo mismo que la pantalla, al correrse 243px dejaría un borde vacío.
-   ─────────────────────────────────────────────────────────────────────────
-
-   16 segundos para 243px son 15px por segundo. Es lentísimo para ser lluvia, y
-   es a propósito: a velocidad real esto se convierte en un protector de
-   pantalla y la página deja de ser lo importante.
-   ========================================================================== */
-
-.ambient__rain {
-  position: absolute;
-  inset: -300px -6%;
-  background-image: repeating-linear-gradient(
-    105deg,
-    transparent 0 20px,
-    var(--rain) 20px 21px
-  );
-  will-change: transform;
-  animation: rain 16s linear infinite;
-  /* Más fuerte arriba y desvaneciéndose abajo, donde está la ciudad: dos
-     texturas encimadas en el mismo lugar se leen como suciedad. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 58%, transparent 88%);
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.5) 58%, transparent 88%);
-}
-
-@keyframes rain {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(0, 243.4px, 0); }
-}
-
-/* ============================================================================
-   5) EL VELO
-   ----------------------------------------------------------------------------
-   Un paño del color del papel, apenas opaco, encima de todo lo anterior.
-
-   Es lo que hace que este fondo sea seguro: por más que entre una foto con
-   mucho contraste o que se suba el color de las manchas, lo que queda debajo
-   del texto sigue siendo casi el mismo papel de siempre. Sin él, cada foto
-   nueva que se cambie obligaría a revisar la legibilidad de toda la página.
-   ========================================================================== */
-
-.ambient__veil {
-  position: absolute;
-  inset: 0;
-  background: var(--paper);
-  opacity: 0.26;
-}
-
-/* ============================================================================
    Reducir movimiento
-   ----------------------------------------------------------------------------
-   Se apaga lo que se desplaza solo: las manchas y la lluvia. La lluvia queda
-   quieta, que es una trama diagonal fina, y sigue sirviendo de textura. El
-   color, la ciudad y los puntos no se tocan.
-
-   Las fotos siguen cruzándose: un fundido de opacidad no es movimiento, no
-   desplaza nada por la pantalla y es justamente lo que se le recomienda a
-   quien no tolera el movimiento.
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  .ambient__blob,
-  .ambient__rain {
+  .ambient__blob {
     animation: none !important;
   }
 }
