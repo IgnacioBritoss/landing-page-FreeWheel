@@ -473,16 +473,31 @@ function VoiceNote({ seconds, said, chat }) {
 }
 
 /**
- * La foto del auto. Si en content.js se cargó una foto real (CHAT_PHOTO), va
- * esa; si no, se dibuja un auto en tres cuartos. La ilustración no depende de
- * ningún archivo, así que nunca queda el hueco gris de una imagen que no cargó.
+ * La foto del auto que manda la otra persona en el chat.
+ *
+ * Va la foto de verdad de `public/auto.jpg` (CHAT_PHOTO en content.js). Antes
+ * acá había una ilustración vectorial, y una ilustración adentro de un chat que
+ * dice ser una captura de la aplicación real se nota enseguida: es lo único de
+ * toda esta sección que no podía existir en una conversación.
+ *
+ * LA ILUSTRACIÓN SIGUE ESTANDO, COMO RESPALDO. Si el archivo no está o le
+ * cambian el nombre, `onError` lo avisa y se dibuja el auto vectorial en su
+ * lugar. Nunca queda el ícono de imagen rota ni un hueco gris, que es
+ * exactamente lo que arruinaría la sección que promete "no son bocetos".
  */
 function PhotoMessage({ caption }) {
+  const [failed, setFailed] = useState(false);
+
   return (
     <div className="photo">
       <div className="photo__frame">
-        {CHAT_PHOTO ? (
-          <img src={CHAT_PHOTO} alt={caption} loading="lazy" />
+        {CHAT_PHOTO && !failed ? (
+          <img
+            src={CHAT_PHOTO}
+            alt={caption}
+            loading="lazy"
+            onError={() => setFailed(true)}
+          />
         ) : (
           <svg className="photo__draw" viewBox="0 0 320 200" aria-hidden="true">
             {/* El piso y la sombra debajo del auto */}

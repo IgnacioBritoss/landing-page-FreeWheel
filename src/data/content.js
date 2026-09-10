@@ -103,13 +103,22 @@ export const MAP_CARS = [
 ];
 
 /**
- * ► PERSONALIZAR — LA FOTO DEL AUTO EN EL CHAT
- * Poné un archivo (por ejemplo `auto.jpg`) dentro de la carpeta `public/` y
- * escribí acá su ruta: "/auto.jpg". Mientras esto sea null, se dibuja una
- * ilustración vectorial de un auto en tres cuartos, que no depende de ningún
- * archivo y nunca deja el hueco gris de una imagen que no cargó.
+ * LA FOTO DEL AUTO EN EL CHAT
+ *
+ * El archivo va en `public/auto.jpg`. Es la foto que la otra persona manda en
+ * la conversación cuando dice "estado actual del auto", y ahora es una foto de
+ * verdad: antes había una ilustración vectorial, y una ilustración adentro de
+ * un chat que dice ser una captura de la aplicación real se nota enseguida.
+ *
+ * El marco es de 16:10 y la imagen entra con `object-fit: cover`, así que si la
+ * foto es más apaisada se recorta arriba y abajo. Conviene que el auto quede
+ * centrado.
+ *
+ * SI EL ARCHIVO NO ESTÁ, se dibuja la ilustración de siempre en su lugar: el
+ * componente escucha el error de carga (ver PhotoMessage en Showcase.jsx). Ni
+ * un hueco gris ni un ícono de imagen rota.
  */
-export const CHAT_PHOTO = null;
+export const CHAT_PHOTO = "/auto.jpg";
 
 /**
  * LAS FOTOS DE BUENOS AIRES

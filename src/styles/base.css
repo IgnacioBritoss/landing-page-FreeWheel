@@ -205,6 +205,9 @@ h1, h2, h3, h4 {
 .band {
   position: relative;
   isolation: isolate;
+  /* La foto se agranda un poco para que el desenfoque no deje los bordes
+     transparentes, así que lo que sobresale hay que recortarlo. */
+  overflow: hidden;
   color: var(--text-on-ink);
   background: var(--band-fallback);
 
@@ -234,13 +237,32 @@ h1, h2, h3, h4 {
   z-index: -1;
 }
 
-/* La foto. Se le saca la mitad del color: a todo color pelea con el azul de la
-   marca, y en blanco y negro puro se ve vieja. */
+/* ── La foto ──────────────────────────────────────────────────────────────
+   Se le saca la mitad del color: a todo color pelea con el azul de la marca, y
+   en blanco y negro puro se ve vieja.
+
+   Y VA APENAS DESENFOCADA, que es lo que arregla la calidad. Las fotos miden
+   alrededor de 1200px de ancho y acá se estiran a pantalla completa: en un
+   monitor de 1920 se ven los bloques del JPEG en el cielo y el detalle de los
+   edificios se pixela. Un desenfoque de 3px se come exactamente eso —el ruido
+   fino— y deja intacto lo único que esta foto tiene que aportar, que es la
+   silueta de la ciudad. Un fondo levemente desenfocado además hace que el texto
+   de encima se lea mejor: no hay bordes duros compitiendo con las letras.
+
+   Es más barato de lo que parece. Desenfocar sale caro cuando hay que rehacerlo
+   en cada cuadro de una animación; acá la foto está quieta, así que el navegador
+   lo calcula una vez y guarda el resultado.
+
+   El `inset` negativo compensa el desenfoque: al difuminar, los píxeles del
+   borde se mezclan con la nada y dejan una franja transparente. Agrandando la
+   capa un 2% por lado, esa franja cae fuera de la sección y el `overflow:
+   hidden` de arriba la recorta. */
 .band::before {
+  inset: -2%;
   background-image: var(--photo);
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.55) contrast(1.04);
+  filter: grayscale(0.55) contrast(1.04) blur(3px);
 }
 
 /* El velo. Va plano y no en degradado: es lo que garantiza que el texto blanco
