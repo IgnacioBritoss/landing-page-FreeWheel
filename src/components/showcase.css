@@ -54,6 +54,26 @@
 
 /* ============================================================================
    1) El escaneo del DNI
+   ----------------------------------------------------------------------------
+   Un documento dibujado con divs, las cuatro esquinas de un encuadre, una línea
+   azul que lo recorre de arriba abajo, y después los cuatro controles que hace
+   el modelo, apareciendo de a uno.
+
+   EL DOCUMENTO NO TIENE NI UN DATO. Los renglones son BARRAS GRISES, no texto.
+   Es deliberado: poner un nombre y un número inventados en algo que simula un
+   DNI es exactamente lo que no hay que hacer, y además no hace falta para que
+   se entienda qué se está mirando. La proporción de la tarjeta (85 × 54 mm, la
+   real) alcanza para que cualquiera reconozca un documento.
+
+   ARRANCA AL ENTRAR EN PANTALLA Y NO AL CARGAR LA PÁGINA. El componente usa
+   useInView para ponerle la clase `is-on`, y a partir de ahí todo lo de acá
+   abajo se dispara en cadena con retardos de CSS. Si empezara al cargar, para
+   cuando alguien bajara hasta esta sección ya habría terminado hace rato.
+
+   TODA LA SECUENCIA ESTÁ EN CSS, con un solo cambio de clase desde JavaScript.
+   No hay ningún temporizador en JS encadenando pasos: la línea corre 1.2s, y
+   los controles tienen su retardo calculado desde el mismo cero. Un solo
+   interruptor y el resto se ordena solo.
    ========================================================================== */
 
 .scan {
@@ -142,13 +162,26 @@
   background: var(--line-2);
 }
 
-/* Las esquinas del encuadre */
+/* ── Las esquinas del encuadre ────────────────────────────────────────────
+   Las cuatro escuadras que cualquiera reconoce de la cámara de un teléfono
+   apuntando a un documento. Son el gesto que dice "esto se está leyendo", sin
+   una palabra.
+
+   EL TRUCO: cada esquina es un cuadrado de 14px con borde en los CUATRO lados,
+   y abajo se le apagan dos. Lo que queda es una escuadra. La de arriba a la
+   izquierda conserva el borde de arriba y el de la izquierda; la de arriba a la
+   derecha, el de arriba y el de la derecha; y así.
+
+   Cuatro reglas de una línea, sin un solo SVG ni imagen. */
 .scan__corner {
   position: absolute;
   width: 14px;
   height: 14px;
   border: 2px solid var(--blue);
   opacity: 0;
+  /* Entran 100ms antes que la línea empiece a bajar: primero se encuadra, y
+     recién después se lee. Al revés se vería como si la lectura hubiera
+     arrancado sin apuntar. */
   transition: opacity 0.35s var(--ease) 0.1s;
 }
 
@@ -161,8 +194,14 @@
 .scan__corner--bl { bottom: 7px; left: 7px;  border-right: none; border-top: none; }
 .scan__corner--br { bottom: 7px; right: 7px; border-left: none;  border-top: none; }
 
-/* La línea que recorre el documento. Se mueve con transform, que no obliga al
-   navegador a recalcular el layout en cada cuadro. */
+/* ── La línea que recorre el documento ────────────────────────────────────
+   NO ES UNA LÍNEA: es una banda de 44px de alto que va de transparente arriba
+   a azul sólido abajo. El borde de abajo es el filo que lee, y los 44px que
+   quedan detrás son la estela. Una línea sola de 2px se vería como una raya
+   pasando; con la estela se lee como un barrido.
+
+   Se mueve con transform, que no obliga al navegador a recalcular el layout en
+   cada cuadro. */
 .scan__beam {
   position: absolute;
   inset-inline: 0;
@@ -186,6 +225,14 @@
   animation: beam 1.2s var(--ease) 1 forwards;
 }
 
+/* Arranca ENTERA POR ENCIMA del documento (translateY(-100%) la sube su propio
+   alto) y termina abajo de todo. El `+ 90px` del final es para que salga del
+   todo por abajo: el documento es más alto que la banda, así que un 100% no
+   alcanza para sacarla de la vista.
+
+   Se enciende en el 14% y se apaga en el 86% en vez de estar a plena opacidad
+   de punta a punta: así entra y sale desvanecida en los bordes del documento,
+   en lugar de aparecer y desaparecer de golpe contra el marco. */
 @keyframes beam {
   0%   { transform: translateY(-100%); opacity: 0; }
   14%  { opacity: 1; }
@@ -231,10 +278,35 @@
 
 /* ============================================================================
    2) El mapa de la Ciudad de Buenos Aires
+   ----------------------------------------------------------------------------
+   ES UN MAPA DE VERDAD, no un dibujo: Leaflet sobre OpenStreetMap, el mismo que
+   usa la aplicación, con coordenadas reales de cinco barrios porteños. Se puede
+   arrastrar y hacer zoom, y si se va hasta el fondo se ve la calle.
+
+   Un mapa dibujado a mano con puntitos sobre una silueta habría sido más fácil
+   y se habría notado. Acá el argumento es "los autos están cerca tuyo", y eso
+   solo se sostiene sobre el mapa de la ciudad donde vive quien está mirando.
+
+   EL CÍRCULO ALREDEDOR DE CADA PIN NO ES DECORACIÓN: marca que la ubicación
+   publicada es la ZONA, no la puerta de la casa. Es la misma decisión de
+   producto que toma la aplicación, y mostrarla acá es parte de lo que esta
+   sección promete.
+
+   ─────────────────────────────────────────────────────────────────────────
+   LO QUE SIGUE ES ADAPTAR UNA LIBRERÍA AJENA
+   Leaflet trae su propia hoja de estilos, con su tipografía, sus sombras, sus
+   esquinas redondeadas y —lo importante— sus z-index altísimos. Todo lo de
+   abajo la alinea con esta página sin tocar cómo funciona. Es el único lugar
+   del proyecto donde se pisan estilos de otro, y por eso está todo junto y
+   todo bajo `.map`: si algún día se cambia de librería, se borra este bloque
+   entero y no hay que ir a buscar reglas sueltas por ahí.
+   ─────────────────────────────────────────────────────────────────────────
    ========================================================================== */
 
 .map {
   position: relative;
+  /* La proporción la fija el contenedor y no el alto: así el mapa se achica
+     entero en un celular en vez de quedar como una franja finita. */
   aspect-ratio: 4 / 3;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -252,8 +324,21 @@
 /* ── Leaflet, adaptado a la página ────────────────────────────────────────
    La librería trae su propia hoja de estilos con tipografías, sombras y
    esquinas que no son las de acá. Esto la alinea, sin tocar su funcionamiento.
-   El z-index es la parte importante: por defecto Leaflet usa valores muy
-   altos y el mapa se le monta encima a la barra de navegación fija. */
+
+   EL z-index ES LA PARTE IMPORTANTE, y es un arreglo de verdad, no estética.
+   Leaflet le pone a sus capas valores de 400 a 1000, pensando en un mapa que
+   ocupa toda la pantalla. Acá el mapa es un elemento más adentro de una página
+   que tiene una barra fija en z-index 100: sin esto, el mapa se le monta
+   encima, y al scrollear los pines de los autos pasan por arriba de la
+   navegación.
+
+   Bajarlos a 1 los deja apilados entre sí en el mismo orden relativo (todos
+   bajan igual), pero por debajo de todo lo que la página pone más arriba.
+
+   Los `!important` son inevitables acá: la regla que hay que pisar es de la
+   hoja de la librería, y aunque este selector es más específico, el orden de
+   carga de las hojas no está garantizado en todos los armados. Es la excepción
+   que confirma la regla de no usarlos. */
 .map .leaflet-pane,
 .map .leaflet-top,
 .map .leaflet-bottom {
@@ -356,6 +441,31 @@
 
 /* ============================================================================
    3) El chat
+   ----------------------------------------------------------------------------
+   La conversación entre quien alquila y quien presta, escribiéndose sola: los
+   mensajes entran de a uno, con el audio que se reproduce, la foto del auto,
+   los tildes que pasan de gris a celeste, y el perfil de la otra persona, que
+   se abre al tocar el nombre.
+
+   POR QUÉ EL CHAT Y NO OTRA PANTALLA
+   Es la parte de la plataforma que más miedo da y menos se puede explicar con
+   palabras: hablar con un desconocido para arreglar la entrega de un auto.
+   Mostrar la conversación resuelta —corta, cordial, con una foto y un audio—
+   hace más que cualquier párrafo sobre "comunicación segura".
+
+   LOS DETALLES SON EL ARGUMENTO. El audio con su forma de onda, los dos tildes
+   celestes, la esquina achatada del globo del lado de quien habla: nada de eso
+   hace falta para entender la conversación, y es todo lo que hace que se
+   reconozca como una mensajería de verdad en vez de como una maqueta. Si algo
+   de esto faltara, se vería el dibujo.
+
+   ─────────────────────────────────────────────────────────────────────────
+   CÓMO SE ARMA CADA MENSAJE
+   De dos lados a la vez: de content.js sale la FORMA (quién lo manda, si es
+   texto, audio o foto, la hora) y del diccionario el CONTENIDO, emparejados
+   por posición. Así el mismo audio de ocho segundos dice lo suyo en los cinco
+   idiomas sin repetir cinco veces que es un audio de ocho segundos.
+   ─────────────────────────────────────────────────────────────────────────
    ========================================================================== */
 
 .chat {
@@ -422,11 +532,20 @@
   min-height: 340px;
 }
 
+/* Nunca más del 80% del ancho: un globo que llega de punta a punta deja de
+   leerse como un mensaje y pasa a ser un párrafo. Ese margen del 20% es lo que
+   hace que se vea de qué lado está cada uno.
+
+   La animación de entrada corre al montarse cada mensaje. Como el componente
+   los va agregando de a uno con un temporizador, el efecto es el de una
+   conversación que se escribe sola. */
 .msg {
   max-width: 80%;
   animation: pop-in 0.3s var(--ease) both;
 }
 
+/* Los propios se van a la derecha. Es el único cambio de posición: todo lo
+   demás (color, esquina achatada, tildes) sale de la misma clase --me. */
 .msg--me {
   align-self: flex-end;
 }
@@ -439,6 +558,14 @@
   line-height: 1.5;
 }
 
+/* LA ESQUINA ACHATADA. Cada globo tiene tres esquinas redondeadas y una casi
+   recta (3px): la de abajo del lado de quien habla. Es el detalle que hace que
+   el globo "salga" de ese lado en vez de flotar suelto, y es lo que usan todas
+   las mensajerías. Sin él, los dos globos se ven como dos cajas iguales de
+   distinto color.
+
+   Los ajenos van blancos con línea de 1px, sobre el fondo gris del cuerpo del
+   chat; los propios, azules y sin línea. */
 .msg--them .msg__text {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -447,6 +574,8 @@
 
 .msg--me .msg__text {
   background: var(--blue);
+  /* Blanco fijo y no --paper: el globo es azul en los dos temas, así que el
+     texto de adentro tiene que quedarse blanco aunque el papel se oscurezca. */
   color: #fff;
   border-bottom-right-radius: 3px;
 }
@@ -465,7 +594,21 @@
   justify-content: flex-end;
 }
 
-/* ── Los tildes de estado ────────────────────────────────────────────── */
+/* ── Los tildes de estado ─────────────────────────────────────────────────
+   Los tres estados de un mensaje propio, que cualquiera lee sin que se los
+   expliquen:
+
+     enviado   → un tilde gris
+     entregado → dos tildes grises
+     leído     → dos tildes celestes
+
+   SON DOS ELEMENTOS SIEMPRE PRESENTES, y el segundo se muestra o se esconde con
+   opacidad. No se agrega ni se saca del HTML: si apareciera de la nada, el
+   ancho del bloque daría un salto y la hora de al lado se correría. Con
+   opacidad el lugar ya está reservado y lo único que cambia es si se ve.
+
+   El recorrido de los estados lo maneja ChatDemo con temporizadores; acá solo
+   está cómo se ve cada uno. */
 .ticks {
   display: inline-flex;
   color: var(--text-4);
@@ -488,7 +631,13 @@
   opacity: 1;
 }
 
-/* Leído: los dos tildes pasan a celeste. */
+/* Leído: los dos tildes pasan a celeste.
+
+   El color va escrito a mano y no sale de las variables a propósito: este
+   celeste es el de las mensajerías, no el de Freewheel. Meterlo como token
+   invitaría a usarlo en otro lado, y acá está justamente porque NO es un color
+   de la marca: es una cita. Los tildes se pintan con `currentColor`, así que
+   cambiar el color del contenedor los cambia a los dos de una. */
 .ticks.is-read {
   color: #34b7f1;
 }
@@ -530,14 +679,22 @@
   height: 15px;
 }
 
-/* La onda. El corte entre lo reproducido y lo que falta se pinta con un
-   degradado de dos colores planos sobre el texto de las barras. */
+/* ── La onda ──────────────────────────────────────────────────────────────
+   Las barritas verticales de una nota de voz. Son elementos de verdad, uno por
+   barra, con altos distintos que pone el JSX: no es una imagen ni un dibujo
+   repetido.
+
+   El avance de la reproducción NO se pinta con un degradado por encima: cada
+   barra sabe si ya sonó, porque el componente le escribe data-on="1" a medida
+   que avanza el tiempo. Es más simple y permite lo que un degradado no puede,
+   que es lo de abajo: que las barras ya reproducidas LATAN.
+   ────────────────────────────────────────────────────────────────────────── */
 .voice__wave {
   display: flex;
-  align-items: center;
+  align-items: center;   /* las barras crecen desde el centro, hacia los dos lados */
   gap: 2.5px;
   height: 26px;
-  flex-grow: 1;
+  flex-grow: 1;          /* se come el ancho que sobra entre el botón y el tiempo */
 }
 
 .voice__wave span {
@@ -547,15 +704,15 @@
   transform-origin: center;
 }
 
-/* Las barras que ya sonaron quedan azules. Se resuelve con un degradado sobre
-   el contenedor y `background-clip`, pero acá alcanza con una regla más
-   simple: se pinta el fondo del contenedor y las barras recortan. */
-.voice__wave::before {
-  content: "";
-  position: absolute;
-}
+/* Las barras que ya sonaron quedan azules y laten.
 
-/* Mientras reproduce, las barras laten. */
+   EL LATIDO ESTÁ ESCALONADO: cada barra arranca 45ms después de la anterior
+   (--j es su posición, se la pone el JSX). Con todas latiendo a la vez sería
+   un parpadeo; corridas en el tiempo se ve como una onda que recorre el audio,
+   que es lo que hace que parezca que está sonando algo.
+
+   Late `scaleY` y no el alto: escalar no mueve a las barras vecinas ni obliga
+   al navegador a recalcular la fila en cada cuadro. */
 .voice__wave span[data-on="1"] {
   background: var(--blue);
   animation: wave 1s var(--ease) infinite;
@@ -574,6 +731,14 @@
   flex-shrink: 0;
 }
 
+/* LA TRANSCRIPCIÓN DEL AUDIO. No está de adorno: es lo que hace que la nota de
+   voz signifique algo para quien no la puede escuchar —porque es sorda, porque
+   está en un lugar ruidoso, o porque simplemente está mirando la página sin
+   sonido, que es la mayoría. Sin esto, uno de los cinco mensajes de la
+   conversación sería un rectángulo con barritas y nada más.
+
+   La línea de puntos es el único borde punteado de toda la página, y ahí dice
+   algo: separa lo que se oye de lo que se lee sin cortar el globo en dos. */
 .voice__transcript {
   margin-top: 10px;
   padding-top: 9px;
@@ -593,25 +758,45 @@
   margin-bottom: 3px;
 }
 
-/* ── La foto ─────────────────────────────────────────────────────────── */
+/* ── La foto ──────────────────────────────────────────────────────────────
+   El mensaje con la foto del auto. Hay DOS formas de que se vea, y el
+   componente elige sola:
+
+     · si content.js tiene una foto en CHAT_PHOTO y el archivo carga, se
+       muestra la foto;
+     · si no hay foto, o si el archivo falla, se dibuja la ilustración
+       vectorial de acá abajo.
+
+   El respaldo importa: un mensaje de foto que no carga deja el hueco gris roto
+   de una imagen faltante, justo en la sección que vino a mostrar que la
+   plataforma funciona. Con la ilustración, lo peor que puede pasar es que se
+   vea un dibujo.
+   ────────────────────────────────────────────────────────────────────────── */
 .photo {
-  padding: 6px;
+  padding: 6px;   /* el marquito blanco alrededor de la imagen */
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  border-bottom-left-radius: 3px;
+  border-bottom-left-radius: 3px;   /* la esquina achatada, como los globos */
 }
 
 .photo__frame {
+  /* El marco tiene proporción fija, así la foto ocupa siempre el mismo lugar
+     sea cual sea el tamaño del archivo que se ponga: el chat no cambia de alto
+     según la foto que cargue. */
   aspect-ratio: 16 / 10;
   border-radius: var(--r-sm);
   overflow: hidden;
+  /* El gris se ve solamente el instante que tarda en cargar la foto. */
   background: #eef1f5;
 }
 
 .photo__frame img {
   width: 100%;
   height: 100%;
+  /* `cover` LLENA el marco y recorta lo que sobra, en vez de deformar la foto
+     para que entre. Es lo que permite poner cualquier foto sin recortarla a
+     mano: se pierde un poco de los bordes y el auto nunca sale estirado. */
   object-fit: cover;
 }
 
@@ -621,7 +806,12 @@
 }
 
 /* La ilustración del auto: colores planos y una sola luz, para que se lea como
-   una foto de catálogo y no como un ícono. */
+   una foto de catálogo y no como un ícono.
+
+   Los colores van escritos a mano y no salen de las variables porque son los
+   de un objeto, no los de la interfaz: un auto gris azulado tiene que seguir
+   siendo gris azulado en modo oscuro. Si leyeran los tokens, al cambiar de
+   tema el auto se daría vuelta como el resto de la página. */
 .photo__shadow { fill: rgba(17, 24, 39, 0.09); }
 .photo__body   { fill: #3f5573; }
 .photo__glass  { fill: #cfe0f2; }
@@ -736,21 +926,43 @@
 
 /* ============================================================================
    El perfil
+   ----------------------------------------------------------------------------
+   Se abre al tocar el nombre de la otra persona, arriba del chat: el rango, los
+   viajes hechos, la calificación como dueño y las últimas reseñas.
+
+   SE ABRE ADENTRO DEL CHAT, NO ENCIMA DE LA PÁGINA. `position: absolute` e
+   `inset: 0` lo estiran sobre el contenedor del chat, que es el que tiene
+   `position: relative`. Un diálogo que tapara toda la pantalla estaría
+   pidiéndole a quien mira que le preste atención a una maqueta; así queda claro
+   que lo que se está mostrando pasa adentro de la aplicación.
+
+   Es también lo que hace esta sección: en vez de escribir "cada usuario tiene
+   un perfil con su reputación", se toca el nombre y se ve.
    ========================================================================== */
 
 .profile {
   position: absolute;
   inset: 0;
+  /* Por encima del chat pero MUY por debajo de la barra de navegación (100):
+     este diálogo vive adentro de su sección, no sobre la página. */
   z-index: 5;
   display: grid;
-  place-items: center;
+  place-items: center;   /* la tarjeta, centrada en los dos ejes */
   padding: 14px;
 }
 
+/* El velo que oscurece el chat de atrás. Además de separar visualmente, es lo
+   que se toca para cerrar: ocupa todo el fondo, así que un clic en cualquier
+   lado fuera de la tarjeta cierra el perfil. */
 .profile__scrim {
   position: absolute;
   inset: 0;
   background: rgba(17, 24, 39, 0.45);
+  /* Un desenfoque de apenas 2px sobre lo que queda detrás. Es la única vez que
+     se usa en toda la página, y se justifica porque acá lo de atrás es un chat
+     lleno de texto: sin desenfocar, los mensajes se siguen leyendo a través del
+     velo y compiten con el perfil. Sobre un área chica como esta el costo es
+     despreciable, a diferencia del fondo de pantalla completa de Ambient. */
   backdrop-filter: blur(2px);
   animation: pop-in 0.2s ease both;
 }
@@ -758,6 +970,9 @@
 .profile__card {
   position: relative;
   width: 100%;
+  /* Nunca más alta que el chat, y si el contenido no entra, se scrollea la
+     tarjeta por dentro. Sin esto, un perfil con muchas reseñas se saldría por
+     abajo del chat y quedaría cortado sin forma de llegar al final. */
   max-height: 100%;
   overflow-y: auto;
   background: var(--paper);
@@ -767,6 +982,9 @@
   animation: profile-in 0.3s var(--ease) both;
 }
 
+/* Entra subiendo 12px y creciendo de 97% a 100%. Las dos cosas juntas dan la
+   sensación de que la tarjeta viene desde atrás hacia adelante, que es el
+   gesto de algo que se abre. Solo con opacidad aparecería como un cartel. */
 @keyframes profile-in {
   from { opacity: 0; transform: translateY(12px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }

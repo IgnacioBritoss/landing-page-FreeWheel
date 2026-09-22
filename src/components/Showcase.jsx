@@ -240,10 +240,26 @@ function MapCars() {
  * Acá corresponde el símbolo: el globito está imitando la pantalla de la
  * aplicación, que muestra $. Donde sí van las tres letras es en la calculadora
  * de ganancias, que es plata de verdad y no puede quedar ambigua.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
+ * POR QUÉ HAY UN Map ACÁ ARRIBA
+ * Construir un `Intl.NumberFormat` es de las operaciones más caras del
+ * navegador: tiene que cargar las reglas de escritura de números de ese idioma.
+ * Formatear con uno ya construido, en cambio, es inmediato.
+ *
+ * Esta función se llama una vez por auto del mapa, o sea cinco veces seguidas,
+ * y siempre con el mismo idioma. Sin el Map se construirían cinco formateadores
+ * idénticos y se tirarían cuatro.
+ *
+ * El Map guarda uno por idioma (la clave es el `locale`) y vive fuera de la
+ * función para que sobreviva entre llamadas. Como son cinco idiomas, nunca
+ * puede crecer más allá de cinco entradas: no hay riesgo de que se llene.
+ * ─────────────────────────────────────────────────────────────────────────
  */
 const prices = new Map();
 
 function price(locale, value) {
+  // Se construye una sola vez por idioma; de ahí en más se reusa.
   if (!prices.has(locale)) {
     prices.set(
       locale,
@@ -251,6 +267,8 @@ function price(locale, value) {
         style: "currency",
         currency: "ARS",
         currencyDisplay: "narrowSymbol",
+        // Sin centavos: los precios de alquiler por día son números redondos, y
+        // "$8.500,00" en un globito de mapa es ruido.
         maximumFractionDigits: 0,
       }),
     );

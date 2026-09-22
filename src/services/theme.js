@@ -38,22 +38,48 @@ export function getTheme() {
   }
 }
 
-/** ¿Un tema dado se ve oscuro? Para "system", pregunta al sistema operativo. */
+/**
+ * ¿Un tema dado se ve oscuro? Para "system", pregunta al sistema operativo.
+ *
+ * Existe porque "qué eligió la persona" y "cómo se está viendo" son dos cosas
+ * distintas: con "system" elegido, la respuesta depende de cómo tenga
+ * configurada la computadora, y puede cambiar sin que nadie toque nada.
+ *
+ * `matchMedia` consulta desde JavaScript la misma media query que usa el CSS.
+ * Va con `?.` y con `?? false` porque en un entorno sin ventana —una prueba
+ * automatizada, un renderizado en el servidor— `window.matchMedia` no existe, y
+ * sin eso la página entera se caería al arrancar.
+ */
 function darkFor(theme) {
   if (theme === "dark") return true;
   if (theme === "light") return false;
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
 }
 
-/** ¿Se está viendo oscuro ahora mismo? */
+/** ¿Se está viendo oscuro ahora mismo? Es lo que mira el botón de la barra para
+ *  saber qué ícono dibujar (sol o luna). */
 export function isDark() {
   return darkFor(getTheme());
 }
 
-/** Aplica un tema y lo recuerda. */
+/**
+ * Aplica un tema y lo recuerda.
+ *
+ * ES LA ÚNICA FUNCIÓN DE TODA LA PÁGINA QUE CAMBIA COLORES, y no toca ni un
+ * color: escribe un atributo en el <html> y nada más. Los colores los cambia el
+ * CSS solo, porque cada componente lee de variables y esas variables están
+ * redefinidas bajo el selector `[data-theme="dark"]` (ver tokens.css).
+ *
+ * Por eso no hay ningún componente que sepa en qué tema está, ni haga falta
+ * volver a dibujar nada: cambia un atributo y el navegador repinta.
+ */
 export function setTheme(theme) {
   const root = document.documentElement;
 
+  // "system" se representa con la AUSENCIA del atributo, no con un valor.
+  // Tiene que ser así para que el bloque @media de tokens.css vuelva a mandar:
+  // ese bloque está escrito como `:root:not([data-theme="light"])`, o sea que
+  // se aplica mientras no haya una elección manual en contra.
   if (theme === "system") {
     root.removeAttribute("data-theme");
   } else {

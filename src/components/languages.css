@@ -1,5 +1,22 @@
 /* ============================================================================
    languages.css — Los cinco idiomas
+   ----------------------------------------------------------------------------
+   La segunda banda con foto: Buenos Aires de noche. Es la sección del turista
+   que llega, así que la ciudad de noche detrás no es decoración suelta.
+
+   LA DEMOSTRACIÓN ES EL ARGUMENTO. Se tocan los cinco idiomas y el saludo de la
+   pantalla de inicio cambia delante de quien mira. Decir "la aplicación está
+   traducida a cinco idiomas" cuesta una línea y no se puede verificar; esto se
+   verifica solo en dos segundos.
+
+   ESTA SECCIÓN NO CAMBIA EL IDIOMA DE LA PÁGINA. El selector de verdad está
+   arriba, en la barra. Acá se prueban los idiomas sin salir de donde uno está
+   leyendo, que es distinto: si tocar "中文" tradujera la página entera, quien
+   quiso mirar se quedaría sin poder volver.
+
+   Sí funciona al revés: cambiar el idioma en la barra mueve también esta
+   muestra, para que no queden diciendo cosas distintas (ver el useEffect de
+   Languages.jsx).
    ========================================================================== */
 
 /* El fondo, el velo y el color del texto los pone `.band` (styles/base.css).
@@ -33,6 +50,20 @@
   margin-top: 16px;
 }
 
+/* LOS CINCO IDIOMAS, PEGADOS EN UNA GRILLA SIN HUECOS.
+
+   Con `gap: 0` los botones se tocan y forman un bloque, como las teclas de un
+   teclado. Separados serían cinco píldoras sueltas, que es justo el aspecto de
+   aplicación que esta página evita en todos lados.
+
+   LAS LÍNEAS SIN DUPLICARSE: la lista pone la línea de ARRIBA y la de la
+   IZQUIERDA; cada botón pone la suya de la DERECHA y la de ABAJO. Así, donde
+   dos botones se tocan hay una sola línea (la derecha de uno es la izquierda
+   del otro), y el marco de afuera queda cerrado igual. Es el mismo problema
+   que resuelve la grilla de 1px de la calculadora, con otra herramienta.
+
+   `flex-wrap` deja que pasen a un segundo renglón cuando no entran, y la línea
+   sigue saliendo bien porque cada botón trae la suya. */
 .langs__list {
   list-style: none;
   display: flex;
@@ -96,7 +127,17 @@
   letter-spacing: -0.03em;
 }
 
-/* El cursor que titila: hace que la frase se lea como algo recién escrito. */
+/* El cursor que titila: hace que la frase se lea como algo recién escrito, no
+   como un cartel.
+
+   `step-end` es lo que lo hace TITILAR de verdad. Con una curva normal, la
+   opacidad se desvanecería de a poco y quedaría un cursor que respira; los
+   pasos discretos hacen que salte de visible a invisible sin estados
+   intermedios, que es como titila el cursor de cualquier campo de texto.
+
+   El alto va en `em` y no en píxeles: así crece con la frase, que es fluida
+   (clamp de 1.4 a 2rem). Con un alto fijo, en una pantalla grande el cursor
+   quedaría como una rayita a media altura de la letra. */
 .langs__caret {
   display: inline-block;
   width: 2px;

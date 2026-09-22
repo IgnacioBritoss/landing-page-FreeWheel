@@ -184,9 +184,35 @@ export default function Earnings() {
 /**
  * Lleva un número hasta su valor nuevo deslizándose, en vez de saltar.
  *
+ * QUÉ APORTA AL DISEÑO. El número es la respuesta de toda la sección, y si
+ * saltara de $85.000 a $102.000 de un cuadro al otro, el cambio pasaría
+ * desapercibido: el ojo no registra un valor que ya estaba cuando lo miró.
+ * Subiendo, en cambio, obliga a seguirlo, y de paso se ve que el número está
+ * atado a lo que uno acaba de tocar y no es un cartel fijo.
+ *
+ * POR QUÉ NO SE PUEDE HACER CON CSS, como casi todo lo demás de esta página:
+ * el CSS anima propiedades (posiciones, colores, opacidades), no el CONTENIDO
+ * de un elemento. Un número que cuenta hay que contarlo en JavaScript.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
+ * CÓMO FUNCIONA
+ * `requestAnimationFrame` le pide al navegador que llame a una función justo
+ * antes de dibujar el próximo cuadro. En cada llamada se mira cuánto tiempo
+ * pasó desde que arrancó, se calcula qué fracción del recorrido corresponde, y
+ * se escribe ese valor.
+ *
+ * No se usa `setInterval` con un paso fijo porque el intervalo no está
+ * sincronizado con los cuadros de la pantalla: en algunos se dibujaría dos
+ * veces el mismo número y en otros ninguno, y se vería a los tirones.
+ *
  * Si el usuario sigue moviendo el control, el efecto se limpia y vuelve a
  * empezar desde el valor actual: nunca hay dos animaciones peleándose por el
  * mismo número.
+ *
+ * ACCESIBILIDAD: con "reducir movimiento" el número salta directamente al
+ * valor final. Acá SÍ corresponde eliminar el efecto y no solo suavizarlo,
+ * porque lo que molesta de un número animado es justamente que se mueva.
+ * ─────────────────────────────────────────────────────────────────────────
  */
 function useSmoothNumber(target, duration = 480) {
   const [display, setDisplay] = useState(target);
@@ -197,6 +223,7 @@ function useSmoothNumber(target, duration = 480) {
   useEffect(() => {
     const from = currentRef.current;
     const delta = target - from;
+    // Nada que animar: se corta antes de pedir un solo cuadro.
     if (delta === 0) return;
 
     const quiet = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -210,9 +237,17 @@ function useSmoothNumber(target, duration = 480) {
     let startTime = null;
 
     const tick = (now) => {
+      // El primer cuadro fija el cero. No se usa Date.now() al armar el efecto
+      // porque entre ese momento y el primer cuadro puede pasar un rato, y la
+      // animación arrancaría ya empezada.
       if (startTime === null) startTime = now;
       const progress = Math.min((now - startTime) / duration, 1);
       // easeOutCubic: rápido al principio, suave al llegar.
+      //
+      // Es la forma de la curva --ease que usa todo el CSS de la página, escrita
+      // acá como cuenta. Importa que sea la misma: un número que acelera
+      // distinto de como se mueve el resto de la interfaz se nota aunque nadie
+      // sepa decir por qué.
       const eased = 1 - Math.pow(1 - progress, 3);
       const value = from + delta * eased;
 
@@ -222,12 +257,20 @@ function useSmoothNumber(target, duration = 480) {
       if (progress < 1) {
         frame = requestAnimationFrame(tick);
       } else {
+        // El último paso se escribe EXACTO y no calculado: la curva llega a
+        // 0.9999 y no a 1, así que sin esto el resultado podría quedar en
+        // $101.999 en vez de $102.000.
         currentRef.current = target;
         setDisplay(target);
       }
     };
 
     frame = requestAnimationFrame(tick);
+    // La limpieza es obligatoria: si el componente se va de pantalla —o el
+    // usuario mueve el control otra vez— en el medio de la animación, el cuadro
+    // pedido seguiría llegando e intentaría escribir en un componente que ya no
+    // está. React avisa de eso por consola, y además queda un bucle corriendo
+    // al pedo.
     return () => cancelAnimationFrame(frame);
   }, [target, duration]);
 

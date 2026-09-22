@@ -1,5 +1,19 @@
 /* ============================================================================
    faq.css — Acordeón de preguntas
+   ----------------------------------------------------------------------------
+   Las preguntas que frenan a alguien justo antes de decidirse. El título se
+   queda fijo a la izquierda y las preguntas se abren de a una a la derecha.
+
+   SOLO PUEDE HABER UNA ABIERTA. No es por prolijidad: con varias abiertas la
+   columna crece sin control, y quien abre la quinta pregunta pierde de vista
+   dónde está. Abrir una cierra la otra, y la lista nunca mide mucho más que su
+   alto cerrada.
+
+   LO INTERESANTE TÉCNICO DE ESTE ARCHIVO son dos cosas, las dos explicadas en
+   su lugar más abajo:
+     · el signo + que se convierte en − rotando una sola raya;
+     · la apertura del panel con una grilla de 0fr a 1fr, que anima un alto
+       que nadie midió.
    ========================================================================== */
 
 .faq {
@@ -8,8 +22,15 @@
 
 .faq__inner {
   display: grid;
+  /* La columna de las preguntas es la ancha (1.2 contra 0.8): el título es
+     corto y las respuestas son párrafos. Repartido en mitades iguales, las
+     respuestas quedarían en renglones cortos y el título nadando en aire. */
   grid-template-columns: 0.8fr 1.2fr;
   gap: clamp(32px, 5vw, 70px);
+  /* `start` es lo que permite que el título de la izquierda se pueda pegar:
+     con `stretch` (que es lo normal) la celda mide lo mismo que la columna más
+     alta, y un elemento pegado adentro de una celda de ese alto no tiene por
+     dónde moverse. */
   align-items: start;
 }
 
@@ -94,11 +115,28 @@
   color: var(--blue);
 }
 
-/* ── El panel que se expande ─────────────────────────────────────────────
+/* ── El panel que se expande ──────────────────────────────────────────────
    `height: auto` no se puede animar: el navegador no sabe a qué número tiene
    que llegar. La solución es una grilla que va de 0fr a 1fr, que SÍ se puede
    interpolar. Es CSS puro, se adapta solo a cualquier contenido y no hace
-   falta medir nada con JavaScript. */
+   falta medir nada con JavaScript.
+
+   CUÁL ES LA ALTERNATIVA Y POR QUÉ NO SE USA
+   Lo habitual es medir con JavaScript: leer `scrollHeight` del panel, escribir
+   ese número como alto, animar hasta ahí. Funciona, y trae tres problemas que
+   acá no existen:
+     · hay que volver a medir cada vez que cambia el contenido — y acá el
+       contenido cambia con el idioma, porque una respuesta en alemán o en
+       chino no mide lo mismo que en castellano;
+     · hay que volver a medir cuando cambia el ancho de la ventana, porque el
+       texto se reparte en otra cantidad de renglones;
+     · leer `scrollHeight` obliga al navegador a calcular la página en ese
+       mismo instante, en el medio de una interacción.
+
+   La unidad `fr` de las grillas es una fracción del espacio disponible, y el
+   navegador SÍ sabe interpolar entre dos fracciones. Con 0fr la fila no tiene
+   alto; con 1fr toma todo el que necesita su contenido. La cuenta la hace el
+   navegador, con el texto que haya y en el ancho que haya. */
 .faq__panel {
   display: grid;
   grid-template-rows: 0fr;

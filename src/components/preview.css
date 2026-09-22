@@ -1,6 +1,28 @@
 /* ============================================================================
    preview.css — La maqueta del teléfono
-   ========================================================================== */
+   ----------------------------------------------------------------------------
+   Cuatro pantallas de la aplicación adentro de un teléfono dibujado. A la
+   izquierda un índice para elegir cuál mirar; a la derecha el teléfono.
+
+   ESTÁ DIBUJADO CON DIVS, NO ES UNA CAPTURA. Cuesta más escribirlo, y se paga
+   solo por tres motivos:
+     · no se pixela nunca, en ninguna pantalla ni con ningún zoom;
+     · acompaña el modo oscuro, porque lee las mismas variables que el resto de
+       la página: una captura se quedaría clara para siempre;
+     · el texto de adentro sale del diccionario, así que la maqueta también
+       está traducida a los cinco idiomas. Con capturas harían falta veinte.
+
+   ─────────────────────────────────────────────────────────────────────────
+   POR QUÉ ACÁ ADENTRO LOS TAMAÑOS VAN EN PÍXELES FIJOS
+
+   En toda la página los tamaños salen de las variables de tokens.css. Adentro
+   del teléfono NO: son números sueltos y chicos, de 9 a 12 píxeles.
+
+   No es un descuido. El teléfono es una MAQUETA A ESCALA: lo que se ve no es
+   texto de la página, es el dibujo de una pantalla más chica. Si esas letras
+   crecieran con la tipografía de la página, la maqueta dejaría de parecer un
+   teléfono y pasaría a parecer una tarjeta con borde redondeado.
+   ───────────────────────────────────────────────────────────────────────── */
 
 .preview {
   border-top: 1px solid var(--line);
@@ -15,12 +37,25 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(32px, 5vw, 70px);
+  /* Centrado vertical: el índice tiene cuatro filas y el teléfono es alto, así
+     que sin esto el índice quedaría pegado arriba y descolgado. */
   align-items: center;
 }
 
-/* ── Selector de pantalla ────────────────────────────────────────────── */
+/* ── Selector de pantalla ─────────────────────────────────────────────────
+   Es una lista de filas separadas por una línea de 1px, igual que la sección
+   "Plataforma": el mismo lenguaje de índice en toda la página, en vez de una
+   fila de botones con forma de pestaña.
+
+   Lo que señala la fila elegida son TRES cosas a la vez y ninguna es un fondo
+   de color: el texto pasa de gris a negro, el número se pone azul, y la fila
+   se corre 10px a la derecha. Ese corrimiento es el que hace de "indicador":
+   se ve de reojo cuál está activa sin tener que leer.
+   ────────────────────────────────────────────────────────────────────────── */
 .preview__tabs {
   list-style: none;
+  /* La primera línea la pone la lista y las demás cada fila con su borde de
+     abajo: así no se duplica la línea entre dos filas vecinas. */
   border-top: 1px solid var(--line-2);
 }
 
@@ -33,9 +68,13 @@
   border-bottom: 1px solid var(--line-2);
   text-align: left;
   color: var(--text-3);
+  /* El color entra rápido y el corrimiento un poco más lento, con la curva de
+     la página: el texto responde al toque y la fila se acomoda después. */
   transition: color 0.25s ease, padding-left 0.35s var(--ease);
 }
 
+/* El mouse encima y la fila elegida llegan al mismo lugar a propósito: pasar
+   por arriba muestra de antemano cómo va a quedar si se hace clic. */
 .preview__tab:hover {
   color: var(--text);
   padding-left: 10px;
@@ -66,16 +105,29 @@
   font-weight: 650;
 }
 
-/* ── El teléfono ─────────────────────────────────────────────────────── */
+/* ── El teléfono ──────────────────────────────────────────────────────────
+   El aparato son dos cajas, una adentro de la otra: la de afuera es el marco y
+   la de adentro la pantalla. El borde de 8px entre las dos es el bisel.
+
+   No lleva ni sombra ni reflejo ni brillo: es un contorno de 1px, como todo lo
+   demás de la página. Un teléfono con sombra larga y vidrio lustrado se lee
+   como una plantilla comprada, y desentona con el resto.
+   ────────────────────────────────────────────────────────────────────────── */
 .preview__phone-wrap {
   display: flex;
   justify-content: center;
 }
 
 .phone {
+  /* Nunca más de 300px, y si la columna es más angosta que eso, se achica con
+     ella en vez de desbordar. */
   width: min(300px, 100%);
+  /* LA PROPORCIÓN ES LO QUE LO HACE UN TELÉFONO. Con aspect-ratio el alto sale
+     del ancho, así que la maqueta se achica entera y sigue teniendo la forma
+     de un teléfono en cualquier pantalla. Si el alto fuera un número fijo, en
+     una columna angosta quedaría un cuadrado. */
   aspect-ratio: 9 / 18.5;
-  padding: 8px;
+  padding: 8px;               /* el bisel */
   border-radius: 32px;
   background: var(--paper);
   border: 1px solid var(--line-2);
@@ -83,10 +135,18 @@
 
 .phone__screen {
   height: 100%;
+  /* 25 = 32 del marco − 8 del bisel, redondeando: así la curva de la pantalla
+     es concéntrica con la del aparato. Con el mismo radio en los dos, el bisel
+     se vería más grueso en las esquinas que en los lados. */
   border-radius: 25px;
   background: var(--paper);
   border: 1px solid var(--line);
+  /* Recorta lo que se salga de la pantalla, que es lo que permite que el
+     contenido entre desplazándose desde el costado sin asomar por afuera. */
   overflow: hidden;
+  /* Columna de tres partes: barra de estado, cuerpo y barra de abajo. El
+     cuerpo es el único que crece (flex-grow más abajo), así las dos barras
+     quedan pegadas a sus extremos sea cual sea el alto. */
   display: flex;
   flex-direction: column;
 }
@@ -108,12 +168,23 @@
   border-radius: 2px;
 }
 
+/* El encabezado y el cuerpo entran desde la derecha cada vez que se cambia de
+   pantalla, con 50ms de diferencia entre uno y otro. Es el mismo gesto con el
+   que un teléfono apila una pantalla sobre la anterior, y es lo que hace que
+   cambiar de solapa se lea como "navegar" y no como que se reemplazó un bloque.
+
+   Corre en cada cambio porque el JSX le pone al contenedor una `key` distinta
+   por pantalla: React monta un elemento nuevo, y una animación de CSS arranca
+   sola cuando el elemento nace. No hace falta reiniciarla a mano. */
 .phone__head {
   padding: 10px 16px 12px;
   border-bottom: 1px solid var(--line);
   animation: slide-in 0.45s var(--ease) both;
 }
 
+/* `both` deja el elemento en el estado del `from` ANTES de empezar y en el del
+   `to` después de terminar. Sin eso se ve un parpadeo: el elemento aparece
+   opaco durante un cuadro y recién después salta al principio de la animación. */
 @keyframes slide-in {
   from { opacity: 0; transform: translateX(16px); }
   to   { opacity: 1; transform: translateX(0); }
@@ -125,6 +196,8 @@
 }
 
 .phone__body {
+  /* El único de los tres que crece: se come todo el alto que sobra y empuja la
+     barra de abajo contra el borde inferior. */
   flex-grow: 1;
   padding: 14px;
   display: flex;
@@ -148,8 +221,17 @@
   color: var(--blue);
 }
 
-/* Todo lo de adentro entra en cascada: la pantalla se "arma" en vez de
-   aparecer entera. */
+/* ── La cascada de adentro ────────────────────────────────────────────────
+   Todo lo de adentro entra en cascada: la pantalla se "arma" en vez de
+   aparecer entera.
+
+   Cada pieza recibe del JSX su número de orden en la variable --i, y el
+   retardo se calcula con eso: 40 milisegundos por posición, más 100 de
+   arranque para que entre después del encabezado. Un solo bloque de CSS le da
+   el escalonado a las cuatro pantallas, sin una regla por elemento.
+
+   El `var(--i, 0)` lleva respaldo: si algún elemento nuevo se olvida de
+   declarar --i, entra primero en vez de romper la cuenta. */
 .ph-form,
 .ph-item,
 .ph-specs > div,
@@ -224,7 +306,18 @@
   white-space: nowrap;
 }
 
-/* ── Ficha ───────────────────────────────────────────────────────────── */
+/* ── Ficha ─────────────────────────────────────────────────────────────── */
+
+/* LA GRILLA CON LÍNEAS DE 1px, SIN UN SOLO BORDE ADENTRO.
+   El truco: la grilla se pinta del color de la línea y se le deja 1px de
+   separación entre celdas; cada celda se pinta del color del papel y tapa todo
+   menos esa separación. Lo que queda a la vista son líneas de exactamente 1px.
+
+   Se hace así y no con un borde por celda porque los bordes de dos celdas
+   vecinas se suman y dan 2px, y hay que salir a apagar el de la derecha de
+   unas y el de abajo de otras con selectores de última columna y última fila.
+   Acá no hay nada de eso, y si mañana la ficha pasa a tener seis datos en vez
+   de cuatro, las líneas siguen saliendo bien solas. */
 .ph-specs {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -287,7 +380,11 @@
   line-height: 1.5;
 }
 
-/* ── Reserva ─────────────────────────────────────────────────────────── */
+/* ── Reserva ───────────────────────────────────────────────────────────── */
+
+/* Siete columnas, que son los siete días de la semana. Los casilleros salen
+   cuadrados por `aspect-ratio: 1` y no por un alto fijo: así el calendario se
+   achica con el teléfono sin deformarse. */
 .ph-cal {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -296,7 +393,7 @@
 
 .ph-cal span {
   display: grid;
-  place-items: center;
+  place-items: center;   /* el número, centrado en los dos ejes */
   aspect-ratio: 1;
   border-radius: 4px;
   font-size: 9px;
@@ -307,7 +404,10 @@
 .ph-cal .is-taken {
   color: var(--text-4);
   background: var(--paper-3);
-  /* La rayita se lee también sin color. */
+  /* ACCESIBILIDAD: el día ocupado no se distingue SOLO por el color de fondo.
+     La rayita encima lo dice igual para quien no distingue el gris del blanco,
+     y también si la pantalla se imprime en blanco y negro. Misma idea que el
+     rechazo de la revisión de fotos, que lleva una cruz y no solo color. */
   text-decoration: line-through;
 }
 
@@ -340,6 +440,10 @@
 .sw--picked { background: var(--blue); }
 .sw--taken  { background: var(--paper-3); border: 1px solid var(--line-2); }
 
+/* `margin-top: auto` adentro de una columna flexible empuja el elemento hasta
+   abajo de todo: el total queda pegado al pie de la pantalla, como en
+   cualquier carrito, sin importar cuántos días tenga el calendario arriba.
+   Es la misma idea que usa .ph-steps en la pantalla de entrega. */
 .ph-total {
   margin-top: auto;
   padding-top: 11px;
@@ -431,7 +535,19 @@
   background: var(--blue);
 }
 
-/* ── Pantallas chicas ────────────────────────────────────────────────── */
+/* ── Pantallas chicas ──────────────────────────────────────────────────────
+   Las dos columnas se apilan, y se INVIERTE el orden: el teléfono arriba y el
+   índice abajo.
+
+   En el HTML el índice va primero, porque leyéndolo de corrido tiene sentido
+   saber qué pantallas hay antes de verlas. Pero apilado tal cual, quien entra
+   desde el celular se come cuatro filas de texto antes de llegar a la maqueta,
+   que es lo único que esta sección vino a mostrar.
+
+   `order` cambia solo cómo se dibuja: el orden del HTML no se toca, así que
+   quien navega con el teclado o con un lector de pantalla lo sigue recorriendo
+   en el orden que tiene sentido leído.
+   ────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .preview__grid {
     grid-template-columns: 1fr;

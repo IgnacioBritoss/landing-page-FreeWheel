@@ -1,6 +1,43 @@
 /* ============================================================================
    journey.css — La sección fija de los cuatro pasos
-   ========================================================================== */
+   ----------------------------------------------------------------------------
+   Los cuatro pasos de alquilar un auto. La sección SE CLAVA en la pantalla:
+   se sigue scrolleando, la página sigue avanzando, pero lo que se ve se queda
+   quieto y lo que cambia es el paso.
+
+   ─────────────────────────────────────────────────────────────────────────
+   CÓMO SE CLAVA — SON DOS ELEMENTOS, NO UNO
+
+     .journey          alto 400vh  → cuatro pantallas de recorrido
+       └ .journey__sticky   position: sticky; top: 0; alto 100svh
+
+   El de afuera es una caja larguísima y vacía: lo único que hace es OCUPAR
+   cuatro pantallas de scroll. El de adentro mide una pantalla y va pegado
+   arriba, así que se queda quieto mientras su padre le pasa por detrás.
+
+   Cuando el padre se termina, el hijo se despega solo y sigue subiendo con la
+   página. Eso es todo el mecanismo, y no lleva una sola línea de JavaScript:
+   `position: sticky` no es más que "quedate pegado al borde mientras tu padre
+   siga a la vista".
+
+   El JavaScript (ver useScrollProgress en modo "out", y Journey.jsx) solo MIDE
+   cuánto se avanzó y escribe un número de 0 a 1 en la variable --progress. Con
+   ese número, el CSS de acá abajo llena la línea vertical, llena la barra de
+   abajo, y el JSX decide qué paso mostrar. Nada se mueve desde JavaScript: se
+   escribe un número y el navegador hace el resto.
+
+   POR QUÉ NO SE USA position: fixed
+   Con `fixed` el elemento se despega del documento y hay que calcular a mano
+   cuándo soltarlo, lo que obliga a leer la posición del scroll en cada cuadro
+   y a corregir el salto que da la página al soltar. `sticky` no tiene ninguno
+   de esos dos problemas porque el elemento nunca deja de ocupar su lugar.
+
+   POR QUÉ EL ALTO ES 100svh Y NO 100vh
+   `vh` mide la pantalla del celular CON la barra del navegador escondida. Como
+   esa barra aparece y desaparece al scrollear, el alto real cambia en el medio
+   del recorrido y el bloque pegado salta. `svh` es la versión chica y estable:
+   mide siempre como si la barra estuviera a la vista.
+   ───────────────────────────────────────────────────────────────────────── */
 
 /* La sección mide cuatro pantallas: ese es el recorrido de scroll durante el
    cual el contenido de adentro se queda quieto. Una pantalla por paso. */
@@ -65,7 +102,22 @@
   background: var(--line-2);
 }
 
-/* La parte llena, que crece con el avance del scroll. */
+/* La parte llena, que crece con el avance del scroll.
+
+   ESTÁ ENCIMA DE LA LÍNEA GRIS, NO EN LUGAR DE ELLA: son dos elementos
+   apilados, y el azul tapa al gris de arriba hacia abajo.
+
+   `inset: 0` la hace del tamaño exacto de la línea gris que la contiene, y
+   `scaleY(--progress)` la aplasta a esa fracción de su alto. Con --progress en
+   0.5 se ve media línea azul y media gris.
+
+   SE ESCALA EN VEZ DE CAMBIAR EL ALTO por lo mismo de siempre: `transform` lo
+   resuelve la placa de video sin volver a calcular la posición de nada, y esto
+   se actualiza en cada cuadro mientras se scrollea. Cambiar `height` obligaría
+   al navegador a rehacer el cálculo de la página sesenta veces por segundo.
+
+   `transform-origin: top` es lo que la hace crecer hacia abajo; por defecto
+   escalaría desde el centro y se abriría hacia los dos lados. */
 .journey__fill {
   position: absolute;
   inset: 0;
@@ -96,6 +148,15 @@
     transform 0.4s var(--ease);
 }
 
+/* TRES ESTADOS PARA CADA PUNTO, y los tres se distinguen sin leer:
+     · pendiente → hueco, del color del fondo con borde gris;
+     · cumplido  → lleno de azul;
+     · actual    → lleno de azul Y agrandado un 35%.
+
+   El agrandado es lo que separa "el paso en el que estoy" de "los pasos que ya
+   pasé", que si no serían idénticos. Se hace con `transform: scale` y no
+   cambiando el ancho y el alto, porque escalar no mueve a los vecinos: con
+   ancho y alto, el punto que crece correría de lugar a los otros tres. */
 .journey__tick.is-done .journey__dot {
   background: var(--blue);
   border-color: var(--blue);

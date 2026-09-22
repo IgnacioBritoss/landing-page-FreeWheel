@@ -1,6 +1,32 @@
 /* ============================================================================
    close.css — El bloque oscuro del cierre
-   ========================================================================== */
+   ----------------------------------------------------------------------------
+   Lo último de la página: una frase grande, los dos botones y el pie con los
+   enlaces. Sobre la panorámica del 9 de Julio, con velo azul oscuro.
+
+   ES LA TERCERA Y ÚLTIMA BANDA CON FOTO. Las tres (la frase que se ilumina,
+   los idiomas y esta) son los respiros oscuros de una página que si no sería
+   blanca de punta a punta, y están repartidas a propósito: una arriba, una en
+   el medio y una al final.
+
+   ACÁ SE CIERRA CON UNA SOLA ACCIÓN. No hay un formulario de correo, ni un
+   "suscribite", ni tres botones distintos: la aplicación ya existe y está
+   funcionando, así que lo único que corresponde pedir es que la abran.
+
+   ─────────────────────────────────────────────────────────────────────────
+   EL PROBLEMA DE CONTRASTE QUE RESUELVE ESTE ARCHIVO
+   Todos los grises de la página (--text-2, --text-3, --text-4) están elegidos
+   para leerse sobre papel blanco. Sobre un fondo casi negro no se leen: hay que
+   cambiarlos por sus versiones "sobre tinta". Lo mismo el azul de la marca, que
+   contra este fondo da 3.9 de contraste —por debajo del mínimo de 4.5— y se
+   apaga.
+
+   Por eso este archivo es, en buena parte, una lista de qué cosa cambia de
+   color adentro del cierre. Las variables --text-on-ink, --text-on-ink-2 y
+   --blue-on-ink existen exactamente para esto (ver tokens.css y `.band` en
+   base.css) y NO cambian con el tema, porque este bloque es oscuro en claro y
+   en oscuro por igual.
+   ───────────────────────────────────────────────────────────────────────── */
 
 /* El color y el fondo los pone ahora `.band` (styles/base.css): la foto, el
    velo azul oscuro y el texto en blanco. Acá queda solo lo propio del cierre. */
@@ -30,6 +56,13 @@
   padding-block: clamp(90px, 13vw, 180px);
 }
 
+/* Casi tan grande como el titular de la portada, y es a propósito: la página
+   abre y cierra con el mismo peso. Lo del medio es explicación; estos dos son
+   los que tienen que quedar.
+
+   `line-height: 1.03` aprieta los renglones casi hasta tocarse. En tamaños
+   grandes el interlineado normal (1.5) deja huecos enormes entre líneas y el
+   bloque se desarma; cuanto más grande la letra, menos aire necesita. */
 .close__title {
   font-size: clamp(2rem, 5.6vw, 4.2rem);
   font-weight: 700;
@@ -126,6 +159,8 @@
 }
 
 @media (max-width: 560px) {
+  /* Tres columnas de enlaces en 360px dan 100px cada una: los títulos en
+     mayúsculas se parten por la mitad. De a dos entran, y la tercera baja. */
   .close__cols {
     grid-template-columns: 1fr 1fr;
     gap: 28px 20px;
@@ -136,6 +171,9 @@
     align-items: flex-start;
   }
 
+  /* Los dos botones se reparten el ancho y quedan del mismo tamaño, uno al
+     lado del otro. En el celular es donde más importa que el botón principal
+     sea grande y fácil de acertar. */
   .close__actions .btn {
     flex-grow: 1;
   }

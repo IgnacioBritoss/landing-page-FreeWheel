@@ -1,6 +1,36 @@
 /* ============================================================================
    hero.css — La portada
-   ========================================================================== */
+   ----------------------------------------------------------------------------
+   Lo primero que se ve: el titular, el párrafo, los dos botones, y abajo un
+   auto de contorno que SE VA PINTANDO DE AZUL A MEDIDA QUE SE BAJA.
+
+   ─────────────────────────────────────────────────────────────────────────
+   LA IDEA DE LA PORTADA
+   No hay foto de fondo, ni video, ni una captura de la aplicación. Hay tipografía
+   grande sobre blanco y un dibujo de línea. Es una portada de diario, no de
+   plantilla: lo que tiene que quedar de los primeros tres segundos es la frase,
+   no una imagen de archivo de gente sonriendo en un auto.
+
+   EL AUTO ES EL ÚNICO ADORNO, y hace dos cosas a la vez: dice de qué se trata
+   esto sin una palabra, y —al pintarse con el scroll— es lo que invita a bajar.
+   Quien ve medio auto pintado baja para terminar de pintarlo. Ese es todo el
+   truco, y funciona porque es la única cosa de la pantalla que responde.
+
+   EL TITULAR ENTRA CON CORTINA: cada renglón sube desde abajo, tapado por el
+   de arriba, escalonados de a 110ms. Se llama "cortina" porque el renglón está
+   adentro de una caja que recorta, y lo que se mueve es el texto detrás de esa
+   caja; no aparece, entra.
+
+   ─────────────────────────────────────────────────────────────────────────
+   LA CUENTA QUE HAY QUE RESPETAR SI SE TOCA ALGO
+   El auto va en posición absoluta, apoyado abajo de la portada, y el relleno
+   inferior del bloque es el lugar que le hace falta. Si ese relleno se achica,
+   el trazo del auto cruza por encima del párrafo y el texto se vuelve ilegible;
+   si el bloque entero crece de más, el auto queda abajo del pliegue y la única
+   pieza que invita a scrollear pasa a estar donde nadie la ve.
+
+   Los números y de dónde salen están anotados en `.hero` acá abajo.
+   ───────────────────────────────────────────────────────────────────────── */
 
 .hero {
   position: relative;
@@ -132,12 +162,43 @@
   stroke-linejoin: round;
 }
 
-/* dasharray 1 = un guion que cubre el trazado entero (por pathLength="1").
-   dashoffset va de 1 (nada visible) a 0 (todo visible). El avance lo escribe
-   el hook en la variable --progress del <section>.
-   El × 1.6 hace que el auto termine de llenarse antes de que la portada salga
+/* ── EL TRAZO QUE SE DIBUJA ───────────────────────────────────────────────
+   Es el mecanismo central de la portada, y es más simple de lo que parece.
+
+   Un trazo de SVG se puede dibujar a rayas con `stroke-dasharray`: tantos
+   píxeles de línea, tantos de hueco. Y con `stroke-dashoffset` se corre ese
+   patrón de rayas a lo largo del trazado.
+
+   EL TRUCO es hacer que el guion mida EXACTAMENTE lo que mide todo el trazado.
+   Entonces no hay rayas: hay una sola línea entera. Y correrla con
+   `dashoffset` la va sacando de a poco, como si se destapara desde la punta.
+   Al revés —de todo corrido a nada corrido— se ve como si se dibujara sola.
+
+   EL PROBLEMA NORMAL ES SABER CUÁNTO MIDE EL TRAZADO. Un contorno de auto con
+   curvas puede medir 1.847,3 píxeles, y hay que averiguarlo con JavaScript
+   (`path.getTotalLength()`) y escribirlo en el estilo.
+
+   ACÁ NO HACE FALTA: el SVG lleva `pathLength="1"`, que le dice al navegador
+   "para las cuentas de rayas, hacé de cuenta que este trazado mide 1". Así:
+
+       stroke-dasharray: 1     → un guion que cubre el trazado entero
+       stroke-dashoffset: 1    → corrido entero: no se ve nada
+       stroke-dashoffset: 0    → sin correr: se ve todo
+       stroke-dashoffset: 0.5  → medio auto dibujado
+
+   O sea que el avance del scroll (0 a 1) ES directamente el dashoffset, dado
+   vuelta. Ninguna medición, ningún JavaScript tocando el SVG: el hook escribe
+   --progress en el <section> y la cuenta se hace acá.
+
+   EL × 1.6 hace que el auto termine de llenarse antes de que la portada salga
    de pantalla: si se repartiera sobre el recorrido completo, la última parte
-   se dibujaría cuando ya nadie la ve. El min() lo frena en 1. */
+   se dibujaría cuando ya nadie la ve. El min() lo frena en 1 para que no se
+   pase de largo y empiece a borrarse.
+
+   SON DOS TRAZADOS SUPERPUESTOS: el gris (--ghost) siempre entero, y el azul
+   encima dibujándose. Sin el gris debajo, el auto aparecería de la nada; con
+   él, hay un contorno completo desde el principio y lo que avanza es el
+   color. */
 .hero__car-line {
   stroke: var(--blue);
   stroke-width: 4.5;

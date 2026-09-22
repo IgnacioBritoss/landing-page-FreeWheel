@@ -1,5 +1,19 @@
 /* ============================================================================
    trust.css — Verificación y rangos
+   ----------------------------------------------------------------------------
+   La sección que responde la pregunta que frena a cualquiera antes de prestarle
+   el auto a un desconocido: quién es esta persona.
+
+   Van dos mitades UNA AL LADO DE LA OTRA y no una debajo de la otra, y eso es
+   parte del argumento: la verificación (quién entra) y los rangos (cómo se
+   gana reputación quien ya está adentro) son las dos caras de lo mismo, y
+   puestas en paralelo se leen como un solo sistema en vez de como dos listas.
+
+   LA SEPARACIÓN ES UNA LÍNEA, NO UNA CAJA. Ninguna de las dos mitades tiene
+   recuadro, fondo ni sombra: lo único que las separa es una línea vertical de
+   1px, que se convierte en horizontal cuando se apilan. Es el mismo recurso de
+   toda la página, y es el que deja que las dos se lean como partes de un mismo
+   bloque; con dos tarjetas se leerían como dos cosas distintas.
    ========================================================================== */
 
 .trust {
@@ -14,12 +28,15 @@
 .trust__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* `gap: 0` a propósito: el aire entre las dos mitades no lo pone la grilla,
+     lo ponen los rellenos de cada lado. Tiene que ser así porque la línea
+     divisoria es el borde de la mitad izquierda, y si la separación fuera un
+     hueco de la grilla la línea quedaría pegada a un texto y lejos del otro.
+     Con rellenos, la línea queda centrada en el medio del hueco. */
   gap: 0;
   border-top: 1px solid var(--line);
 }
 
-/* La línea vertical entre las dos mitades, en vez de dos recuadros. Es el
-   mismo recurso de toda la página: separar con una línea, no con una caja. */
 .kyc,
 .tiers {
   padding-top: 34px;
@@ -32,6 +49,9 @@
 }
 
 .tiers {
+  /* El mismo clamp que el relleno derecho de la otra mitad, para que la línea
+     quede exactamente en el medio en cualquier ancho. Si los dos números no
+     coincidieran, la línea se correría de a poco al achicar la ventana. */
   padding-left: clamp(24px, 4vw, 56px);
 }
 
@@ -62,6 +82,15 @@
   gap: 22px;
 }
 
+/* Dos columnas: el número en un ancho FIJO de 32px y el texto en lo que sobre.
+   Fijo y no automático porque así los cuatro textos arrancan exactamente en la
+   misma vertical: con ancho automático, un "01" y un "04" miden apenas
+   distinto y los renglones quedarían desalineados.
+
+   `align-items: baseline` alinea por la línea de apoyo de las letras y no por
+   el borde de la caja: el número queda a la altura de la primera línea del
+   título, que es donde el ojo lo espera. Con `start` flotaría un pelo más
+   arriba, porque el título tiene un tamaño de letra mayor. */
 .kyc__steps li {
   display: grid;
   grid-template-columns: 32px 1fr;
@@ -72,6 +101,9 @@
 .kyc__n {
   font-size: var(--t-xs);
   font-weight: 600;
+  /* Los números de ancho parejo: el "1" ocupa lo mismo que el "4". Sin esto,
+     en la mayoría de las tipografías el 1 es más angosto y la columna de
+     números queda visiblemente despareja. */
   font-variant-numeric: tabular-nums;
   color: var(--blue);
 }
@@ -99,16 +131,25 @@
   line-height: 1.65;
 }
 
-/* ── Rangos ──────────────────────────────────────────────────────────── */
+/* ── Rangos ────────────────────────────────────────────────────────────────
+   Los cuatro rangos en una grilla de dos por dos, no en una lista de cuatro
+   renglones: son cuatro escalones de un mismo sistema, y de a dos se abarcan
+   de una sola mirada.
+   ────────────────────────────────────────────────────────────────────────── */
 .tiers__list {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  /* Dos números: 24px entre filas y 20px entre columnas. Más aire vertical que
+     horizontal a propósito, porque cada celda tiene dos renglones de texto y
+     sin esa diferencia las filas se pegan entre sí. */
   gap: 24px 20px;
 }
 
 .tier {
   display: flex;
+  /* El escudo arriba de todo, a la altura del nombre del rango. Centrado
+     quedaría a mitad de camino entre el nombre y el requisito. */
   align-items: flex-start;
   gap: 13px;
   color: var(--text-3);
@@ -116,7 +157,12 @@
 }
 
 /* El escudo hereda el color del <li>, así que basta con cambiarlo acá para que
-   el dibujo y el texto viajen juntos. */
+   el dibujo y el texto viajen juntos.
+
+   Funciona porque TierShield dibuja con `currentColor` en vez de con un color
+   propio: `currentColor` es el color de texto que tenga el elemento en ese
+   momento, así que el SVG se entera del cambio sin que este archivo sepa nada
+   de su estructura interna. */
 .tier:hover {
   color: var(--blue);
 }
@@ -156,6 +202,9 @@
   }
 }
 
+/* Abajo de 440px, dos por dos deja columnas de unos 190px: el requisito de
+   cada rango se corta en tres renglones y la grilla se ve como texto apretado.
+   A una columna respira. */
 @media (max-width: 440px) {
   .tiers__list {
     grid-template-columns: 1fr;

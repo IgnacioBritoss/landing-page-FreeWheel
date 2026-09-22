@@ -97,7 +97,34 @@ export default function AppPreview() {
   );
 }
 
-/* ── Pantalla 1: buscar ─────────────────────────────────────────────── */
+/* ============================================================================
+   LAS CUATRO PANTALLAS
+   ----------------------------------------------------------------------------
+   Una función por pantalla, todas con la misma forma: reciben el diccionario ya
+   resuelto (`t`) y devuelven solo el CONTENIDO del cuerpo del teléfono. El
+   marco, la barra de estado, el encabezado y la barra de abajo los pone
+   AppPreview una sola vez y no se repiten acá.
+
+   NINGUNA TIENE ESTADO PROPIO. Son funciones que devuelven lo mismo para la
+   misma entrada: no guardan nada, no miden nada, no se enganchan a ningún
+   evento. Toda la animación de adentro (la cascada de entrada, el código que se
+   arma, la pantalla que entra desde el costado) la hace el CSS con la variable
+   --i que se le pasa a cada pieza. Por eso son tan cortas.
+
+   EL --i DE CADA ELEMENTO es su número de orden, y es lo único "de programación"
+   que hay acá: preview.css lo convierte en un retardo (40ms por posición), y
+   eso arma la cascada. Si se agrega un renglón nuevo hay que darle su --i, o
+   entra todo junto con el primero.
+
+   Reciben `t` por parámetro en vez de llamar a useT() cada una. Da lo mismo en
+   funcionamiento, pero deja claro de dónde sale el texto y las vuelve probables
+   sin montar el contexto de idiomas.
+   ========================================================================== */
+
+/* ── Pantalla 1: buscar ───────────────────────────────────────────────────
+   El formulario de búsqueda y dos resultados. Los precios y los nombres salen
+   del diccionario y no de content.js porque acá son EJEMPLOS de pantalla, no
+   los autos del mapa: cada idioma escribe su número como corresponde. */
 function ScreenSearch({ t }) {
   return (
     <>
@@ -150,15 +177,27 @@ function ScreenDetail({ t }) {
   );
 }
 
-/* ── Pantalla 3: reserva ────────────────────────────────────────────── */
+/* ── Pantalla 3: reserva ──────────────────────────────────────────────────
+   El calendario con los días ocupados y los tres elegidos.
+
+   MUESTRA DÍAS OCUPADOS A PROPÓSITO. Un calendario todo libre no dice nada; con
+   días tomados se entiende de una que el auto es de alguien que también lo usa,
+   que es la diferencia entre esto y una agencia de alquiler. */
 function ScreenBooking({ t }) {
   // 0 = libre, 1 = ocupado, 2 = elegido.
+  //
+  // Va como números y no como tres listas separadas ni como objetos: son
+  // veintiún casilleros con tres estados posibles, y así se lee de un vistazo
+  // dónde caen los ocupados. La línea de abajo convierte cada número en su
+  // clase buscándolo por posición en un arreglo de tres nombres.
   const days = [0, 0, 1, 1, 0, 0, 0, 2, 2, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 
   return (
     <>
       <div className="ph-cal">
         {days.map((state, i) => (
+          // ["", "is-taken", "is-picked"][state] → el estado 0 no lleva clase,
+          // el 1 lleva "is-taken" y el 2 "is-picked".
           <span key={i} className={["", "is-taken", "is-picked"][state]} style={{ "--i": i }}>
             {i + 1}
           </span>
@@ -203,7 +242,15 @@ function ScreenQr({ t }) {
                 key={`${y}-${x}`}
                 className={cell === "1" ? "on" : ""}
                 // Los módulos se encienden en diagonal, como si el código se
-                // fuera armando. El retardo sale de la suma de fila y columna.
+                // fuera armando. El retardo sale de la suma de fila y columna:
+                // todos los casilleros de una misma diagonal dan el mismo
+                // número, así que se encienden juntos.
+                //
+                // EL RESTO DE 14 ES LO QUE HACE QUE SE PUEDA VER. La diagonal
+                // más larga de una matriz de 29×29 suma 56, y a 35ms por
+                // posición el último módulo tardaría casi dos segundos. Dando
+                // la vuelta cada 14 el código se arma en medio segundo, en
+                // cuatro olas que se persiguen.
                 style={{ "--i": (x + y) % 14 }}
               />
             )),

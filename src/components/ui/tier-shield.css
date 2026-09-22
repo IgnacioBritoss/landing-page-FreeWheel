@@ -1,5 +1,24 @@
+/* ============================================================================
+   tier-shield.css — El escudo de rango
+   ----------------------------------------------------------------------------
+   El escudito que acompaña a cada uno de los cuatro rangos (bronce, plata, oro
+   y platino). El dibujo está en TierShield.jsx; acá solo está cómo se apoya en
+   la página y cómo responde al mouse.
+
+   POR QUÉ LA SOMBRA VA CON drop-shadow Y NO CON box-shadow
+   `box-shadow` proyecta la sombra de la CAJA del elemento, que es un rectángulo:
+   en una pieza con forma de escudo se vería un rectángulo gris asomando por
+   detrás de las puntas. `drop-shadow` sigue el contorno real del dibujo, hueco
+   del medio incluido. Es la única forma de que un SVG proyecte una sombra que
+   se corresponda con lo que se ve.
+   ========================================================================== */
+
 /* El escudo se levanta un poco al pasar el mouse por su fila. La sombra es muy
-   corta y muy tenue: es una pieza chica, una sombra larga la haría flotar. */
+   corta y muy tenue: es una pieza chica, una sombra larga la haría flotar.
+
+   Se levanta al pasar por LA FILA y no por el escudo mismo (el selector es
+   `.tier:hover`, no `.tier-shield:hover`): apuntarle a una pieza de 28px es
+   incómodo, y el nombre del rango de al lado es parte de la misma cosa. */
 .tier-shield {
   flex-shrink: 0;
   transition: transform 0.35s var(--ease);

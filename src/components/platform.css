@@ -1,5 +1,21 @@
 /* ============================================================================
    platform.css — La lista de capacidades
+   ----------------------------------------------------------------------------
+   Las ocho cosas que trae el producto, escritas como un ÍNDICE y no como una
+   grilla de tarjetas.
+
+   Es una decisión, no una economía: ocho tarjetas iguales con su iconito se
+   leen como un catálogo y se saltean. Ocho filas numeradas separadas por una
+   línea de 1px se leen como un índice, y un índice se recorre entero.
+
+   TRES COLUMNAS QUE ARRANCAN SIEMPRE EN LA MISMA VERTICAL: el número, el
+   título y la explicación. Esa alineación es lo que hace que se pueda barrer la
+   lista de arriba abajo leyendo solo los títulos, y frenar en el que interesa.
+
+   NO SE MUEVE NADA AL PASAR EL MOUSE. En una lista larga, filas que se
+   desplazan o crecen al pasarles por encima marean. Lo único que pasa es que la
+   fila se aclara y el número se pone azul, y la banda gris cruza la pantalla de
+   punta a punta (el mecanismo está explicado abajo, en `.platform__row::before`).
    ========================================================================== */
 
 .platform {
@@ -21,8 +37,16 @@
 .platform__row {
   position: relative;
   display: grid;
+  /* 56px fijos para el número —así los ocho títulos arrancan exactamente en la
+     misma vertical—, y después el título con un mínimo de 180px para que no se
+     estruje cuando la explicación es larga. El `minmax` es lo que impide que
+     la columna del medio se achique de más: sin él, un título corto dejaría su
+     columna angosta y las filas quedarían desalineadas entre sí. */
   grid-template-columns: 56px minmax(180px, 1fr) 1.5fr;
   gap: 12px 26px;
+  /* Por la línea de apoyo de las letras, no por el borde de la caja: el
+     número, el título y el texto tienen tamaños distintos, y alineados por
+     arriba quedarían los tres a alturas visiblemente diferentes. */
   align-items: baseline;
   padding-block: 26px;
   border-bottom: 1px solid var(--line);

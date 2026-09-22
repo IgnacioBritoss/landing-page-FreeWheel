@@ -1,11 +1,45 @@
 /* ============================================================================
    nav.css — Barra de navegación
-   ========================================================================== */
+   ----------------------------------------------------------------------------
+   La barra de arriba, fija, con la marca a la izquierda, los cinco destinos en
+   el medio y las preferencias (tema, idioma) más el botón de la aplicación a la
+   derecha. Abajo de 1040px los destinos se van a un menú a pantalla completa.
+
+   ES EL ÚNICO ELEMENTO DE LA PÁGINA QUE ESTÁ SIEMPRE A LA VISTA, así que es el
+   que más tiene que aguantar sin molestar. De ahí tres decisiones:
+
+     · Es SÓLIDA desde el primer píxel, no transparente. La barra transparente
+       que se vuelve opaca al bajar está en todos lados, y tiene un problema
+       concreto: arriba de todo la marca queda flotando sin apoyo, y en el
+       instante del cambio la página parpadea. Acá lo único que cambia al
+       scrollear es una sombra de 12px casi imperceptible.
+
+     · No hay estado "activo" en los destinos. Marcar en qué sección se está
+       obliga a vigilar el scroll contra cinco elementos y a decidir qué pasa
+       cuando dos entran a la vez. Lo que sí hay es la barra de avance de
+       lectura de abajo, que dice lo mismo —cuánto falta— con una sola cuenta.
+
+     · El tema y el idioma no tienen recuadro hasta que se les pasa el mouse.
+       Son preferencias, no acciones: si tuvieran el mismo peso que el botón de
+       la aplicación, competirían con lo único que la barra vino a ofrecer.
+
+   ─────────────────────────────────────────────────────────────────────────
+   POR QUÉ LA BARRA ES `fixed` Y LA SECCIÓN DE LOS PASOS ES `sticky`
+   Son dos mecanismos distintos para dos cosas distintas. `fixed` clava el
+   elemento a la pantalla PARA SIEMPRE y lo saca del flujo del documento; por
+   eso el <body> lleva un relleno arriba en base.css que compensa el alto de la
+   barra, porque si no el primer bloque quedaría tapado. `sticky` pega el
+   elemento solo mientras su padre está a la vista y nunca deja de ocupar lugar.
+   Acá hace falta lo primero: la barra tiene que estar siempre.
+   ───────────────────────────────────────────────────────────────────────── */
 
 .nav {
   position: fixed;
   inset-inline: 0;
   top: 0;
+  /* Por encima de todo lo demás de la página. El menú de celular va en 99 y el
+     desplegable de idioma en 10: los tres números están espaciados a propósito,
+     para poder meter algo en el medio sin tener que renumerar. */
   z-index: 100;
   /* Barra sólida DESDE EL PRINCIPIO. Antes arrancaba transparente y aparecía
      al bajar: el tope de la página quedaba liso y la marca flotando sin
@@ -50,7 +84,15 @@
   flex-shrink: 0;
 }
 
-/* ── Links de escritorio ─────────────────────────────────────────────── */
+/* ── Links de escritorio ──────────────────────────────────────────────────
+   `margin-inline: auto` reparte todo el espacio sobrante a los dos costados de
+   este bloque, y eso es lo que lo deja CENTRADO EN LA BARRA aunque la marca de
+   la izquierda y las acciones de la derecha midan cosas distintas.
+
+   Con `justify-content: space-between` en el padre —que es lo que está puesto—
+   los links quedarían pegados al grupo de la derecha. El margen automático gana
+   por encima de eso y los planta en el medio.
+   ────────────────────────────────────────────────────────────────────────── */
 .nav__links {
   display: flex;
   align-items: center;
@@ -71,7 +113,15 @@
 }
 
 /* El subrayado que se dibuja de izquierda a derecha. Se anima scaleX con el
-   origen a la izquierda: la línea "se traza" en vez de aparecer entera. */
+   origen a la izquierda: la línea "se traza" en vez de aparecer entera.
+
+   Es un pseudo-elemento y no un <span> en el HTML: lo decorativo no tiene por
+   qué existir en el documento. Un lector de pantalla no se entera de que está,
+   que es exactamente lo que corresponde para una rayita.
+
+   `background: currentColor` la ata al color del texto del link, así que se
+   aclara y se oscurece junto con él al pasar el mouse sin necesidad de una
+   segunda regla que la sincronice. */
 .nav__link::after {
   content: "";
   position: absolute;
@@ -244,12 +294,24 @@
   min-height: 40px;
 }
 
-/* ── Barra de avance de lectura ──────────────────────────────────────── */
+/* ── Barra de avance de lectura ───────────────────────────────────────────
+   La línea azul que cruza la barra y avanza con el scroll de toda la página.
+   Es la única señal de "dónde estoy" que tiene la navegación, y reemplaza a
+   marcar el destino activo: dice cuánto falta, que es la pregunta real.
+
+   El JSX escribe scaleX(0 … 1) en el elemento de adentro; el número lo calcula
+   useScroll dividiendo lo scrolleado por el alto total scrolleable.
+   ────────────────────────────────────────────────────────────────────────── */
 .nav__progress {
   position: absolute;
   inset-inline: 0;
+  /* -1px la apoya encima del borde de abajo de la barra, que mide 1px: la línea
+     azul lo reemplaza mientras avanza, en vez de sumarse y engordar el borde. */
   bottom: -1px;
   height: 2px;
+  /* Recorta el relleno cuando está escalado a más de 1. El valor se satura en
+     1 desde JavaScript, pero si algún día se pasara, esto evita que se desborde
+     por el costado de la barra. */
   overflow: hidden;
 }
 
@@ -261,9 +323,17 @@
      useScroll. Una transición encima lo dejaría atrasado respecto del scroll. */
 }
 
-/* ── Botón hamburguesa ───────────────────────────────────────────────── */
+/* ── Botón hamburguesa ────────────────────────────────────────────────────
+   DOS líneas, no tres. Con dos, el gesto de cerrar sale de una: las mismas dos
+   líneas se juntan y rotan y ya son una X. Con tres hay que esconder la del
+   medio, que es un movimiento que no significa nada y se nota.
+
+   44 × 44 es el tamaño mínimo recomendado para algo que se toca con el dedo.
+   Las líneas ocupan 22px de ese ancho; el resto es aire alrededor, que no se ve
+   pero sí se acierta.
+   ────────────────────────────────────────────────────────────────────────── */
 .nav__burger {
-  display: none;
+  display: none;             /* aparece abajo de 1040px */
   flex-direction: column;
   justify-content: center;
   gap: 6px;
@@ -280,7 +350,16 @@
   transition: transform 0.35s var(--ease);
 }
 
-/* Las dos líneas se juntan en el centro y rotan: forman la X. */
+/* Las dos líneas se juntan en el centro y rotan: forman la X.
+
+   LA CUENTA DEL 3.75: entre las dos líneas hay 6px de separación más 1.5 de
+   grosor de una de ellas, o sea 7.5px de centro a centro. Cada una tiene que
+   recorrer la mitad de eso para encontrarse con la otra en el medio exacto:
+   7.5 / 2 = 3.75. Si ese número no coincidiera, la X quedaría con el cruce
+   corrido y se vería torcida.
+
+   Se mueven en sentidos opuestos (una baja, la otra sube) y rotan en sentidos
+   opuestos (+45 y −45): eso es lo que las cruza en ángulo recto. */
 .nav__burger.is-open span:nth-child(1) {
   transform: translateY(3.75px) rotate(45deg);
 }
@@ -290,6 +369,14 @@
 
 /* ============================================================================
    Menú de celular
+   ----------------------------------------------------------------------------
+   A pantalla completa, opaco, con los cinco destinos en letra grande y las dos
+   acciones abajo. No es un panel que se desliza desde un costado: ocupa todo.
+
+   Un menú de celular tiene una sola cosa que hacer —llevar a otro lado— y
+   cuanto más grande sea cada destino, menos se falla al tocarlo. Cada renglón
+   mide 22px de relleno arriba y abajo más el texto: más de 60px de alto, casi
+   el doble del mínimo recomendado.
    ========================================================================== */
 
 .sheet {
@@ -331,7 +418,14 @@
   padding: 22px 2px;
   border-bottom: 1px solid var(--line);
 
-  /* Cada link entra desde abajo con su propio retardo (--i lo pone el JSX). */
+  /* Cada link entra desde abajo con su propio retardo (--i lo pone el JSX).
+
+     ES UNA TRANSICIÓN Y NO UNA ANIMACIÓN, a diferencia de casi todo el resto de
+     la página. La diferencia importa acá: una animación corre una sola vez al
+     nacer el elemento, y estos elementos no nacen —existen siempre, escondidos—
+     porque el menú se apaga con opacidad y no con display:none. Una transición
+     se dispara cada vez que cambia el valor, así que la cascada vuelve a correr
+     en cada apertura. */
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);

@@ -1,5 +1,24 @@
 /* ============================================================================
    ai.css — Sección de inteligencia artificial
+   ----------------------------------------------------------------------------
+   Los cuatro usos de IA que tiene la plataforma, mostrados como una CONSOLA que
+   trabaja: se ve la consigna que entra y la respuesta saliendo renglón por
+   renglón, y después se pasa sola al uso siguiente.
+
+   POR QUÉ UNA CONSOLA Y NO CUATRO TARJETAS
+   "Revisamos las fotos con inteligencia artificial" es una frase que escribe
+   cualquiera. Verla revisar cinco fotos y rechazar la tercera, no. La consola
+   no explica lo que hace el modelo: lo hace delante de quien mira, que es la
+   única forma de que una afirmación así no suene a folleto.
+
+   LA TIPOGRAFÍA MONOESPACIADA ES PARTE DEL ARGUMENTO. Adentro de la consola,
+   la consigna y la respuesta van en la tipografía de terminal (--font-mono) y
+   todo el resto de la página en la de la marca. Ese corte es el que hace que se
+   lea como salida de un programa y no como un párrafo más.
+
+   SE PASA SOLA, y eso obliga a dos cosas que están más abajo: una barrita de
+   avance que avisa cuánto falta para el cambio (si no, el salto se siente
+   arbitrario) y un alto mínimo fijo para que la página no dé saltos.
    ========================================================================== */
 
 .ai {
@@ -10,6 +29,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(40px, 6vw, 76px);
+  /* `start` y no `center`: las dos columnas tienen altos distintos y arrancan
+     pegadas arriba. Centradas, el índice quedaría flotando a media altura de
+     la consola. */
   align-items: start;
 }
 
@@ -55,11 +77,35 @@
   color: var(--blue);
 }
 
-/* La barrita de avance de la pestaña activa. Dura lo mismo que la demo
-   completa (5 renglones × 420ms + 2200ms de pausa ≈ 4.3s). */
+/* ── La barrita de avance ─────────────────────────────────────────────────
+   Una línea azul que cruza el renglón activo mientras corre la demostración.
+   Dura lo mismo que la demo completa (5 renglones × 420ms + 2200ms de pausa
+   ≈ 4.3s), así que llegar al final del recorrido y saltar al uso siguiente
+   pasan a la vez.
+
+   ESTÁ PARA QUE EL CAMBIO NO SORPRENDA. Una sección que se cambia sola sin
+   avisar se siente rota: uno está leyendo y le mueven la página. Con la barra,
+   el cambio deja de ser una interrupción y pasa a estar anunciado desde el
+   primer segundo.
+
+   SE ANIMA scaleX Y NO width. Cambiar el ancho obliga al navegador a recalcular
+   la posición de los elementos en cada cuadro; `transform` lo resuelve la placa
+   de video sin volver a dibujar nada. Es la misma regla que en Ambient.
+
+   El `transform-origin: left` es lo que la hace crecer desde la izquierda: por
+   defecto escalaría desde el centro y se abriría hacia los dos lados.
+
+   `forwards` la deja llena al terminar, en vez de volver de golpe a cero
+   durante el instante que va del fin de la animación al cambio de pestaña.
+
+   La barra se rearma sola en cada cambio porque el JSX le pone al elemento una
+   `key` distinta por pestaña: nace un elemento nuevo y la animación arranca de
+   cero, sin tener que reiniciarla a mano. */
 .ai__tab-bar {
   position: absolute;
   left: 0;
+  /* -1px la apoya EXACTAMENTE encima del borde de abajo del renglón, que mide
+     1px: la barra no se suma a la línea, la reemplaza mientras avanza. */
   bottom: -1px;
   height: 1px;
   width: 100%;
@@ -68,6 +114,9 @@
   animation: ai-bar 4.3s linear forwards;
 }
 
+/* `linear` a propósito, y es la única animación de la página que no usa
+   --ease: una barra de avance tiene que contar tiempo parejo. Con una curva
+   que frena al final parecería trabarse justo antes de cambiar. */
 @keyframes ai-bar {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
@@ -168,11 +217,29 @@
   animation: pop-in 0.35s var(--ease) both;
 }
 
+/* EL RECHAZO NO SE DISTINGUE SOLO POR EL COLOR. Cambian tres cosas juntas: la
+   barrita de la izquierda, el color del renglón, y el texto mismo, que ya dice
+   que esa foto no se reconoció. Con el color solo, quien no distingue el verde
+   del ámbar —que es cerca de uno de cada doce varones— vería cinco renglones
+   iguales y se perdería justo lo único que esta demostración vino a mostrar.
+
+   CUÁL ES EL RECHAZO NO SE ADIVINA LEYENDO EL TEXTO: sale de content.js, del
+   campo `bad` del uso "fotos". Antes se buscaba la frase "no se reconoce" con
+   una expresión regular; funcionaba en castellano y fallaba en chino. */
 .ai__out li.is-bad {
   border-left-color: var(--alert);
   color: var(--alert);
 }
 
+/* Los tres puntitos de "está pensando". Es un <li> más de la lista, así que
+   hereda la barrita verde y la línea de abajo de los renglones de respuesta;
+   las dos se apagan acá, porque todavía no hay nada aprobado ni nada escrito.
+
+   Los `!important` son de los pocos de la página y están justificados: la regla
+   que pisan tiene la misma especificidad (`.ai__out li` contra `.ai__typing`
+   sería 0-2-0 contra 0-1-0), así que sin ellos ganaría la otra por orden. La
+   alternativa era escribir `.ai__out li.ai__typing`, que ata este bloque a que
+   el elemento siga siendo hijo de esa lista. */
 .ai__typing {
   display: flex;
   gap: 5px;
@@ -189,6 +256,11 @@
   animation: typing-dot 1.3s var(--ease) infinite;
 }
 
+/* Los tres puntos corren LA MISMA animación, corrida en el tiempo: uno sube,
+   después el otro, después el tercero. Con los tres a la vez sería un
+   parpadeo; escalonados es la onda que cualquiera reconoce de una mensajería.
+   180ms entre uno y otro: menos no se distingue, más se desarma en tres
+   puntos sueltos. */
 .ai__typing i:nth-child(2) { animation-delay: 0.18s; }
 .ai__typing i:nth-child(3) { animation-delay: 0.36s; }
 
@@ -207,6 +279,11 @@
   }
 }
 
+/* La tipografía monoespaciada ocupa más ancho por carácter que la de la marca,
+   y adentro de la consola hay renglones largos que no se pueden cortar sin que
+   dejen de parecer salida de un programa. En un celular angosto esos renglones
+   se pasaban del borde. Bajarlos a 12.5px es lo único que hace falta: el resto
+   de la sección entra bien. */
 @media (max-width: 520px) {
   .ai__out li,
   .ai__prompt {
